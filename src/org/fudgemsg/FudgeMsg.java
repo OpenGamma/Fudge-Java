@@ -233,6 +233,21 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
    * {@inheritDoc}
    */
   @Override
+  public void setByIndex (final int index, final FudgeField field) {
+    if(index < 0) {
+      throw new ArrayIndexOutOfBoundsException("Cannot specify a negative index into a FudgeMsg.");
+    }
+    if (index == getFields ().size ()) {
+      getFields ().add (field);
+    } else {
+      getFields ().set (index, field);
+    }
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public void clear () {
     getFields ().clear ();
   }

@@ -90,6 +90,14 @@ public interface MutableFudgeFieldContainer extends FudgeFieldContainer {
   public void remove (String name, Short ordinal);
   
   /**
+   * Sets a field at a specific index.
+   * 
+   * @param index index of the field
+   * @param field new field value
+   */
+  public void setByIndex (int index, FudgeField field);
+  
+  /**
    * Removes all fields from the message.
    */
   public void clear ();

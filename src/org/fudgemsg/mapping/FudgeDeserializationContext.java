@@ -58,10 +58,10 @@ public class FudgeDeserializationContext {
    * to keep the states of both sender and receiver consistent.
    */
   public void reset () {
-    getSerialisationBuffer ().reset ();
+    getSerializationBuffer ().reset ();
   }
   
-  private SerializationBuffer getSerialisationBuffer () {
+  private SerializationBuffer getSerializationBuffer () {
     return _serialisationBuffer;
   }
   
@@ -108,6 +108,19 @@ public class FudgeDeserializationContext {
     }
   }
   
+  private <T> T buildObject (final FudgeObjectBuilder<T> builder, final FudgeFieldContainer message) {
+    final SerializationBuffer.Handle handle = getSerializationBuffer ().beginObject ();
+    try {
+      final T object = builder.buildObject (this, message);
+      getSerializationBuffer ().endObject (handle, object);
+      return object;
+    } catch (RuntimeException e) {
+      e.printStackTrace ();
+      getSerializationBuffer ().cancelObject (handle);
+      throw e;
+    }
+  }
+  
   /**
    * Converts a Fudge message to a best guess Java object. {@link List} and {@link Map} encodings are recognized and inflated. Any other encodings
    * require field ordinal 0 to include possible class names to use.
@@ -123,6 +136,7 @@ public class FudgeDeserializationContext {
         if (field.getOrdinal () == null) continue;
         if (field.getOrdinal () < 0) {
           // not a list/set/map
+          getSerializationBuffer ().storeObject (message);
           return message;
         }
         if (field.getOrdinal () > maxOrdinal) maxOrdinal = field.getOrdinal ();
@@ -137,19 +151,32 @@ public class FudgeDeserializationContext {
     } else {
       for (FudgeField type : types) {
         final Object o = type.getValue ();
+        final Class<?> possibleClass;
         if (o instanceof Number) {
-          throw new UnsupportedOperationException ("Serialisation framework doesn't support back/forward references"); 
+          final int i = ((Number)o).intValue ();
+          if (i < 0) {
+            // class reference
+            possibleClass = getSerializationBuffer ().getObjectClass (-i);
+          } else {
+            // object reference
+            throw new UnsupportedOperationException ("Serialisation framework doesn't support back/forward references");
+          }
         } else if (o instanceof String) {
           try {
-            FudgeObjectBuilder<?> builder = getFudgeContext ().getObjectDictionary ().getObjectBuilder (Class.forName ((String)o));
-            if (builder != null) return builder.buildObject (this, message);
+            possibleClass = Class.forName ((String)o);
           } catch (ClassNotFoundException e) {
             // ignore
+            continue;
           }
+        } else {
+          continue;
         }
+        FudgeObjectBuilder<?> builder = getFudgeContext ().getObjectDictionary ().getObjectBuilder (possibleClass);
+        if (builder != null) return buildObject (builder, message);
       }
     }
     // couldn't process - return the raw message
+    getSerializationBuffer ().storeObject (message);
     return message;
   }
   
@@ -171,24 +198,45 @@ public class FudgeDeserializationContext {
     if (types.size () != 0) {
       // message contains type information - use it if we can
       for (FudgeField type : types) {
-        final Object o = type.getValue ();
+        Object o = type.getValue ();
+        final Class<?> possibleClass;
         if (o instanceof Number) {
-          throw new UnsupportedOperationException ("Serialisation framework doesn't support back/forward references"); 
+          final int i = ((Number)o).intValue ();
+          if (i < 0) {
+            // class reference
+            possibleClass = getSerializationBuffer ().getObjectClass (-i);
+          } else {
+            // object reference
+            o = getSerializationBuffer ().getObjectInstance (i + 1);
+            if (clazz.isAssignableFrom (o.getClass ())) {
+              getSerializationBuffer ().storeObject (o);
+              return (T)o;
+            } else {
+              // back reference is the wrong type
+              continue;
+            }
+          }
         } else if (o instanceof String) {
           try {
-            final Class<?> possibleClazz = Class.forName ((String)o);
-            //System.out.println ("Trying " + possibleClazz);
-            if (clazz.isAssignableFrom (possibleClazz)) {
-              builder = (FudgeObjectBuilder<T>)getFudgeContext ().getObjectDictionary ().getObjectBuilder (possibleClazz);
-              //System.out.println ("Builder " + builder);
-              if (builder != null) return builder.buildObject (this, message);
-            }
+            possibleClass = Class.forName ((String)o);
           } catch (ClassNotFoundException e) {
             // ignore
-          } catch (Exception e) {
-            //e.printStackTrace ();
-            lastError = e;
+            continue;
           }
+        } else {
+          // ignore field that doesn't contain class name or back reference
+          continue;
+        }
+        try {
+          //System.out.println ("Trying " + possibleClazz);
+          if (clazz.isAssignableFrom (possibleClass)) {
+            builder = (FudgeObjectBuilder<T>)getFudgeContext ().getObjectDictionary ().getObjectBuilder (possibleClass);
+            //System.out.println ("Builder " + builder);
+            if (builder != null) return buildObject (builder, message);
+          }
+        } catch (Exception e) {
+          //e.printStackTrace ();
+          lastError = e;
         }
       }
     }
@@ -197,7 +245,7 @@ public class FudgeDeserializationContext {
     builder = getFudgeContext ().getObjectDictionary ().getObjectBuilder (clazz);
     if (builder != null) {
       try {
-        return builder.buildObject (this, message);
+        return buildObject (builder, message);
       } catch (Exception e) {
         lastError = e;
       }

@@ -18,11 +18,14 @@ package org.fudgemsg.mapping;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeMsgEnvelope;
-import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeUtils;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.MappedNameBean;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.SimpleBean;
@@ -165,7 +168,49 @@ public class FudgeObjectMessageFactoryTest {
     SimpleBean recursiveBean = ObjectMappingTestUtil.constructSimpleBean ();
     recursiveBean.getFieldTwo ().setFieldTwo (recursiveBean);
     FudgeMsgEnvelope msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (recursiveBean);
+    System.out.println (msg.getMessage ());
+  }
+  
+  public static class Pair {
+    private int _a;
+    private int _b;
+    public Pair () {
+    }
+    public Pair (int a, int b) {
+      _a = a;
+      _b = b;
+    }
+    public void setA (int a) {
+      _a = a;
+    }
+    public void setB (int b) {
+      _b = b;
+    }
+    public int getA () {
+      return _a;
+    }
+    public int getB () {
+      return _b;
+    }
+  }
+  
+  @SuppressWarnings("unchecked")
+  @Test
+  public void classNameSubstitutionTest () {
+    final Map<Pair,Pair> map = new HashMap<Pair,Pair> ();
+    map.put (new Pair (1, 2), new Pair (3, 4));
+    map.put (new Pair (2, 3), new Pair (4, 5));
+    map.put (new Pair (3, 4), new Pair (5, 6));
+    map.put (new Pair (4, 5), new Pair (6, 7));
+    FudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (map).getMessage ();
     System.out.println (msg);
+    final byte[] ser = FudgeContext.GLOBAL_DEFAULT.toByteArray (msg);
+    // was 608 bytes without the class name reduction
+    // expect to save on 7 on the class names, with a byte index being written instead of the length, saving the length of the string
+    System.out.println (ser.length + " bytes, expected " + (608 - 7 * Pair.class.getName ().length ()));
+    assertTrue (ser.length <= (608 - 7 * Pair.class.getName ().length ()));
+    final Map<Pair,Pair> map2 = FudgeContext.GLOBAL_DEFAULT.fromFudgeMsg (Map.class, msg);
+    assertNotNull (map2);
   }
   
 }

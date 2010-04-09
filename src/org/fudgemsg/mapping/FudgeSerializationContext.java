@@ -17,12 +17,15 @@
 package org.fudgemsg.mapping;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.FudgeMessageFactory;
-import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeFieldType;
+import org.fudgemsg.FudgeMessageFactory;
+import org.fudgemsg.FudgeMsgField;
+import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.MutableFudgeFieldContainer;
 import org.fudgemsg.types.FudgeMsgFieldType;
+import org.fudgemsg.types.PrimitiveFieldTypes;
 import org.fudgemsg.types.StringFieldType;
 
 /**
@@ -99,6 +102,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
     final FudgeFieldType<?> fieldType = getFudgeContext ().getTypeDictionary ().getByJavaType (object.getClass ());
     if ((fieldType != null) && !FudgeMsgFieldType.INSTANCE.equals (fieldType)) {
       // goes natively into a message
+      getSerialisationBuffer ().storeObject (object);
       message.add (name, ordinal, fieldType, object);
     } else {
       // look up a custom or default builder and embed as sub-message
@@ -109,7 +113,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
   /**
    * Converts a Java object to a Fudge message {@link MutableFudgeFieldContainer} instance using a {@link FudgeMessageBuilder} registered against the object's class
    * in the current {@link FudgeObjectDictionary}. Note that a mutable container is returned (from the definition of {@code FudgeMessageBuilder} so that the caller is
-   * able to append additional data to the message if required, e.g. {@link #addClassHeader(MutableFudgeFieldContainer,Class)}.
+   * able to append additional data to the message if required, e.g. {@link #addClassHeader(MutableFudgeFieldContainer,Class)} if the message builders have omitted it.
    * 
    * @param object the Java object to serialize
    * @return the Fudge message created
@@ -117,13 +121,43 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
   @SuppressWarnings("unchecked")
   public MutableFudgeFieldContainer objectToFudgeMsg (final Object object) {
     if (object == null) throw new NullPointerException ("object cannot be null");
-    getSerialisationBuffer ().beginObject (object);
-    try {
-      Class<?> clazz = object.getClass ();
-      return getFudgeContext ().getObjectDictionary ().getMessageBuilder ((Class<Object>)clazz).buildMessage (this, object);
-    } finally {
-      getSerialisationBuffer ().endObject (object);
+    int i = getSerialisationBuffer ().findObjectIndex (object);
+    final MutableFudgeFieldContainer message;
+    if (i >= 0) {
+      getSerialisationBuffer ().storeObject (object);
+      message = getFudgeContext ().newMessage ();
+      message.add (null, 0, i);
+      return message;
     }
+    final SerializationBuffer.Handle handle = getSerialisationBuffer ().beginObject (object);
+    try {
+      message = getFudgeContext ().getObjectDictionary ().getMessageBuilder ((Class<Object>)object.getClass ()).buildMessage (this, object);
+    } catch (RuntimeException e) {
+      getSerialisationBuffer ().cancelObject (handle);
+      throw e;
+    }
+    getSerialisationBuffer ().endObject (object);
+    // compress the class names if possible
+    FudgeField field;
+    for (i = 0; (field = message.getByIndex (i)) != null; i++) {
+      if (field.getName () == null) {
+        Short ordinal = field.getOrdinal ();
+        if ((ordinal != null) && (ordinal == 0)) {
+          int classIndex = getSerialisationBuffer ().findClassIndex ((String)field.getValue ());
+          if (classIndex > 0) {
+            classIndex = -classIndex;
+            if (classIndex > Byte.MIN_VALUE) {
+              message.setByIndex (i, new FudgeMsgField (PrimitiveFieldTypes.BYTE_TYPE, (byte)classIndex, null, field.getOrdinal ()));
+            } else if (classIndex > Short.MIN_VALUE) {
+              message.setByIndex (i, new FudgeMsgField (PrimitiveFieldTypes.SHORT_TYPE, (short)classIndex, null, field.getOrdinal ()));
+            } else {
+              message.setByIndex (i, new FudgeMsgField (PrimitiveFieldTypes.INT_TYPE, classIndex, null, field.getOrdinal ()));
+            }
+          }
+        }
+      }
+    }
+    return message;
   }
   
   /**
