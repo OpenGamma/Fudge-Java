@@ -16,67 +16,69 @@
 
 package org.fudgemsg.mapping;
 
-
 /**
- * An immutable version of a {@link FudgeObjectDictionary}.
+ * A decorator creating an immutable dictionary.
+ * <p>
+ * This class is not mutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-public class ImmutableFudgeObjectDictionary extends FudgeObjectDictionary {
-  
+public final class ImmutableFudgeObjectDictionary extends FudgeObjectDictionary {
+
   /**
-   * Creates a new {@link FudgeObjectDictionary} as an immutable clone of an existing one.
+   * Creates a new dictionary wrapping another instance.
    * 
-   * @param dictionary The {@code FudgeObjectDictionary} to clone
+   * @param underlying  the instance to pass non-overridden method calls to, not null
    */
-  public ImmutableFudgeObjectDictionary (final FudgeObjectDictionary dictionary) {
-    super (dictionary);
+  public ImmutableFudgeObjectDictionary(final FudgeObjectDictionary underlying) {
+    super(underlying);
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Always throws an exception - this is an immutable dictionary.
    * 
-   * @param defaultBuilderFactory the {@code FudgeBuilderFactory} to use
+   * @param defaultBuilderFactory  the factory to use
    */
   @Override
-  public void setDefaultBuilderFactory (final FudgeBuilderFactory defaultBuilderFactory) {
-    throw new UnsupportedOperationException ("setDefaultBuilderFactory called on an immutable dictionary");
+  public void setDefaultBuilderFactory(final FudgeBuilderFactory defaultBuilderFactory) {
+    throw new UnsupportedOperationException("setDefaultBuilderFactory called on an immutable dictionary");
   }
-  
+
   /**
    * Always throws an exception - this is an immutable dictionary.
    * 
    * @param <T> Java type of the objects created by the builder
-   * @param clazz the Java class to register the builder against
-   * @param builder the builder to register
+   * @param clazz  the Java class to register the builder against
+   * @param builder  the builder to register
    */
   @Override
-  public <T> void addObjectBuilder (final Class<T> clazz, final FudgeObjectBuilder<? extends T> builder) {
-    throw new UnsupportedOperationException ("addObjectBuilder called on an immutable dictionary");
+  public <T> void addObjectBuilder(final Class<T> clazz, final FudgeObjectBuilder<? extends T> builder) {
+    throw new UnsupportedOperationException("addObjectBuilder called on an immutable dictionary");
   }
-  
+
   /**
    * Always throws an exception - this is an immutable dictionary.
    * 
    * @param <T> Java type of the objects processed by the builder
-   * @param clazz the Java class to register the builder against
-   * @param builder builder to register
+   * @param clazz  the Java class to register the builder against
+   * @param builder  builder to register
    */
   @Override
-  public <T> void addMessageBuilder (final Class<T> clazz, final FudgeMessageBuilder<? super T> builder) {
-    throw new UnsupportedOperationException ("addMessageBuilder called on an immutable dictionary");
+  public <T> void addMessageBuilder(final Class<T> clazz, final FudgeMessageBuilder<? super T> builder) {
+    throw new UnsupportedOperationException("addMessageBuilder called on an immutable dictionary");
   }
-  
+
   /**
    * Always throws an exception - this is an immutable dictionary.
    * 
    * @param <T> Java type of the objects processed by the builder
-   * @param clazz the Java class to register the builder against
-   * @param builder builder to register
+   * @param clazz  the Java class to register the builder against
+   * @param builder  builder to register
    */
   @Override
-  public <T> void addBuilder (final Class<T> clazz, final FudgeBuilder<T> builder) {
-    throw new UnsupportedOperationException ("addMessageBuilder called on an immutable dictionary");
+  public <T> void addBuilder(final Class<T> clazz, final FudgeBuilder<T> builder) {
+    throw new UnsupportedOperationException("addMessageBuilder called on an immutable dictionary");
   }
-  
+
 }

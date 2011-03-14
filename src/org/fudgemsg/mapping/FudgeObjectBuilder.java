@@ -19,21 +19,28 @@ package org.fudgemsg.mapping;
 import org.fudgemsg.FudgeFieldContainer;
 
 /**
- * Defines an object capable of constructing a Java object from a Fudge message
+ * Defines how to convert a Fudge message to an object.
+ * <p>
+ * This interface, and {@link FudgeMessageBuilder}, define how to convert between
+ * an object and a Fudge message. The two interfaces are combined in {@link FudgeBuilder}.
+ * <p>
+ * This interface must be implemented in a thread-safe manner.
  * 
- * @param <T> the Java type this builder deserialises Fudge messages to
- * 
+ * @param <T> the Java type this builder creates
  * @author Andrew Griffin
  */
 public interface FudgeObjectBuilder<T> {
-  
+
   /**
-   * Decodes the message into an instance of type T.
+   * Converts the Fudge message to an object using the specified context.
+   * <p>
+   * This provides the strategy for converting a message to an object to be specified.
+   * The input message should not be mutated.
    * 
-   * @param context the {@link FudgeDeserializationContext}
-   * @param message the origin Fudge message
-   * @return the created object
+   * @param context  the context, not null
+   * @param message  the Fudge message to convert, not null
+   * @return the created object, not null
    */
-  T buildObject (FudgeDeserializationContext context, FudgeFieldContainer message);
-  
+  T buildObject(FudgeDeserializationContext context, FudgeFieldContainer message);
+
 }

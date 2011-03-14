@@ -21,82 +21,99 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeMsgWriter;
 
 /**
- * Serialises Java objects to a target Fudge message stream.
+ * Reader to serialize Java objects to an underlying stream of Fudge messages.
  * 
  * @author Andrew Griffin
  */
 public class FudgeObjectWriter {
-  
+
+  /**
+   * The underlying Fudge message reader.
+   */
   private final FudgeMsgWriter _messageWriter;
-  
+  /**
+   * The context.
+   */
   private FudgeSerializationContext _serialisationContext;
-  
+
   /**
-   * Creates a new {@link FudgeObjectWriter} around a {@link FudgeMsgWriter}.
+   * Creates a writer around the underlying Fudge stream.
    * 
-   * @param messageWriter the target for Fudge messages
+   * @param messageWriter  the target for Fudge messages containing serialized objects
    */
-  public FudgeObjectWriter (final FudgeMsgWriter messageWriter) {
-    if (messageWriter == null) throw new NullPointerException ("messageWriter cannot be null");
+  public FudgeObjectWriter(final FudgeMsgWriter messageWriter) {
+    if (messageWriter == null) {
+      throw new NullPointerException("messageWriter cannot be null");
+    }
     _messageWriter = messageWriter;
-    _serialisationContext = new FudgeSerializationContext (messageWriter.getFudgeContext ());
+    _serialisationContext = new FudgeSerializationContext(messageWriter.getFudgeContext());
   }
-  
-  /**
-   * Closes the underlying target stream.
-   */
-  public void close () {
-    if (_messageWriter == null) return;
-    _messageWriter.close ();
-  }
-  
-  /**
-   * Returns the underlying {@link FudgeContext}. This will be the context of the {@link FudgeMsgWriter} being used.
-   * 
-   * @return the {@code FudgeContext}
-   */
-  public FudgeContext getFudgeContext () {
-    final FudgeSerializationContext context = getSerialisationContext ();
-    if (context == null) return null;
-    return context.getFudgeContext ();
-  }
-  
-  /**
-   * Returns the current {@link FudgeSerializationContext}. This is associated with the same {@link FudgeContext} as
-   * the target message stream.
-   * 
-   * @return the {@code FudgeSerialisationContext}
-   */
-  public FudgeSerializationContext getSerialisationContext () {
-    return _serialisationContext;
-  }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Returns the underlying message target.
    * 
-   * @return the {@link FudgeMsgWriter}
+   * @return the underlying message writer, not null unless overridden in a subclass
    */
-  public FudgeMsgWriter getMessageWriter () {
+  public FudgeMsgWriter getMessageWriter() {
     return _messageWriter;
   }
-  
+
   /**
-   * Serialises a Java object to a Fudge message and writes it to the target stream.
+   * Returns the current serialization context.
+   * This is associated with the same {@link FudgeContext} as the target message stream.
+   * 
+   * @return the context, not null unless overridden in a subclass
+   */
+  public FudgeSerializationContext getSerialisationContext() {
+    return _serialisationContext;
+  }
+
+  /**
+   * Returns the underlying {@link FudgeContext}.
+   * This will be the context of the {@link FudgeMsgWriter} being used.
+   * 
+   * @return the {@code FudgeContext}
+   */
+  public FudgeContext getFudgeContext() {
+    final FudgeSerializationContext context = getSerialisationContext();
+    if (context == null) {
+      return null;
+    }
+    return context.getFudgeContext();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Writes to the stream a serialized form of the given object.
+   * <p>
+   * This converts the Java object to a Fudge message and writes it to the target stream.
    * 
    * @param <T> type of the Java object
    * @param obj the object to write
    */
-  public <T> void write (final T obj) {
-    getSerialisationContext ().reset ();
+  public <T> void write(final T obj) {
+    getSerialisationContext().reset();
     FudgeFieldContainer message;
     if (obj == null) {
       // write an empty message
-      message = getSerialisationContext ().newMessage ();
+      message = getSerialisationContext().newMessage();
     } else {
       // delegate to a message builder
-      message = getSerialisationContext ().objectToFudgeMsg (obj);
+      message = getSerialisationContext().objectToFudgeMsg(obj);
     }
-    getMessageWriter ().writeMessage (message, 0);
+    getMessageWriter().writeMessage(message, 0);
   }
-  
+
+  /**
+   * Closes the underlying stream.
+   */
+  public void close() {
+    FudgeMsgWriter mw = getMessageWriter();
+    if (mw == null) {
+      return;
+    }
+    mw.close();
+  }
+
 }

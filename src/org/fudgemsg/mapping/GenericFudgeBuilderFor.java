@@ -23,11 +23,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation which at runtime specifies that a particular class is a
- * {@link FudgeBuilder} or {@link FudgeObjectBuilder} for a particular
- * abstract or interface data type.
- * Where the intention is to invoke {@link FudgeBuilderFactory#addGenericBuilder(Class, FudgeBuilder)} rather
- * than {@link FudgeObjectDictionary#addBuilder(Class, FudgeBuilder)}, this annotation should be used instead.
+ * Annotation used to specify that this is a "generic" Fudge builder.
+ * <p>
+ * This annotation is used at runtime to specify that a particular class is a
+ * {@link FudgeMessageBuilder} or {@link FudgeObjectBuilder} for a particular
+ * data type. This is similar to {@link HasFudgeBuilder}, but allows the data
+ * object to specify what its builder(s) are, in a case where a builder has been
+ * written external to a source data type.
+ * A "generic" builder is one the would be registered with
+ * {@link FudgeBuilderFactory#addGenericBuilder(Class, FudgeBuilder)}.
+ * <p>
+ * The Fudge system can, if desired, locate this annotation and automatically
+ * configure using {@link FudgeObjectDictionary#addAllAnnotatedBuilders()}.
  *
  * @author Kirk Wylie
  */
@@ -35,9 +42,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface GenericFudgeBuilderFor {
-  
+
   /**
-   * The generic class for which the annotated type is a {@link FudgeBuilder}.
+   * The base/abstract class/interface for which the annotated type is a builder.
    */
   Class<?> value();
 

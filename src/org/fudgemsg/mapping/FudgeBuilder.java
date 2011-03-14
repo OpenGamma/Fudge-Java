@@ -17,11 +17,13 @@
 package org.fudgemsg.mapping;
 
 /**
- * Helper interface combining the message and object building operations.
+ * Builder that combines the conversions to and from a Fudge message.
+ * <p>
+ * This interface must be implemented in a thread-safe manner.
  * 
  * @param <T> class that can be serialised or deserialised by this builder
  * @author Andrew Griffin
  */
 public interface FudgeBuilder<T> extends FudgeMessageBuilder<T>, FudgeObjectBuilder<T> {
-  
+
 }

@@ -26,54 +26,50 @@ import org.fudgemsg.types.IndicatorFieldType;
 import org.fudgemsg.types.IndicatorType;
 
 /**
- * Builder for List objects.
+ * Builder for {@code List} objects.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-/* package */ class ListBuilder implements FudgeBuilder<List<?>> {
-  
-  /**
-   * Singleton instance of the {@link ListBuilder}.
-   */
-  /* package */ static final FudgeBuilder<List<?>> INSTANCE = new ListBuilder (); 
-  
-  private ListBuilder () {
-  }
+/* package */final class ListBuilder implements FudgeBuilder<List<?>> {
+  // a list is sent as a sub-message where each field is a list element
+  // each list element has neither a name nor an ordinal
+  // nulls are sent using the indicator type
+  // a set may be read into a list
 
   /**
-   * Creates a Fudge message representation of a {@link List}.
-   * 
-   * @param context the serialization context
-   * @param list the list to serialize
-   * @return the Fudge message
+   * Singleton instance of the builder.
    */
+  /* package */static final FudgeBuilder<List<?>> INSTANCE = new ListBuilder();
+
+  private ListBuilder() {
+  }
+
+  //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, List<?> list) {
-    final MutableFudgeFieldContainer msg = context.newMessage ();
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, List<?> list) {
+    final MutableFudgeFieldContainer msg = context.newMessage();
     for (Object entry : list) {
       if (entry == null) {
-        msg.add (null, null, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
+        msg.add(null, null, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
       } else {
         context.objectToFudgeMsgWithClassHeaders(msg, null, null, entry);
       }
     }
     return msg;
   }
-  
-  /**
-   * Creates a list from a Fudge message.
-   * 
-   * @param context the deserialization context
-   * @param message the Fudge message
-   * @return the {@link List}
-   */
+
   @Override
-  public List<?> buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final List<Object> list = new ArrayList<Object> ();
+  public List<?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    final List<Object> list = new ArrayList<Object>();
     for (FudgeField field : message) {
-      if ((field.getOrdinal () != null) && (field.getOrdinal () != 1)) throw new IllegalArgumentException ("Sub-message doesn't contain a list (bad field " + field + ")");
-      Object o = context.fieldValueToObject (field);
-      list.add ((o instanceof IndicatorType) ? null : o);
+      if ((field.getOrdinal() != null) && (field.getOrdinal() != 1)) {
+        throw new IllegalArgumentException("Sub-message interpretted as a list but found invalid ordinal " + field + ")");
+      }
+      Object obj = context.fieldValueToObject(field);
+      obj = (obj instanceof IndicatorType) ? null : obj;
+      list.add(obj);
     }
     return list;
   }

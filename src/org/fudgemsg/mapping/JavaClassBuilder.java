@@ -22,43 +22,43 @@ import org.fudgemsg.MutableFudgeFieldContainer;
 import org.fudgemsg.types.StringFieldType;
 
 /**
- * Builder for Class objects. This is a trivial hack so that getClass can be processed safely
- * by the Bean based serialisers. The class object is reduced to just the name.
+ * Builder for {@code Class} objects.
+ * <p>
+ * A Java class name is mapped to a string in the Fudge message.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-/* package */ class JavaClassBuilder implements FudgeBuilder<Class<?>> {
-  
-  /**
-   * 
-   */
-  /* package */ static final FudgeBuilder<Class<?>> INSTANCE = new JavaClassBuilder (); 
-  
-  private JavaClassBuilder () {
-  }
+/* package */final class JavaClassBuilder implements FudgeBuilder<Class<?>> {
 
   /**
-   *
+   * Singleton instance of the builder.
    */
+  /* package */static final FudgeBuilder<Class<?>> INSTANCE = new JavaClassBuilder();
+
+  private JavaClassBuilder() {
+  }
+
+  //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, Class<?> object) {
-    final MutableFudgeFieldContainer msg = context.newMessage ();
-    FudgeSerializationContext.addClassHeader (msg, object.getClass ());
-    msg.add ("name", null, StringFieldType.INSTANCE, object.getName ());
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Class<?> object) {
+    final MutableFudgeFieldContainer msg = context.newMessage();
+    FudgeSerializationContext.addClassHeader(msg, object.getClass());
+    msg.add("name", null, StringFieldType.INSTANCE, object.getName());
     return msg;
   }
-  
-  /**
-   *
-   */
+
   @Override
-  public Class<?> buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final String str = message.getString ("name");
-    if (str == null) throw new IllegalArgumentException ("Sub-message doesn't contain a Java class name");
+  public Class<?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    final String str = message.getString("name");
+    if (str == null) {
+      throw new IllegalArgumentException("Sub-message doesn't contain a Java class name");
+    }
     try {
-      return Class.forName (str);
-    } catch (ClassNotFoundException e) {
-      throw new FudgeRuntimeException ("Cannot deserialise Java class '" + str + "'", e);
+      return Class.forName(str);
+    } catch (ClassNotFoundException ex) {
+      throw new FudgeRuntimeException("Unable to deserialise Java class '" + str + "'", ex);
     }
   }
 

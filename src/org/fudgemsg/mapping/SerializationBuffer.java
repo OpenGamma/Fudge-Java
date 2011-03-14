@@ -21,50 +21,57 @@ import java.util.Stack;
 import org.fudgemsg.FudgeRuntimeException;
 
 /**
- * A basic buffer for the serialization and deserialization contexts that can detect
- * the cycles they can't deal with. When the method for processing object graphs has
- * been agreed, this will process back and forward references.
+ * Buffer used for serialization and deserialization contexts that can detect cycles.
+ * <p>
+ * Some structures are graphs that contain cycles.
+ * When the method for processing object graphs has been agreed, this will process
+ * back and forward references.
  * 
  * @author Andrew Griffin
  */
-/* package */ class SerializationBuffer {
-  
-  private final Stack<Object> _buffer;
-  
+/* package */class SerializationBuffer {
+
+  /**
+   * The buffer stack.
+   */
+  private final Stack<Object> _buffer = new Stack<Object>();
+
   /**
    * Creates a new {@link SerializationBuffer}.
    */
-  SerializationBuffer () {
-    _buffer = new Stack<Object> ();
+  SerializationBuffer() {
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Registers the start of an object being processed. During serialization can detect a loop
    * and raise a {@link FudgeRuntimeException}.
    * 
-   * @param object the object currently being processed
+   * @param object  the object currently being processed
    * @throws FudgeRuntimeException if a cyclic reference is detected    
    */
-  /* package */ void beginObject (final Object object) {
-    if (_buffer.contains (object)) throw new UnsupportedOperationException ("Serialization framework can't support cyclic references");
-    _buffer.push (object);
+  /* package */void beginObject(final Object object) {
+    if (_buffer.contains(object)) {
+      throw new UnsupportedOperationException("Serialization framework does not support cyclic references");
+    }
+    _buffer.push(object);
   }
-  
+
   /**
    * Registers the end of an object being processed.
    * 
-   * @param object the object being processed
+   * @param object  the object being processed
    */
-  /* package */ void endObject (final Object object) {
-    final Object obj = _buffer.pop ();
+  /* package */void endObject(final Object object) {
+    final Object obj = _buffer.pop();
     assert obj == object;
   }
-  
+
   /**
    * Resets the state of the buffer.
    */
-  /* package */ void reset () {
-    _buffer.clear ();
+  /* package */void reset() {
+    _buffer.clear();
   }
-  
+
 }

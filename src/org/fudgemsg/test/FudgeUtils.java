@@ -48,46 +48,43 @@ public class FudgeUtils {
    * @param actualMsg [documentation not available]
    * @param fieldOrderMatters [documentation not available]
    */
-  public static void assertAllFieldsMatch(
-      FudgeFieldContainer expectedMsg,
-      FudgeFieldContainer actualMsg,
+  public static void assertAllFieldsMatch(FudgeFieldContainer expectedMsg, FudgeFieldContainer actualMsg,
       boolean fieldOrderMatters) {
     List<FudgeField> expectedFields = expectedMsg.getAllFields();
     List<FudgeField> actualFields = expectedMsg.getAllFields();
-    if(!fieldOrderMatters) {
+    if (!fieldOrderMatters) {
       expectedFields = order(expectedFields);
       actualFields = order(actualFields);
     }
     Iterator<FudgeField> expectedIter = expectedFields.iterator();
     Iterator<FudgeField> actualIter = actualFields.iterator();
-    while(expectedIter.hasNext()) {
+    while (expectedIter.hasNext()) {
       assertTrue(actualIter.hasNext());
       FudgeField expectedField = expectedIter.next();
       FudgeField actualField = actualIter.next();
-      
+
       assertEquals(expectedField.getName(), actualField.getName());
       assertEquals(expectedField.getType(), actualField.getType());
       assertEquals(expectedField.getOrdinal(), actualField.getOrdinal());
-      if(expectedField.getValue().getClass().isArray()) {
+      if (expectedField.getValue().getClass().isArray()) {
         assertEquals(expectedField.getValue().getClass(), actualField.getValue().getClass());
-        if(expectedField.getValue() instanceof byte[]) {
-          FudgeUtils.assertArraysMatch((byte[]) expectedField.getValue(), (byte[])actualField.getValue());
-        } else if(expectedField.getValue() instanceof short[]) {
-          FudgeUtils.assertArraysMatch((short[]) expectedField.getValue(), (short[])actualField.getValue());
-        } else if(expectedField.getValue() instanceof int[]) {
-          FudgeUtils.assertArraysMatch((int[]) expectedField.getValue(), (int[])actualField.getValue());
-        } else if(expectedField.getValue() instanceof long[]) {
-          FudgeUtils.assertArraysMatch((long[]) expectedField.getValue(), (long[])actualField.getValue());
-        } else if(expectedField.getValue() instanceof float[]) {
-          FudgeUtils.assertArraysMatch((float[]) expectedField.getValue(), (float[])actualField.getValue());
-        } else if(expectedField.getValue() instanceof double[]) {
-          FudgeUtils.assertArraysMatch((double[]) expectedField.getValue(), (double[])actualField.getValue());
+        if (expectedField.getValue() instanceof byte[]) {
+          FudgeUtils.assertArraysMatch((byte[]) expectedField.getValue(), (byte[]) actualField.getValue());
+        } else if (expectedField.getValue() instanceof short[]) {
+          FudgeUtils.assertArraysMatch((short[]) expectedField.getValue(), (short[]) actualField.getValue());
+        } else if (expectedField.getValue() instanceof int[]) {
+          FudgeUtils.assertArraysMatch((int[]) expectedField.getValue(), (int[]) actualField.getValue());
+        } else if (expectedField.getValue() instanceof long[]) {
+          FudgeUtils.assertArraysMatch((long[]) expectedField.getValue(), (long[]) actualField.getValue());
+        } else if (expectedField.getValue() instanceof float[]) {
+          FudgeUtils.assertArraysMatch((float[]) expectedField.getValue(), (float[]) actualField.getValue());
+        } else if (expectedField.getValue() instanceof double[]) {
+          FudgeUtils.assertArraysMatch((double[]) expectedField.getValue(), (double[]) actualField.getValue());
         }
-      } else if(expectedField.getValue() instanceof FudgeMsg) {
+      } else if (expectedField.getValue() instanceof FudgeMsg) {
         assertTrue(actualField.getValue() instanceof FudgeMsg);
-        assertAllFieldsMatch((FudgeMsg) expectedField.getValue(),
-            (FudgeMsg) actualField.getValue());
-      } else if(expectedField.getValue() instanceof UnknownFudgeFieldValue) {
+        assertAllFieldsMatch((FudgeMsg) expectedField.getValue(), (FudgeMsg) actualField.getValue());
+      } else if (expectedField.getValue() instanceof UnknownFudgeFieldValue) {
         assertTrue(actualField.getValue() instanceof UnknownFudgeFieldValue);
         UnknownFudgeFieldValue expectedValue = (UnknownFudgeFieldValue) expectedField.getValue();
         UnknownFudgeFieldValue actualValue = (UnknownFudgeFieldValue) actualField.getValue();
@@ -106,102 +103,101 @@ public class FudgeUtils {
     Collections.sort(expectedFields, new Comparator<FudgeField>() {
       @Override
       public int compare(FudgeField o1, FudgeField o2) {
-        if((o1.getOrdinal() != null) || (o2.getOrdinal() != null)) {
-          if(o1.getOrdinal() == null) {
+        if ((o1.getOrdinal() != null) || (o2.getOrdinal() != null)) {
+          if (o1.getOrdinal() == null) {
             return -1;
-          } else if(o2.getOrdinal() == null) {
+          } else if (o2.getOrdinal() == null) {
             return 1;
           } else {
             int comparison = (o1.getOrdinal() - o2.getOrdinal());
-            if(comparison != 0) {
+            if (comparison != 0) {
               return comparison;
             }
           }
         }
-        if((o1.getName() != null) || (o2.getName() != null)) {
-          if(o1.getName() == null) {
+        if ((o1.getName() != null) || (o2.getName() != null)) {
+          if (o1.getName() == null) {
             return -1;
-          } else if(o2.getName() == null) {
+          } else if (o2.getName() == null) {
             return 1;
           } else {
             int comparison = o1.getName().compareTo(o2.getName());
-            if(comparison != 0) {
+            if (comparison != 0) {
               return comparison;
             }
           }
         }
         return 0;
       }
-      
     });
     return expectedFields;
   }
 
   /**
-   * @param expected [documentation not available]
-   * @param actual [documentation not available]
+   * @param expected  the expected data
+   * @param actual  the actual data
    */
   public static void assertArraysMatch(double[] expected, double[] actual) {
     assertEquals(expected.length, actual.length);
-    for(int i = 0; i < expected.length; i++) {
+    for (int i = 0; i < expected.length; i++) {
       // No tolerance intentionally.
-      assertEquals(expected[i],actual[i], 0.0);
+      assertEquals(expected[i], actual[i], 0.0);
     }
   }
 
   /**
-   * @param expected [documentation not available]
-   * @param actual [documentation not available]
+   * @param expected  the expected data
+   * @param actual  the actual data
    */
   public static void assertArraysMatch(float[] expected, float[] actual) {
     assertEquals(expected.length, actual.length);
-    for(int i = 0; i < expected.length; i++) {
+    for (int i = 0; i < expected.length; i++) {
       // No tolerance intentionally.
-      assertEquals(expected[i],actual[i], 0.0);
+      assertEquals(expected[i], actual[i], 0.0);
     }
   }
 
   /**
-   * @param expected [documentation not available]
-   * @param actual [documentation not available]
+   * @param expected  the expected data
+   * @param actual  the actual data
    */
   public static void assertArraysMatch(long[] expected, long[] actual) {
     assertEquals(expected.length, actual.length);
-    for(int i = 0; i < expected.length; i++) {
-      assertEquals(expected[i],actual[i]);
+    for (int i = 0; i < expected.length; i++) {
+      assertEquals(expected[i], actual[i]);
     }
   }
 
   /**
-   * @param expected [documentation not available]
-   * @param actual [documentation not available]
+   * @param expected  the expected data
+   * @param actual  the actual data
    */
   public static void assertArraysMatch(int[] expected, int[] actual) {
     assertEquals(expected.length, actual.length);
-    for(int i = 0; i < expected.length; i++) {
-      assertEquals(expected[i],actual[i]);
+    for (int i = 0; i < expected.length; i++) {
+      assertEquals(expected[i], actual[i]);
     }
   }
 
   /**
-   * @param expected [documentation not available]
-   * @param actual [documentation not available]
+   * @param expected  the expected data
+   * @param actual  the actual data
    */
   public static void assertArraysMatch(short[] expected, short[] actual) {
     assertEquals(expected.length, actual.length);
-    for(int i = 0; i < expected.length; i++) {
-      assertEquals(expected[i],actual[i]);
+    for (int i = 0; i < expected.length; i++) {
+      assertEquals(expected[i], actual[i]);
     }
   }
 
   /**
-   * @param expected [documentation not available]
-   * @param actual [documentation not available]
+   * @param expected  the expected data
+   * @param actual  the actual data
    */
   public static void assertArraysMatch(byte[] expected, byte[] actual) {
     assertEquals(expected.length, actual.length);
-    for(int i = 0; i < expected.length; i++) {
-      assertEquals(expected[i],actual[i]);
+    for (int i = 0; i < expected.length; i++) {
+      assertEquals(expected[i], actual[i]);
     }
   }
 

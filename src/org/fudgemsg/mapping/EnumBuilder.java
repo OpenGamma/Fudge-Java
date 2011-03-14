@@ -20,49 +20,42 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
- * Builder for enumerations. Note that an enumeration could alternatively be reduced
- * to a string but that then requires forced knowledge at the receiver.
+ * Builder for enums, stored as a sub-message.
+ * <p>
+ * This builder creates a sub-message. Note that an enumeration could alternatively
+ * be reduced to a string but that then requires the receiver to know the type.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
- * @param <E> enumeration type
+ * @param <E> the enumeration type
  * @author Andrew Griffin
  */
-/* package */ class EnumBuilder<E extends Enum<E>> implements FudgeBuilder<Enum<E>> {
-  
+/* package */final class EnumBuilder<E extends Enum<E>> implements FudgeBuilder<Enum<E>> {
+
+  /**
+   * The enum class.
+   */
   private final Class<E> _clazz;
-  
+
   /**
    * @param clazz type of the enumeration
    */
-  /* package */ EnumBuilder (Class<E> clazz) {
+  /* package */EnumBuilder(Class<E> clazz) {
     _clazz = clazz;
   }
 
-  /**
-   * Creates a Fudge message representation of an {@link Enum}.
-   * 
-   * @param context the serialization context
-   * @param enumeration the enum to serialize
-   * @return the Fudge message
-   */
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, Enum<E> enumeration) {
-    final MutableFudgeFieldContainer msg = context.newMessage ();
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Enum<E> enumeration) {
+    final MutableFudgeFieldContainer msg = context.newMessage();
     // REVIEW: jim 2-Jun-2010 -- changed to getDeclaringClass() to fix problem with enums with methods that appear as anon inner classes.
-    msg.add (null, 0, enumeration.getDeclaringClass().getName ());
-    msg.add (null, 1, enumeration.name ());
+    msg.add(null, 0, enumeration.getDeclaringClass().getName());
+    msg.add(null, 1, enumeration.name());
     return msg;
   }
-  
-  /**
-   * Creates an enum from a Fudge message.
-   * 
-   * @param context the deserialization context
-   * @param message the Fudge message
-   * @return the {@link Enum}
-   */
+
   @Override
-  public Enum<E> buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    return Enum.valueOf (_clazz, message.getString (1));
+  public Enum<E> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    return Enum.valueOf(_clazz, message.getString(1));
   }
 
 }

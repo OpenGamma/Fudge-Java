@@ -19,23 +19,28 @@ package org.fudgemsg.mapping;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
- * Defines an object capable of adding data from a given Java object to a fudge message.
+ * Defines how to convert an object to a Fudge message.
+ * <p>
+ * This interface, and {@link FudgeObjectBuilder}, define how to convert between
+ * an object and a Fudge message. The two interfaces are combined in {@link FudgeBuilder}.
+ * <p>
+ * This interface must be implemented in a thread-safe manner.
  * 
  * @param <T> the Java type this builder creates Fudge message from
- * 
  * @author Andrew Griffin
  */
 public interface FudgeMessageBuilder<T> {
-  
+
   /**
-   * Creates a message from the given object. Note that a mutable container must be returned, this
-   * is to allow efficient implementation of sub-class builders that only need append data to the
-   * super-class message.
+   * Converts the object to a Fudge message using the specified context.
+   * <p>
+   * This provides the strategy for converting an object to a message to be specified.
+   * The resulting message is mutable to enable efficient implementations.
    * 
-   * @param context the {@link FudgeSerializationContext}
-   * @param object the object to serialise
-   * @return the Fudge message
+   * @param context  the context, not null
+   * @param object  the object to convert to a Fudge message, not null
+   * @return the Fudge message, not null
    */
-  MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, T object);
-  
+  MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, T object);
+
 }

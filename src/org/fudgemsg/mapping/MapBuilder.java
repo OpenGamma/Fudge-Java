@@ -28,79 +28,87 @@ import org.fudgemsg.types.IndicatorFieldType;
 import org.fudgemsg.types.IndicatorType;
 
 /**
- * Builder for Map objects.
+ * Builder for {@code Map} objects.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-/* package */ class MapBuilder implements FudgeBuilder<Map<?,?>> {
-  
-  /**
-   * Singleton instance of the {@link MapBuilder}.
-   */
-  /* package */ static final FudgeBuilder<Map<?,?>> INSTANCE = new MapBuilder (); 
-  
-  private MapBuilder () {
-  }
+/* package */final class MapBuilder implements FudgeBuilder<Map<?, ?>> {
+  // map stored as sub-message where each entry is stored as two fields
+  // the two fields may be read as all keys then all values, all values
+  // then all keys or a more typical mixture of key-value-key-value-...
+  // keys have ordinal 1, values have ordinal 2
+  // nulls are sent using the indicator type
 
   /**
-   * Creates a Fudge message representation of a {@link Map}.
-   * 
-   * @param context the serialization context
-   * @param map the map to serialize
-   * @return the Fudge message
+   * Singleton instance of the builder.
    */
+  /* package */static final FudgeBuilder<Map<?, ?>> INSTANCE = new MapBuilder();
+  /**
+   * The ordinal to use for the map key.
+   */
+  private static final int KEY_ORDINAL = 1;
+  /**
+   * The ordinal to use for the map value.
+   */
+  private static final int VALUE_ORDINAL = 2;
+
+  private MapBuilder() {
+  }
+
+  //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, Map<?,?> map) {
-    final MutableFudgeFieldContainer msg = context.newMessage ();
-    for (Map.Entry<?,?> entry : map.entrySet ()) {
-      if (entry.getKey () == null) {
-        msg.add (null, 1, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Map<?, ?> map) {
+    final MutableFudgeFieldContainer msg = context.newMessage();
+    for (Map.Entry<?, ?> entry : map.entrySet()) {
+      if (entry.getKey() == null) {
+        msg.add(null, KEY_ORDINAL, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
       } else {
-        context.objectToFudgeMsgWithClassHeaders(msg, null, 1, entry.getKey());
+        context.objectToFudgeMsgWithClassHeaders(msg, null, KEY_ORDINAL, entry.getKey());
       }
-      if (entry.getValue () == null) {
-        msg.add (null, 2, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
+      if (entry.getValue() == null) {
+        msg.add(null, VALUE_ORDINAL, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
       } else {
-        context.objectToFudgeMsgWithClassHeaders(msg, null, 2, entry.getValue());
+        context.objectToFudgeMsgWithClassHeaders(msg, null, VALUE_ORDINAL, entry.getValue());
       }
     }
     return msg;
   }
-  
-  /**
-   * Creates a {@link Map} from a Fudge message.
-   * 
-   * @param context the deserialization context
-   * @param message the Fudge message
-   * @return the {@code Map} 
-   */
+
   @Override
-  public Map<?,?> buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final Map<Object, Object> map = new HashMap<Object, Object> ();
-    final Queue<Object> keys = new LinkedList<Object> ();
-    final Queue<Object> values = new LinkedList<Object> ();
+  public Map<?, ?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    final Map<Object, Object> map = new HashMap<Object, Object>();
+    final Queue<Object> keys = new LinkedList<Object>();
+    final Queue<Object> values = new LinkedList<Object>();
     for (FudgeField field : message) {
-      Object fieldValue = context.fieldValueToObject (field);
-      if (fieldValue instanceof IndicatorType) fieldValue = null;
-      if (field.getOrdinal () == 1) {
-        if (values.isEmpty ()) {
+      Object obj = context.fieldValueToObject(field);
+      obj = (obj instanceof IndicatorType) ? null : obj;
+      if (field.getOrdinal() != null && field.getOrdinal() == KEY_ORDINAL) {
+        if (values.isEmpty()) {
           // no values ready, so store the key till next time
-          keys.add (fieldValue);
+          keys.add(obj);
         } else {
           // store key along with next value
-          map.put (fieldValue, values.remove ());
+          map.put(obj, values.remove());
         }
-      } else if (field.getOrdinal () == 2) {
-        if (keys.isEmpty ()) {
+      } else if (field.getOrdinal() != null && field.getOrdinal() == VALUE_ORDINAL) {
+        if (keys.isEmpty()) {
           // no keys ready, so store the value till next time
-          values.add (fieldValue);
+          values.add(obj);
         } else {
           // store value along with next key
-          map.put (keys.remove (), fieldValue);
+          map.put(keys.remove(), obj);
         }
       } else {
-        throw new IllegalArgumentException ("Sub-message doesn't contain a map (bad field " + field + ")");
+        throw new IllegalArgumentException("Sub-message interpretted as a map but found invalid ordinal " + field + ")");
       }
+    }
+    if (keys.size() > 0) {
+      throw new IllegalArgumentException("Sub-message interpretted as a map but had more keys than values");
+    }
+    if (values.size() > 0) {
+      throw new IllegalArgumentException("Sub-message interpretted as a map but had more values than keys");
     }
     return map;
   }

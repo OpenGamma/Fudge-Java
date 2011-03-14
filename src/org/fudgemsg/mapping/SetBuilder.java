@@ -26,58 +26,53 @@ import org.fudgemsg.types.IndicatorFieldType;
 import org.fudgemsg.types.IndicatorType;
 
 /**
- * Builder for Set objects.
+ * Builder for {@code Set} objects.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-/* package */ class SetBuilder implements FudgeBuilder<Set<?>> {
-  
+/* package */final class SetBuilder implements FudgeBuilder<Set<?>> {
+  // a list is sent as a sub-message where each field is a set element
+  // each field has the ordinal 1
+  // nulls are sent using the indicator type
+
   /**
    * Singleton instance of the {@link SetBuilder}.
    */
-  /* package */ static final FudgeBuilder<Set<?>> INSTANCE = new SetBuilder (); 
-  
-  private SetBuilder () {
+  /* package */static final FudgeBuilder<Set<?>> INSTANCE = new SetBuilder();
+  /**
+   * The ordinal to use for the set.
+   */
+  private static final int ORDINAL = 1;
+
+  private SetBuilder() {
   }
 
-  /**
-   * Creates a Fudge message representation of a {@link Set}.
-   * 
-   * @param context the serialization context
-   * @param set the set to serialize
-   * @return the Fudge message
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, Set<?> set) {
-    final MutableFudgeFieldContainer msg = context.newMessage ();
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Set<?> set) {
+    final MutableFudgeFieldContainer msg = context.newMessage();
     for (Object entry : set) {
       if (entry == null) {
-        msg.add (null, 1, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
+        msg.add(null, 1, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
       } else {
-        context.objectToFudgeMsgWithClassHeaders(msg, null, 1, entry);
+        context.objectToFudgeMsgWithClassHeaders(msg, null, ORDINAL, entry);
       }
     }
     return msg;
   }
-  
-  /**
-   * Creates a {@link Set} from a Fudge message.
-   * 
-   * @param context the deserialization context
-   * @param message the Fudge message
-   * @return the {@code Set} 
-   */
+
   @Override
-  public Set<?> buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final Set<Object> set = new HashSet<Object> ();
+  public Set<?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    final Set<Object> set = new HashSet<Object>();
     for (FudgeField field : message) {
-      Object fieldValue = context.fieldValueToObject (field);
-      if (fieldValue instanceof IndicatorType) fieldValue = null;
-      if (field.getOrdinal () == 1) {
-        set.add (fieldValue);
-      } else {
-        throw new IllegalArgumentException ("Sub-message doesn't contain a set (bad field " + field + ")");
+      if ((field.getOrdinal() == null) && (field.getOrdinal() != ORDINAL)) {
+        throw new IllegalArgumentException("Sub-message interpretted as a set but found invalid ordinal " + field + ")");
       }
+      Object obj = context.fieldValueToObject(field);
+      obj = (obj instanceof IndicatorType) ? null : obj;
+      set.add(obj);
     }
     return set;
   }

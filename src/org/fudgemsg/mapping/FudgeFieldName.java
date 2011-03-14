@@ -22,17 +22,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.ElementType;
 
 /**
- * Annotation for mapping a field within a Bean to a specific name in corresponding Fudge messages.
+ * Annotation used to specify the Fudge field name from a POJO.
+ * <p>
+ * When an object is converted to a Fudge message using reflection, this annotation
+ * is used to provide a specific field name in corresponding Fudge messages.
  * 
  * @author Andrew Griffin
  */
-@Retention (RetentionPolicy.RUNTIME)
-@Target (ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface FudgeFieldName {
 
   /**
-   * Specifies the name of the field within a Fudge message if it needs to be different from the implied Bean property name.
+   * Specifies the name of the field within a Fudge message.
+   * This only needs to be specified if different from the implied Bean property name.
    */
-  String value ();
-  
+  String value();
+
 }

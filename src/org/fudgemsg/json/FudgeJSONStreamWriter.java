@@ -24,22 +24,21 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeRuntimeIOException;
-import org.fudgemsg.FudgeStreamWriter;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
 /**
- * A {@link FudgeStreamWriter} implementation for generating JSON representations of
- * Fudge messages. Please refer to <a href="http://wiki.fudgemsg.org/display/FDG/JSON+Fudge+Messages">JSON Fudge Messages</a> for details on
- * the representation.
+ * Writer that converts Fudge messages to JSON.
+ * <p>
+ * Please refer to <a href="http://wiki.fudgemsg.org/display/FDG/JSON+Fudge+Messages">JSON Fudge Messages</a>
+ * for details onO the representation.
  * 
  * @author Andrew Griffin
  */
 public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
-  
+
   private final JSONSettings _settings;
   private final Writer _underlyingWriter;
   private JSONWriter _writer;
@@ -52,86 +51,91 @@ public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
    * @param writer the target to write to
    */
   public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer) {
-    this (fudgeContext, writer, new JSONSettings ());
+    this(fudgeContext, writer, new JSONSettings());
   }
-  
+
   /**
    * Creates a new stream writer for writing Fudge messages in JSON format to a given
    * {@link Writer}.
    * 
-   * @param fudgeContext the associated {@link FudgeContext}
-   * @param writer the target to write to
+   * @param fudgeContext  the associated {@link FudgeContext}
+   * @param writer  the target to write to
+   * @param settings  the JSON settings
    */
   public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer, final JSONSettings settings) {
-    super (fudgeContext);
+    super(fudgeContext);
     _settings = settings;
     _underlyingWriter = writer;
   }
-  
+
   /**
-   * Returns the settings object 
+   * Returns the settings object .
+   * 
+   * @return the JSON settings.
    */
-  public JSONSettings getSettings () {
+  public JSONSettings getSettings() {
     return _settings;
   }
-  
+
   /**
    * Returns the JSON writer being used, allocating one if necessary.
    * 
    * @return the writer
    */
-  protected JSONWriter getWriter () {
-    if (_writer == null) _writer = new JSONWriter (getUnderlying ());
+  protected JSONWriter getWriter() {
+    if (_writer == null) {
+      _writer = new JSONWriter(getUnderlying());
+    }
     return _writer;
   }
-  
+
   /**
    * Discards the JSON writer. The implementation only allows a single use so we must drop
    * the instance after each message envelope completes.
    */
-  protected void clearWriter () {
+  protected void clearWriter() {
     _writer = null;
   }
-  
+
   /**
-   * Returns the underlying {@link Writer} that is wrapped by {@link JSONWriter} instances for
-   * messages.
+   * Returns the underlying {@link Writer} that is wrapped by {@link JSONWriter} instances for messages.
    * 
    * @return the writer
    */
-  protected Writer getUnderlying () {
+  protected Writer getUnderlying() {
     return _underlyingWriter;
   }
-  
+
   /**
-   * Wraps a JSON exception (which may in turn wrap {@link IOExceptions} into either a {@link FudgeRuntimeException} or {@link FudgeRuntimeIOException}.
+   * Wraps a JSON exception (which may in turn wrap {@link IOException} into
+   * either a {@link FudgeRuntimeException} or {@link FudgeRuntimeIOException}.
    * 
    * @param message message describing the current operation
    * @param e the originating exception
    */
-  protected void wrapException (String message, final JSONException e) {
+  protected void wrapException(String message, final JSONException e) {
     message = "Error writing " + message + " to JSON stream";
-    if (e.getCause () instanceof IOException) {
-      throw new FudgeRuntimeIOException (message, (IOException)e.getCause ());
+    if (e.getCause() instanceof IOException) {
+      throw new FudgeRuntimeIOException(message, (IOException) e.getCause());
     } else {
-      throw new FudgeRuntimeException (message, e);
+      throw new FudgeRuntimeException(message, e);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public void flush () {
-    if (getUnderlying () != null) {
+  public void flush() {
+    if (getUnderlying() != null) {
       try {
-        getUnderlying ().flush ();
+        getUnderlying().flush();
       } catch (IOException e) {
-        throw new FudgeRuntimeIOException (e);
+        throw new FudgeRuntimeIOException(e);
       }
     }
   }
-  
+
   /**
    * Begins a JSON object with the processing directives, schema and taxonomy.
    */

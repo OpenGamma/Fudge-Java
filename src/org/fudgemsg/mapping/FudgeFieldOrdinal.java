@@ -22,23 +22,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.ElementType;
 
 /**
- * Annotation for mapping a field within a Bean to a specific ordinal in corresponding Fudge messages.
+ * Annotation used to specify the Fudge field ordinal from a POJO.
+ * <p>
+ * When an object is converted to a Fudge message using reflection, this annotation
+ * is used to provide a specific field ordinal in corresponding Fudge messages.
  * 
  * @author Andrew Griffin
  */
-@Retention (RetentionPolicy.RUNTIME)
-@Target (ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface FudgeFieldOrdinal {
 
   /**
-   * Specifies the ordinal of the field within a Fudge message. By default, no ordinals will be written
-   * unless they have been derived from a taxonomy matching the field names.
+   * Specifies the ordinal of the field within a Fudge message.
+   * By default, ordinals are only written when derived from a taxonomy based on the field names.
    */
-  short value ();
-  
+  short value();
+
   /**
    * Indicates that the field name must be omitted from the message.
    */
-  boolean noFieldName () default false;
-  
+  boolean noFieldName() default false;
+
 }

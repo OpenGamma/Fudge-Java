@@ -23,13 +23,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation which at runtime specifies that a particular class is a
+ * Annotation used to specify that this is a Fudge builder.
+ * <p>
+ * This annotation is used at runtime to specify that a particular class is a
  * {@link FudgeMessageBuilder} or {@link FudgeObjectBuilder} for a particular
- * data type.
- * While {@link HasFudgeBuilder} allows the data object to specify what its builder(s) are,
- * in a case where a builder has been written external to a source data type, this annotation
- * allows {@link FudgeObjectDictionary#addAllAnnotatedBuilders()} to determine the
- * builder and automatically configure.
+ * data type. This is similar to {@link HasFudgeBuilder}, but allows the data
+ * object to specify what its builder(s) are, in a case where a builder has been
+ * written external to a source data type.
+ * <p>
+ * The Fudge system can, if desired, locate this annotation and automatically
+ * configure using {@link FudgeObjectDictionary#addAllAnnotatedBuilders()}.
  *
  * @author Kirk Wylie
  */
@@ -39,8 +42,8 @@ import java.lang.annotation.Target;
 public @interface FudgeBuilderFor {
 
   /**
-   * The value for which this is a {@link FudgeObjectBuilder} or
-   * {@link FudgeMessageBuilder}.
+   * The class for which the annotated type is a builder.
    */
   Class<?> value();
+
 }

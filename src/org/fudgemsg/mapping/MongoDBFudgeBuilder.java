@@ -30,42 +30,30 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
- * {@link FudgeBuilder} instance for encoding and decoding MongoDB objects.
+ * Builder for encoding and decoding MongoDB objects.
  * 
  * @author Andrew Griffin
  */
 /* package */ class MongoDBFudgeBuilder implements FudgeBuilder<DBObject> {
   
   /**
-   * 
+   * Singleton instance of the builder.
    */
   public static final FudgeBuilder<DBObject> INSTANCE = new MongoDBFudgeBuilder ();
-  
-  private MongoDBFudgeBuilder () {
-  }
-  
-  private Object decodeObjectValue(FudgeSerializationContext context, Object value) {
-    if(value instanceof DBObject) {
-      DBObject dbObject = (DBObject) value;
-      return buildMessage (context, dbObject);
-    }
-    return value;
+
+  private MongoDBFudgeBuilder() {
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public MutableFudgeFieldContainer buildMessage(
-      FudgeSerializationContext context, DBObject dbObject) {
-    if(dbObject == null) {
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, DBObject dbObject) {
+    if (dbObject == null) {
       return null;
     }
-    MutableFudgeFieldContainer msg = context.newMessage ();
-    for(String key : dbObject.keySet()) {
+    MutableFudgeFieldContainer msg = context.newMessage();
+    for (String key : dbObject.keySet()) {
       Object value = dbObject.get(key);
-      if(value instanceof List<?>) {
-        for(Object element : (List<?>) value) {
+      if (value instanceof List<?>) {
+        for (Object element : (List<?>) value) {
           msg.add(key, decodeObjectValue(context, element));
         }
       } else {
@@ -74,12 +62,21 @@ import com.mongodb.DBObject;
     }
     return msg;
   }
-  
-  @SuppressWarnings("unchecked")
+
+  private Object decodeObjectValue(FudgeSerializationContext context, Object value) {
+    if (value instanceof DBObject) {
+      DBObject dbObject = (DBObject) value;
+      return buildMessage(context, dbObject);
+    }
+    return value;
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private Object encodePrimitiveFieldValue(final FudgeDeserializationContext context, Object fieldValue) {
     FudgeFieldType<?> valueType = context.getFudgeContext().getTypeDictionary().getByJavaType(fieldValue.getClass());
     if (valueType == null) {
-      throw new IllegalArgumentException("Cannot handle serialization of object " + fieldValue + " of type " + fieldValue.getClass() + " as no Fudge type available in context");
+      throw new IllegalArgumentException("Cannot handle serialization of object " + fieldValue + " of type "
+          + fieldValue.getClass() + " as no Fudge type available in context");
     }
     
     switch (valueType.getTypeId()) {
@@ -128,12 +125,12 @@ import com.mongodb.DBObject;
 
   private Object encodeFieldValue(final FudgeDeserializationContext context, final Object currentValue, Object fieldValue) {
     boolean structureExpected = false;
-    if(fieldValue instanceof FudgeFieldContainer) {
+    if (fieldValue instanceof FudgeFieldContainer) {
       fieldValue = buildObject(context, (FudgeFieldContainer) fieldValue);
       structureExpected = true;
     }
-    if(currentValue instanceof List<?>) {
-      List<Object> l = new ArrayList<Object>((List<?>)(currentValue));
+    if (currentValue instanceof List<?>) {
+      List<Object> l = new ArrayList<Object>((List<?>) (currentValue));
       l.add(fieldValue);
       return l;
     } else if (currentValue != null) {
@@ -145,27 +142,22 @@ import com.mongodb.DBObject;
       l.add(fieldValue);
       return l;
     }
-    
+
     if (structureExpected) {
       return fieldValue;
     }
-    
+
     return encodePrimitiveFieldValue(context, fieldValue);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public DBObject buildObject(FudgeDeserializationContext context,
-      FudgeFieldContainer fields) {
-    if(fields == null) {
+  public DBObject buildObject(FudgeDeserializationContext context, FudgeFieldContainer fields) {
+    if (fields == null) {
       return null;
     }
     BasicDBObject dbObject = new BasicDBObject();
-    
-    for(FudgeField field : fields.getAllFields()) {
-      if(field.getName() == null) {
+    for (FudgeField field : fields.getAllFields()) {
+      if (field.getName() == null) {
         if (field.getOrdinal() == 0) {
           continue;
         }
@@ -177,8 +169,8 @@ import com.mongodb.DBObject;
       value = encodeFieldValue(context, dbObject.get(field.getName()), value);
       dbObject.put(field.getName(), value);
     }
-    
+
     return dbObject;
   }
-  
+
 }

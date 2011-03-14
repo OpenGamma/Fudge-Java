@@ -17,57 +17,59 @@
 package org.fudgemsg.mapping;
 
 /**
- * Implementation of a {@link FudgeBuilderFactory} that can delegate to another
- * instance for unrecognized classes. This pattern is to allow factories to be
- * chained together.
+ * Adapter implementation of a Fudge message factory.
+ * <p>
+ * This class delegates all factory method calls to an underlying factory.
+ * This simplifies the creation of implementations, allowing factories to
+ * be chained together.
+ * <p>
+ * This class has no mutable state and is thread-safe.
+ * Subclasses should also be thread-safe.
  * 
  * @author Andrew Griffin
  */
 public class FudgeBuilderFactoryAdapter implements FudgeBuilderFactory {
 
-  private final FudgeBuilderFactory _delegate;
-  
   /**
-   * Creates a new {@link FudgeBuilderFactoryAdapter}.
-   * 
-   * @param delegate instance to pass non-overridden method calls to
+   * The underlying delegate.
    */
-  protected FudgeBuilderFactoryAdapter (final FudgeBuilderFactory delegate) {
-    if (delegate == null) throw new NullPointerException ("delegate cannot be null");
+  private final FudgeBuilderFactory _delegate;
+
+  /**
+   * Creates a new factory adapter.
+   * 
+   * @param delegate  the underlying factory, not null
+   */
+  protected FudgeBuilderFactoryAdapter(final FudgeBuilderFactory delegate) {
+    if (delegate == null) {
+      throw new NullPointerException("delegate cannot be null");
+    }
     _delegate = delegate;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Returns the delegate instance to pass method calls to.
    * 
-   * @return the {@link FudgeBuilderFactory} delegate
+   * @return the underlying factory, not null
    */
-  protected FudgeBuilderFactory getDelegate () {
+  protected FudgeBuilderFactory getDelegate() {
     return _delegate;
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public <T> void addGenericBuilder(Class<T> clazz, FudgeBuilder<T> builder) {
-    getDelegate ().addGenericBuilder (clazz, builder);
+    getDelegate().addGenericBuilder(clazz, builder);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public <T> FudgeMessageBuilder<T> createMessageBuilder(Class<T> clazz) {
-    return getDelegate ().createMessageBuilder (clazz);
+    return getDelegate().createMessageBuilder(clazz);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public <T> FudgeObjectBuilder<T> createObjectBuilder(Class<T> clazz) {
-    return getDelegate ().createObjectBuilder (clazz);
+    return getDelegate().createObjectBuilder(clazz);
   }
-  
+
 }

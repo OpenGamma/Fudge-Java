@@ -35,58 +35,63 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * @param <T> class that can be serialized using this builder
  * @author Andrew Griffin
  */
-/* package */ class ReflectionMessageBuilder<T> extends ReflectionBuilderBase<T> implements FudgeMessageBuilder<T> {
-  
+/* package */class ReflectionMessageBuilder<T> extends ReflectionBuilderBase<T> implements FudgeMessageBuilder<T> {
+
   /**
    * Creates a new {@link ReflectionMessageBuilder} for building messages from arbitrary Java objects. Always
    * succeeds, although the builder may only be capable of generating empty messages.
    * 
    * @param <T> class to generate messages for
-   * @param clazz class to generate messages for
-   * @return the {@code ReflectionMessageBuilder}
+   * @param clazz  the class to generate messages for
+   * @return the builder, not null
    */
-  /* package */ static <T> ReflectionMessageBuilder<T> create (final Class<T> clazz) {
+  /* package */static <T> ReflectionMessageBuilder<T> create(final Class<T> clazz) {
     FudgeMessageBuilder<? super T> builder = null;
     Class<? super T> superclazz = clazz;
-    while ((superclazz = superclazz.getSuperclass ()) != null) {
-      builder = ToFudgeMsgMessageBuilder.create (superclazz);
-      if (builder != null) break;
+    while ((superclazz = superclazz.getSuperclass()) != null) {
+      builder = ToFudgeMsgMessageBuilder.create(superclazz);
+      if (builder != null) {
+        break;
+      }
     }
-    return new ReflectionMessageBuilder<T> (clazz, superclazz, builder);
+    return new ReflectionMessageBuilder<T>(clazz, superclazz, builder);
   }
-  
+
+  //-------------------------------------------------------------------------
+  /**
+   * The base builder.
+   */
   private final FudgeMessageBuilder<? super T> _baseBuilder;
-  
-  private ReflectionMessageBuilder (final Class<T> clazz, final Class<? super T> upstream, final FudgeMessageBuilder<? super T> baseBuilder) {
-    super (clazz, "get", 0, upstream);
+
+  private ReflectionMessageBuilder(final Class<T> clazz, final Class<? super T> upstream,
+      final FudgeMessageBuilder<? super T> baseBuilder) {
+    super(clazz, "get", 0, upstream);
     _baseBuilder = baseBuilder;
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage (final FudgeSerializationContext context, final T object) {
+  public MutableFudgeFieldContainer buildMessage(final FudgeSerializationContext context, final T object) {
     //System.out.println ("ReflectionMessageBuilder::buildMessage (" + context + ", " + object + ")");
     final MutableFudgeFieldContainer message;
     if (_baseBuilder != null) {
-      message = _baseBuilder.buildMessage (context, object);
+      message = _baseBuilder.buildMessage(context, object);
     } else {
-      message = context.newMessage ();
+      message = context.newMessage();
     }
     try {
-      for (Map.Entry<String, Method> accessor : getMethods ().entrySet ()) {
+      for (Map.Entry<String, Method> accessor : getMethods().entrySet()) {
         //System.out.println ("\t" + accessor.getValue ());
-        context.objectToFudgeMsg (message, accessor.getKey (), null, accessor.getValue ().invoke (object));
+        context.objectToFudgeMsg(message, accessor.getKey(), null, accessor.getValue().invoke(object));
       }
-    } catch (IllegalArgumentException e) {
-      throw new FudgeRuntimeException ("Couldn't serialise " + object, e);
-    } catch (IllegalAccessException e) {
-      throw new FudgeRuntimeException ("Couldn't serialise " + object, e);
-    } catch (InvocationTargetException e) {
-      throw new FudgeRuntimeException ("Couldn't serialise " + object, e);
+    } catch (IllegalArgumentException ex) {
+      throw new FudgeRuntimeException("Unable to serialise " + object, ex);
+    } catch (IllegalAccessException ex) {
+      throw new FudgeRuntimeException("Unable to serialise " + object, ex);
+    } catch (InvocationTargetException ex) {
+      throw new FudgeRuntimeException("Unable to serialise " + object, ex);
     }
     return message;
   }
-  
+
 }

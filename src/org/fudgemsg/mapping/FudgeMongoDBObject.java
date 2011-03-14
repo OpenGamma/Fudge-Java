@@ -44,15 +44,25 @@ import com.mongodb.DBObject;
  * @author Kirk Wylie
  */
 public class FudgeMongoDBObject implements DBObject {
+
+  /**
+   * The underlying message.
+   */
   private final FudgeMsg _underlying;
+  /**
+   * The cache.
+   */
   private final Map<String, Object> _fastSingleValueCache = new HashMap<String, Object>();
   // This is used A LOT internally in MongoDB. Cache it specifically and avoid all the conversions.
+  /**
+   * The object ID.
+   */
   private ObjectId _objectId;
-  
+
   /**
    * The primary constructor.
    * 
-   * @param underlying underlying FudgeFieldContainer to be wrapped
+   * @param underlying  the underlying FudgeFieldContainer to be wrapped
    */
   public FudgeMongoDBObject(MutableFudgeFieldContainer underlying) {
     if (underlying == null) {
@@ -66,7 +76,7 @@ public class FudgeMongoDBObject implements DBObject {
   }
 
   /**
-   * 
+   * Builds a cache.
    */
   private void buildFastSingleValueCache() {
     Set<String> fieldNamesToIgnore = new HashSet<String>();
@@ -90,15 +100,15 @@ public class FudgeMongoDBObject implements DBObject {
   }
 
   /**
-   * @return the underlying
+   * Gets the underlying message.
+   * 
+   * @return the underlying message
    */
   public FudgeMsg getUnderlying() {
     return _underlying;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
   public boolean containsField(String s) {
     if (_fastSingleValueCache.containsKey(s)) {
@@ -107,17 +117,11 @@ public class FudgeMongoDBObject implements DBObject {
     return getUnderlying().hasField(s);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean containsKey(String s) {
     return containsField(s);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Object get(String key) {
     if ("_id".equals(key)) {
@@ -152,34 +156,22 @@ public class FudgeMongoDBObject implements DBObject {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean isPartialObject() {
     return false;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Set<String> keySet() {
     return getUnderlying().getAllFieldNames();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void markAsPartialObject() {
     // NOTE kirk 2010-06-14 -- Intentional no-op.
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   @Override
   public Object put(String key, Object v) {
     if (v instanceof List) {
@@ -197,36 +189,24 @@ public class FudgeMongoDBObject implements DBObject {
     }
     return null;
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
   public void putAll(BSONObject o) {
     throw new UnsupportedOperationException("Put All not yet supported");
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   @Override
   public void putAll(Map m) {
     throw new UnsupportedOperationException("Put not yet supported");
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Object removeField(String key) {
     throw new UnsupportedOperationException("Remove not yet supported");
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   @Override
   public Map toMap() {
     Map result = new HashMap();

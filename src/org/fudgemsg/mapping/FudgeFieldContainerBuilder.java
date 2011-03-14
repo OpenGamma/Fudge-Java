@@ -23,45 +23,43 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
- * Builder wrapper for objects that are already Fudge messages. The FudgeFieldContainer class name is added
- * so that the serialization framework will decode the messages as messages and not as serialized objects.
+ * Builder wrapper for objects that are already Fudge messages.
+ * <p>
+ * The FudgeFieldContainer class name is added so that the serialization framework will
+ * decode the messages as messages and not as serialized objects.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-/* package */ class FudgeFieldContainerBuilder implements FudgeBuilder<FudgeFieldContainer> {
-  
-  /**
-   * 
-   */
-  /* package */ static final FudgeBuilder<FudgeFieldContainer> INSTANCE = new FudgeFieldContainerBuilder (); 
-  
-  private FudgeFieldContainerBuilder () {
-  }
+/* package */class FudgeFieldContainerBuilder implements FudgeBuilder<FudgeFieldContainer> {
 
   /**
-   *
+   * Singleton instance.
    */
+  /* package */static final FudgeBuilder<FudgeFieldContainer> INSTANCE = new FudgeFieldContainerBuilder();
+
+  private FudgeFieldContainerBuilder() {
+  }
+
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, FudgeFieldContainer fields) {
-    final MutableFudgeFieldContainer msg = context.newMessage (fields);
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, FudgeFieldContainer fields) {
+    final MutableFudgeFieldContainer msg = context.newMessage(fields);
     // add the interface name
-    msg.add (null, 0, FudgeFieldContainer.class.getName ());
+    msg.add(null, FudgeSerializationContext.TYPES_HEADER_ORDINAL, FudgeFieldContainer.class.getName());
     return msg;
   }
-  
-  /**
-   *
-   */
+
   @Override
-  public FudgeFieldContainer buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final MutableFudgeFieldContainer msg = context.getFudgeContext ().newMessage (message);
+  public FudgeFieldContainer buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    final MutableFudgeFieldContainer msg = context.getFudgeContext().newMessage(message);
     // remove the class name(s) if added
-    final Short ordinal = 0;
-    final Iterator<FudgeField> fields = msg.iterator ();
-    while (fields.hasNext ()) {
-      final FudgeField field = fields.next ();
+    final Short ordinal = FudgeSerializationContext.TYPES_HEADER_ORDINAL;
+    final Iterator<FudgeField> fields = msg.iterator();
+    while (fields.hasNext()) {
+      final FudgeField field = fields.next();
       if (ordinal.equals(field.getOrdinal()) && (field.getName() == null)) {
-        fields.remove ();
+        fields.remove();
         break;
       }
     }

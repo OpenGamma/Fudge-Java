@@ -23,65 +23,77 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeRuntimeException;
 
 /**
- * Implementation of FudgeObjectBuilder for a class which supports a fromFudgeMsg
- * function of the form:
- * 
- *    static <T> fromFudgeMsg (FudgeFieldContainer) or
- *    static <T> fromFudgeMsg (FudgeDeserialisationContext, FudgeFieldContainer)
+ * Builder for any object that contains a {@code fromFudgeMsg} method.
+ * <p>
+ * To be detected, a class must contain one of the following method signatures,
+ * which are searched in the order shown:
+ * <pre>
+ *    static <T> fromFudgeMsg(FudgeFieldContainer) or
+ *    static <T> fromFudgeMsg(FudgeDeserialisationContext, FudgeFieldContainer)
+ * </pre>
+ * This is normally paired with a {@link ToFudgeMsgMessageBuilder}.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
  * @param <T> class supporting a {@code fromFudgeMsg} method which can be deserialised by this builder
  * @author Andrew Griffin
  */
-/* package */ class FromFudgeMsgObjectBuilder<T> implements FudgeObjectBuilder<T> {
-  
+/* package */class FromFudgeMsgObjectBuilder<T> implements FudgeObjectBuilder<T> {
+
   /**
-   * Creates a new {@link FromFudgeMsgObjectBuilder} if possible.
+   * Checks a class for a  {@code fromFudgeMsg} method, creating the builder if possible.
    * 
    * @param <T> target class to build from the message 
-   * @param clazz target class to build from the message
-   * @return the {@link FromFudgeMsgObjectBuilder} or {@code null} if none is available
+   * @param clazz  the class to search for a {@code fromFudgeMsg} method, not null
+   * @return the builder, null if no matching method
    */
-  /* package */ static <T> FromFudgeMsgObjectBuilder<T> create (final Class<T> clazz) {
+  /* package */static <T> FromFudgeMsgObjectBuilder<T> create(final Class<T> clazz) {
     try {
-      return new FromFudgeMsgObjectBuilder<T> (clazz.getMethod ("fromFudgeMsg", FudgeDeserializationContext.class, FudgeFieldContainer.class), true);
-    } catch (SecurityException e) {
+      return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeDeserializationContext.class,
+          FudgeFieldContainer.class), true);
+    } catch (SecurityException ex) {
       // ignore
-    } catch (NoSuchMethodException e) {
+    } catch (NoSuchMethodException ex) {
       // ignore
     }
     try {
-      return new FromFudgeMsgObjectBuilder<T> (clazz.getMethod ("fromFudgeMsg", FudgeFieldContainer.class), false);
-    } catch (SecurityException e) {
+      return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeFieldContainer.class), false);
+    } catch (SecurityException ex) {
       // ignore
-    } catch (NoSuchMethodException e) {
+    } catch (NoSuchMethodException ex) {
       // ignore
     }
     return null;
   }
 
+  //-------------------------------------------------------------------------
+  /**
+   * The method to use.
+   */
   private final Method _fromFudgeMsg;
+  /**
+   * Whether to pass the context.
+   */
   private final boolean _passContext;
-  
-  private FromFudgeMsgObjectBuilder (final Method fromFudgeMsg, final boolean passContext) {
+
+  private FromFudgeMsgObjectBuilder(final Method fromFudgeMsg, final boolean passContext) {
     _fromFudgeMsg = fromFudgeMsg;
     _passContext = passContext;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @SuppressWarnings("unchecked")
   @Override
   public T buildObject(final FudgeDeserializationContext context, final FudgeFieldContainer message) {
     try {
-      return (T)(_passContext ? _fromFudgeMsg.invoke (null, context, message) : _fromFudgeMsg.invoke (null, message));
-    } catch (IllegalArgumentException e) {
-      throw new FudgeRuntimeException ("Couldn't call fromFudgeMsg", e);
-    } catch (IllegalAccessException e) {
-      throw new FudgeRuntimeException ("Couldn't call fromFudgeMsg", e);
-    } catch (InvocationTargetException e) {
-      throw new FudgeRuntimeException ("Couldn't call fromFudgeMsg", e);
+      return (T) (_passContext ? _fromFudgeMsg.invoke(null, context, message) : _fromFudgeMsg.invoke(null, message));
+    } catch (IllegalArgumentException ex) {
+      throw new FudgeRuntimeException("Unable to call fromFudgeMsg", ex);
+    } catch (IllegalAccessException ex) {
+      throw new FudgeRuntimeException("Unable to call fromFudgeMsg", ex);
+    } catch (InvocationTargetException ex) {
+      throw new FudgeRuntimeException("Unable to call fromFudgeMsg", ex);
     }
   }
-  
+
 }

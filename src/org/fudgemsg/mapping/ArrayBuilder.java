@@ -23,42 +23,41 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
- * Builder for Array objects (lists).
+ * Builder for Java arrays, stored as a sub-message.
+ * <p>
+ * This builder is immutable and thread safe.
  *
- * @param <E> element type of the array
+ * @param <E> the element type of the array
  * @author Andrew Griffin
  */
-/* package */ class ArrayBuilder<E> implements FudgeBuilder<E[]> {
-  
+/* package */final class ArrayBuilder<E> implements FudgeBuilder<E[]> {
+
+  /**
+   * The array element class.
+   */
   private final Class<E> _clazz;
-  
+
   /**
    * @param clazz type of the array element
    */
-  /* package */ ArrayBuilder (Class<E> clazz) {
+  /* package */ArrayBuilder(Class<E> clazz) {
     _clazz = clazz;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, Object[] array) {
-    final MutableFudgeFieldContainer msg = context.newMessage ();
+  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Object[] array) {
+    final MutableFudgeFieldContainer msg = context.newMessage();
     for (Object entry : array) {
-      context.objectToFudgeMsg (msg, null, null, entry);
+      context.objectToFudgeMsg(msg, null, null, entry);
     }
     return msg;
   }
-  
-  /**
-   * {docInherit}
-   */
+
   @SuppressWarnings("unchecked")
   @Override
-  public E[] buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final List<?> list = ListBuilder.INSTANCE.buildObject (context, message);
-    return list.toArray ((E[])Array.newInstance (_clazz, list.size ()));
+  public E[] buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    final List<?> list = ListBuilder.INSTANCE.buildObject(context, message);
+    return list.toArray((E[]) Array.newInstance(_clazz, list.size()));
   }
 
 }

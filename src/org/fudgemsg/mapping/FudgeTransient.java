@@ -22,14 +22,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Compatibility annotation for users don't have the Java Persistence Framework available. This will
- * be deprecated in a future release when the JPF is more commonly available in Java implementations
- * other than EE.
+ * Annotation used to specify that a property should not be serialized.
+ * <p>
+ * This is a compatibility annotation for users do not have the equivalent Java
+ * Persistence Framework available. This will be deprecated in a future release
+ * when the JPF is more commonly available in Java implementations other than EE.
  * 
  * @author Andrew Griffin
  */
-@Retention (RetentionPolicy.RUNTIME)
-@Target (ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface FudgeTransient {
-  
+
 }

@@ -23,20 +23,29 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeRuntimeException;
 
 /**
- * Implementation of FudgeObjectBuilder for a class with a public constructor that
- * accepts a {@link FudgeFieldContainer} or a {@link FudgeDeserializationContext} and {@link FudgeFieldContainer}.
+ * Builder for any object that contains a suitable Fudge-based constructor.
+ * <p>
+ * To be detected, a class must contain one of the following method signatures,
+ * which are searched in the order shown:
+ * <pre>
+ *    constructor(FudgeFieldContainer) or
+ *    constructor(FudgeDeserialisationContext, FudgeFieldContainer)
+ * </pre>
+ * This is normally paired with a {@link ToFudgeMsgMessageBuilder}.
+ * <p>
+ * This builder is immutable and thread safe.
  * 
- * @param <T> class supporting a {@code FudgeFieldContainer} constructor that can be deserialized by this builder
+ * @param <T> class supporting a Fudge-based constructor which can be deserialised by this builder
  * @author Andrew Griffin
  */
-/* package */ class FudgeMsgConstructorObjectBuilder<T> implements FudgeObjectBuilder<T> {
+/* package */ final class FudgeMsgConstructorObjectBuilder<T> implements FudgeObjectBuilder<T> {
 
   /**
    * Creates a new {@link FudgeMsgConstructorObjectBuilder} for the class if possible.
    * 
    * @param <T> class the builder should create objects of
-   * @param clazz class the builder should create objects of
-   * @return the {@code FudgeMsgConstructorObjectBuilder} or {@code null} if none is available
+   * @param clazz  the class to search for constructors, not null
+   * @return the builder, null if no matching method
    */
   /* package */ static <T> FudgeMsgConstructorObjectBuilder<T> create (final Class<T> clazz) {
     try {
@@ -56,30 +65,35 @@ import org.fudgemsg.FudgeRuntimeException;
     return null;
   }
 
+  //-------------------------------------------------------------------------
+  /**
+   * The constructor to use.
+   */
   private final Constructor<T> _constructor;
+  /**
+   * Whether to pass the context.
+   */
   private final boolean _passContext;
-  
-  private FudgeMsgConstructorObjectBuilder (final Constructor<T> constructor, final boolean passContext) {
+
+  private FudgeMsgConstructorObjectBuilder(final Constructor<T> constructor, final boolean passContext) {
     _constructor = constructor;
     _passContext = passContext;
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  //-------------------------------------------------------------------------
   @Override
-  public T buildObject (final FudgeDeserializationContext context, final FudgeFieldContainer message) {
+  public T buildObject(final FudgeDeserializationContext context, final FudgeFieldContainer message) {
     try {
-      return _passContext ? _constructor.newInstance (context, message) : _constructor.newInstance (message);
-    } catch (IllegalArgumentException e) {
-      throw new FudgeRuntimeException ("Couldn't create " + _constructor.getDeclaringClass () + " object", e);
-    } catch (InstantiationException e) {
-      throw new FudgeRuntimeException ("Couldn't create " + _constructor.getDeclaringClass () + " object", e);
-    } catch (IllegalAccessException e) {
-      throw new FudgeRuntimeException ("Couldn't create " + _constructor.getDeclaringClass () + " object", e);
-    } catch (InvocationTargetException e) {
-      throw new FudgeRuntimeException ("Couldn't create " + _constructor.getDeclaringClass () + " object", e);
+      return _passContext ? _constructor.newInstance(context, message) : _constructor.newInstance(message);
+    } catch (IllegalArgumentException ex) {
+      throw new FudgeRuntimeException("Unable to create " + _constructor.getDeclaringClass() + " object", ex);
+    } catch (InstantiationException ex) {
+      throw new FudgeRuntimeException("Unable to create " + _constructor.getDeclaringClass() + " object", ex);
+    } catch (IllegalAccessException ex) {
+      throw new FudgeRuntimeException("Unable to create " + _constructor.getDeclaringClass() + " object", ex);
+    } catch (InvocationTargetException ex) {
+      throw new FudgeRuntimeException("Unable to create " + _constructor.getDeclaringClass() + " object", ex);
     }
   }
-  
+
 }

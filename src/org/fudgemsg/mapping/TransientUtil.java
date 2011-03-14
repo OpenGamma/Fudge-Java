@@ -20,45 +20,56 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 /**
- * Utility class for checking for a transient annotation on a Bean property. The Transient annotation from the
- * Java Persistence Framework should be used where available. Otherwise, there is a Transient annotation defined
- * within the org.fudgemsg.mapping package.
+ * Utility class for checking for a transient annotation on a Bean property.
+ * <p>
+ * The Transient annotation from the Java Persistence Framework should be used where available.
+ * Otherwise, there is a Transient annotation defined within the org.fudgemsg.mapping package.
  * 
  * @author Andrew Griffin
  */
 @SuppressWarnings("unchecked")
-/* package */ class TransientUtil {
-  
+/* package */class TransientUtil {
+
+  /**
+   * The class for the Fudge transient annotation.
+   */
   private static final Class<? extends Annotation> s_fudgeTransient = FudgeTransient.class;
+  /**
+   * The class for the Java EE transient annotation.
+   */
   private static final Class<? extends Annotation> s_javaxTransient;
-  
-  private TransientUtil () {
-  }
-  
   static {
     Class<? extends Annotation> javaxTransient = null;
     try {
-      javaxTransient = (Class<? extends Annotation>)Class.forName ("javax.persistence.Transient");
+      javaxTransient = (Class<? extends Annotation>) Class.forName("javax.persistence.Transient");
     } catch (ClassNotFoundException e) {
       // ignore
     }
     s_javaxTransient = javaxTransient;
   }
-  
+
+  private TransientUtil() {
+  }
+
+  //-------------------------------------------------------------------------
   /**
    * Detects whether the {@code javax.persistence.Transient} or {@link FudgeTransient} annotation has been used on an element
    * 
    * @param element element to check
    * @return {@code true} if the annotation is present, {@code false} otherwise
    */
-  public static boolean hasTransientAnnotation (final AnnotatedElement element) {
+  public static boolean hasTransientAnnotation(final AnnotatedElement element) {
     if (s_javaxTransient != null) {
-      if (element.getAnnotation (s_javaxTransient) != null) return true;
+      if (element.getAnnotation(s_javaxTransient) != null) {
+        return true;
+      }
     }
     if (s_fudgeTransient != null) {
-      if (element.getAnnotation (s_fudgeTransient) != null) return true;
+      if (element.getAnnotation(s_fudgeTransient) != null) {
+        return true;
+      }
     }
     return false;
   }
-  
+
 }

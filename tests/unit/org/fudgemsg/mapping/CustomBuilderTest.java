@@ -291,7 +291,7 @@ public class CustomBuilderTest {
       fail ("exception should have been raised");
     } catch (FudgeRuntimeException fre) {
       fre.printStackTrace ();
-      final String expectedMessage = "Don't know how to create interface " + FooInterface.class.getName ();
+      final String expectedMessage = "Unable to create interface " + FooInterface.class.getName ();
       assertEquals (expectedMessage, fre.getCause ().getCause ().getCause ().getMessage ().substring (0, expectedMessage.length ()));
     }
     // a custom builder for our implementation should fix it

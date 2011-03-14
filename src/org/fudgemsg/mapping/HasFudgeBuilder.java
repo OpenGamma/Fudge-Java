@@ -24,12 +24,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation that can be placed on any Java object to indicate that there is an
- * instance of {@link FudgeMessageBuilder} or {@link FudgeObjectBuilder} (or a full
- * {@link FudgeBuilder}) for that type.
- * This will then be picked up at runtime and automatically configured for that type.
- * <p/>
- * All parameters are optional, and only have default values of {@link Object} for convenience.
+ * Annotation used to specify that this class has an associated Fudge builder.
+ * <p>
+ * This annotation, or {@link FudgeBuilderFor}, can be used to connect a class with
+ * the associated builder. This is used on the class itself and refers to the builders.
+ * All parameters are optional, having default values of {@code Object} due to
+ * limitations of enums.
+ * <p>
+ * The Fudge system can, if desired, locate this annotation and automatically
+ * configure using {@link FudgeObjectDictionary#addAllAnnotatedBuilders()}.
  *
  * @author Kirk Wylie
  */
@@ -40,17 +43,25 @@ import java.lang.annotation.Target;
 public @interface HasFudgeBuilder {
 
   /**
-   * A class that implements both {@link FudgeMessageBuilder} and {@link FudgeObjectBuilder}
+   * Defines the builder to be used for this class.
+   * The class should implement both {@link FudgeMessageBuilder} and {@link FudgeObjectBuilder}
    * for the annotated type.
-   * Convenience method (much like the convenience type {@link FudgeBuilder}). 
+   * If specified, the other two enum values should be omitted.
    */
   Class<?> builder() default Object.class;
+
   /**
-   * A class that implements {@link FudgeObjectBuilder} for the annotated type.
+  * Defines the builder to be used for this class.
+   * The class should implement {@link FudgeObjectBuilder} for the annotated type.
+   * If specified, the other enum {@code builder} value should be omitted.
    */
   Class<?> objectBuilder() default Object.class;
+
   /**
-   * A class that implements {@link FudgeMessageBuilder} for the annotated type.
+  * Defines the builder to be used for this class.
+   * The class should implement {@link FudgeMessageBuilder} for the annotated type.
+   * If specified, the other enum {@code builder} value should be omitted.
    */
   Class<?> messageBuilder() default Object.class;
+
 }

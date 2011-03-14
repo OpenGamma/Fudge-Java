@@ -17,30 +17,33 @@
 package org.fudgemsg.mapping;
 
 /**
- * Immutable {@link FudgeBuilderFactory} implementation.
+ * A decorator creating a factory that is immutable.
+ * <p>
+ * This class is not mutable and thread safe.
  * 
  * @author Andrew Griffin
  */
-/* package */ class ImmutableFudgeBuilderFactory extends FudgeBuilderFactoryAdapter {
-  
+/* package */final class ImmutableFudgeBuilderFactory extends FudgeBuilderFactoryAdapter {
+
   /**
-   * {@docInherit}
+   * Creates a new factory wrapping another instance.
    * 
-   * @param delegate instance to pass non-overridden method calls to 
+   * @param underlying  the instance to pass non-overridden method calls to, not null
    */
-  /* package */ ImmutableFudgeBuilderFactory(FudgeBuilderFactory delegate) {
-    super(delegate);
+  /* package */ImmutableFudgeBuilderFactory(FudgeBuilderFactory underlying) {
+    super(underlying);
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Always throws an exception - this is an immutable factory
    * 
-   * @param clazz the generic type (probably an interface) the builder is for
-   * @param builder the builder to register
    * @param <T> the generic type (probably an interface) the builder is for
+   * @param clazz  the generic type (probably an interface) the builder is for
+   * @param builder  the builder to register
    */
-  public <T> void addGenericBuilder (Class<T> clazz, FudgeBuilder<T> builder) {
-    throw new UnsupportedOperationException ("addGenericBuilder called on immutable instance");
+  public <T> void addGenericBuilder(Class<T> clazz, FudgeBuilder<T> builder) {
+    throw new UnsupportedOperationException("addGenericBuilder called on immutable instance");
   }
-  
+
 }

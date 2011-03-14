@@ -20,15 +20,21 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
- * Builder for primitive Java objects. Typically this is required if a primitive was written out
- * through serialization (i.e. has a class name) but is being deserialized to an Object target.
+ * Builder for primitive Java objects.
+ * <p>
+ * This is required if a primitive was written out through serialization, such as with
+ * a class name but is being deserialized to an Object target.
  * 
  * @author Andrew Griffin
  */
 /* package */class PrimitiveBuilder {
 
+  /**
+   * The value field name.
+   */
   private static final String VALUE_KEY = "value";
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Boolean
    */
@@ -42,13 +48,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildBoolean() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Boolean object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -56,20 +55,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Boolean buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Integer.class, VALUE_KEY) != 0;
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Byte
    */
@@ -83,13 +75,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildByte() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Byte object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -97,20 +82,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Byte buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Byte.class, VALUE_KEY);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Double
    */
@@ -124,13 +102,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildDouble() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Double object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -139,20 +110,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Double buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Double.class, VALUE_KEY);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Character. A character isn't available as a Fudge primitive, so is written as
    * a string of length 1.
@@ -167,13 +131,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildCharacter() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Character object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -181,20 +138,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Character buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(String.class, VALUE_KEY).charAt(0);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Float
    */
@@ -208,13 +158,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildFloat() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Float object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -223,20 +166,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Float buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Float.class, VALUE_KEY);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Integer
    */
@@ -250,13 +186,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildInteger() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Integer object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -264,20 +193,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Integer buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Integer.class, VALUE_KEY);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Long
    */
@@ -291,13 +213,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildLong() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Long object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -305,20 +220,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Long buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Long.class, VALUE_KEY);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.Short
    */
@@ -332,13 +240,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildShort() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Short object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -346,20 +247,13 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public Short buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(Short.class, VALUE_KEY);
     }
-
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Handles java.lang.String
    */
@@ -373,13 +267,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     private BuildString() {
     }
 
-    /**
-     * Creates a message containing the object value as a Fudge primitive field.
-     * 
-     * @param context the serialization context
-     * @param object the value
-     * @return the message
-     */
     @Override
     public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, String object) {
       final MutableFudgeFieldContainer message = context.newMessage();
@@ -387,18 +274,10 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       return message;
     }
 
-    /**
-     * Returns the Java object representation of the value within a message.
-     * 
-     * @param context the deserialization context
-     * @param message the message
-     * @return the object
-     */
     @Override
     public String buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
       return message.getValue(String.class, VALUE_KEY);
     }
-
   }
 
 }
