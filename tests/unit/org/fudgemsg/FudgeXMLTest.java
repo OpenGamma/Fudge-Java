@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -58,44 +57,44 @@ public class FudgeXMLTest {
     _fudgeContext.setTaxonomyResolver (new ImmutableMapTaxonomyResolver (tr));
   }
   
-  private void xmlTest (final FudgeFieldContainer message, final int taxonomy, final String filename) throws IOException {
+  private void xmlTest(final FudgeFieldContainer message, final int taxonomy, final String filename) throws IOException {
     String expectedXML = readXMLFile(filename);
     StringWriter sw = new StringWriter(1024);
-    final FudgeMsgWriter fmw = new FudgeMsgWriter (new FudgeXMLStreamWriter (_fudgeContext, new PrintWriter (sw)));
-    fmw.writeMessage (message, taxonomy);
-    fmw.flush ();
-    System.out.println (sw);
+    final FudgeMsgWriter fmw = new FudgeMsgWriter(new FudgeXMLStreamWriter(_fudgeContext, sw));
+    fmw.writeMessage(message, taxonomy);
+    fmw.flush();
+    System.out.println(sw);
     assertEquals(expectedXML, sw.toString());
   }
   
   @Test
-  public void xmlStreamWriterAllNamesNoTaxonomy () throws Exception {
-    xmlTest (StandardFudgeMessages.createMessageAllNames (_fudgeContext), 0, "allNamesNoTaxonomy.xml");
+  public void xmlStreamWriterAllNamesNoTaxonomy() throws Exception {
+    xmlTest(StandardFudgeMessages.createMessageAllNames (_fudgeContext), 0, "allNamesNoTaxonomy.xml");
   }
   
   @Test
-  public void xmlStreamWriterAllNamesTaxonomy () throws Exception {
-    xmlTest (StandardFudgeMessages.createMessageAllNames (_fudgeContext), 1, "allNamesTaxonomy.xml");
+  public void xmlStreamWriterAllNamesTaxonomy() throws Exception {
+    xmlTest(StandardFudgeMessages.createMessageAllNames (_fudgeContext), 1, "allNamesTaxonomy.xml");
   }
   
   @Test
-  public void xmlStreamWriterAllOrdinalsNoTaxonomy () throws Exception {
-    xmlTest (StandardFudgeMessages.createMessageAllOrdinals (_fudgeContext), 0, "allOrdinalsNoTaxonomy.xml");
+  public void xmlStreamWriterAllOrdinalsNoTaxonomy() throws Exception {
+    xmlTest(StandardFudgeMessages.createMessageAllOrdinals (_fudgeContext), 0, "allOrdinalsNoTaxonomy.xml");
   }
   
   @Test
-  public void xmlStreamWriterAllOrdinalsTaxonomy () throws Exception {
-    xmlTest (StandardFudgeMessages.createMessageAllOrdinals (_fudgeContext), 1, "allOrdinalsTaxonomy.xml");
+  public void xmlStreamWriterAllOrdinalsTaxonomy() throws Exception {
+    xmlTest(StandardFudgeMessages.createMessageAllOrdinals (_fudgeContext), 1, "allOrdinalsTaxonomy.xml");
   }
   
   @Test
-  public void xmlStreamWriterWithSubMsgsNoTaxonomy () throws Exception {
-    xmlTest (StandardFudgeMessages.createMessageWithSubMsgs (_fudgeContext), 0, "withSubMsgsNoTaxonomy.xml");
+  public void xmlStreamWriterWithSubMsgsNoTaxonomy() throws Exception {
+    xmlTest(StandardFudgeMessages.createMessageWithSubMsgs (_fudgeContext), 0, "withSubMsgsNoTaxonomy.xml");
   }
   
   @Test
-  public void xmlStreamWriterWithSubMsgsTaxonomy () throws Exception {
-    xmlTest (StandardFudgeMessages.createMessageWithSubMsgs (_fudgeContext), 1, "withSubMsgsTaxonomy.xml");
+  public void xmlStreamWriterWithSubMsgsTaxonomy() throws Exception {
+    xmlTest(StandardFudgeMessages.createMessageWithSubMsgs (_fudgeContext), 1, "withSubMsgsTaxonomy.xml");
   }
   
   private String readXMLFile(String filename) throws IOException {
