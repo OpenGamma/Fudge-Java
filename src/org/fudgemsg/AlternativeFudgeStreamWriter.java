@@ -17,6 +17,7 @@
 package org.fudgemsg;
 
 import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.util.ArgumentChecker;
 
 /**
  * Abstract implementation of a {@code FudgeStreamWriter} that detects major state changes and invokes
@@ -37,6 +38,7 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * @param fudgeContext the associated {@link FudgeContext}
    */
   protected AlternativeFudgeStreamWriter (final FudgeContext fudgeContext) {
+    ArgumentChecker.notNull(fudgeContext, "fudgeContext");
     _fudgeContext = fudgeContext;
   }
 
@@ -137,12 +139,11 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void writeField(
       Short ordinal,
       String name,
-      FudgeFieldType type,
+      @SuppressWarnings("rawtypes") FudgeFieldType type,
       Object fieldValue) {
     if (fudgeFieldStart (ordinal, name, type)) {
       if (type.getTypeId () == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
@@ -162,14 +163,14 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * @param processingDirectives the envelope processing directives
    * @param schemaVersion the envelope schema version
    */
-  protected void fudgeEnvelopeStart (final int processingDirectives, final int schemaVersion) {
+  protected void fudgeEnvelopeStart(final int processingDirectives, final int schemaVersion) {
     // no-op
   }
   
   /**
    * Called at the end of the envelope after all fields have been processed.
    */
-  protected void fudgeEnvelopeEnd () {
+  protected void fudgeEnvelopeEnd() {
     // no-op
   }
   
@@ -181,14 +182,14 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * @param type the field type
    * @return {@code true} to continue processing the field, {@code false} to ignore it ({@link #fudgeFieldValue}, {@link #fudgeSubMessageStart}, {@link #fudgeSubMessageEnd} and {@link #fudgeFieldEnd} will not be called for this field)
    */
-  protected boolean fudgeFieldStart (Short ordinal, String name, FudgeFieldType<?> type) {
+  protected boolean fudgeFieldStart(Short ordinal, String name, FudgeFieldType<?> type) {
     return true;
   }
   
   /**
    * Called after a field has been processed.
    */
-  protected void fudgeFieldEnd () {
+  protected void fudgeFieldEnd() {
     // no-op
   }
   
@@ -198,21 +199,21 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * @param type the field type
    * @param fieldValue the value
    */
-  protected void fudgeFieldValue (FudgeFieldType<?> type, Object fieldValue) {
+  protected void fudgeFieldValue(FudgeFieldType<?> type, Object fieldValue) {
     // no-op
   }
   
   /**
    * Called after {@link #fudgeFieldStart} when a sub-message is starting.
    */
-  protected void fudgeSubMessageStart () {
+  protected void fudgeSubMessageStart() {
     // no-op
   }
   
   /**
    * Called when a sub-message has been processed, before {@link #fudgeFieldEnd} is called for the field.
    */
-  protected void fudgeSubMessageEnd () {
+  protected void fudgeSubMessageEnd() {
     // no-op
   }
   
