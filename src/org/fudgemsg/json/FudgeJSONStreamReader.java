@@ -367,4 +367,9 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
     return _settings;
   }
 
+  @Override
+  public FudgeStreamReader skipMessageField() {
+    throw new UnsupportedOperationException();
+  }
+
 }
