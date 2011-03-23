@@ -22,8 +22,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.MutableFudgeFieldContainer;
@@ -62,12 +62,12 @@ public class FudgeObjectStreamReaderTest {
     assertEquals(new Byte((byte)42), map.get("Life, Universe, and Everything"));
     
     @SuppressWarnings("unchecked")
-    List list = simple.getFieldFive();
-    assertNotNull(list);
-    assertEquals(3, list.size());
-    assertEquals("Kirk Wylie", list.get(0));
-    assertEquals("Yan Tordoff", list.get(1));
-    assertEquals("Jim Moores", list.get(2));
+    Set set = simple.getFieldFive();
+    assertNotNull(set);
+    assertEquals(3, set.size());
+    assertTrue (set.contains ("Kirk Wylie"));
+    assertTrue (set.contains ("Yan Tordoff"));
+    assertTrue (set.contains ("Jim Moores"));
     
     simple = simple.getFieldTwo();
     assertNotNull(simple);
