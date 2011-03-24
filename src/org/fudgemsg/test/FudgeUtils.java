@@ -51,7 +51,7 @@ public class FudgeUtils {
   public static void assertAllFieldsMatch(FudgeFieldContainer expectedMsg, FudgeFieldContainer actualMsg,
       boolean fieldOrderMatters) {
     List<FudgeField> expectedFields = expectedMsg.getAllFields();
-    List<FudgeField> actualFields = expectedMsg.getAllFields();
+    List<FudgeField> actualFields = actualMsg.getAllFields();
     if (!fieldOrderMatters) {
       expectedFields = order(expectedFields);
       actualFields = order(actualFields);
@@ -62,7 +62,6 @@ public class FudgeUtils {
       assertTrue(actualIter.hasNext());
       FudgeField expectedField = expectedIter.next();
       FudgeField actualField = actualIter.next();
-
       assertEquals(expectedField.getName(), actualField.getName());
       assertEquals(expectedField.getType(), actualField.getType());
       assertEquals(expectedField.getOrdinal(), actualField.getOrdinal());

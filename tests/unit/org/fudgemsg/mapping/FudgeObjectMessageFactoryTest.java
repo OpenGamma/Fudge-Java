@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeMsgEnvelope;
+import org.fudgemsg.MutableFudgeFieldContainer;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.MappedNameBean;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.SimpleBean;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.StaticTransientBean;
@@ -42,8 +43,9 @@ public class FudgeObjectMessageFactoryTest {
   @Deprecated
   public void simpleBeanOld() {
     SimpleBean simpleBean = ObjectMappingTestUtil.constructSimpleBean();
-    FudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(simpleBean, FudgeContext.GLOBAL_DEFAULT);
+    MutableFudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(simpleBean, FudgeContext.GLOBAL_DEFAULT);
     assertNotNull(msg);
+    msg.remove((short)0);
     FudgeUtils.assertAllFieldsMatch(ObjectMappingTestUtil.constructSimpleMessage(FudgeContext.GLOBAL_DEFAULT), msg, false);
   }
   
@@ -55,7 +57,6 @@ public class FudgeObjectMessageFactoryTest {
   public void staticAndTransientOld() {
     StaticTransientBean bean = new StaticTransientBean();
     FudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(bean, FudgeContext.GLOBAL_DEFAULT);
-    System.out.println (msg);
     assertNotNull(msg);
     assertEquals(1, msg.getNumFields()); // the class identifier only
   }
@@ -109,8 +110,9 @@ public class FudgeObjectMessageFactoryTest {
   @Test
   public void simpleBean() {
     SimpleBean simpleBean = ObjectMappingTestUtil.constructSimpleBean();
-    FudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (simpleBean).getMessage ();
+    MutableFudgeFieldContainer msg = (MutableFudgeFieldContainer)FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (simpleBean).getMessage ();
     assertNotNull(msg);
+    msg.remove((short)0);
     FudgeUtils.assertAllFieldsMatch(ObjectMappingTestUtil.constructSimpleMessage(FudgeContext.GLOBAL_DEFAULT), msg, false);
   }
   
@@ -121,7 +123,6 @@ public class FudgeObjectMessageFactoryTest {
   public void staticAndTransient() {
     StaticTransientBean bean = new StaticTransientBean();
     FudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (bean).getMessage ();
-    System.out.println (msg);
     assertNotNull(msg);
     assertEquals(1, msg.getNumFields()); // the class identifier only
   }

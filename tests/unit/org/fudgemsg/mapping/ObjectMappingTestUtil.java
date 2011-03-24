@@ -16,16 +16,15 @@
 
 package org.fudgemsg.mapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.MutableFudgeFieldContainer;
 import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
  * 
@@ -43,7 +42,7 @@ public class ObjectMappingTestUtil {
     private SimpleBean _fieldTwo;
     private int _fieldThree;
     private Map _fieldFour;
-    private List _fieldFive;
+    private Set _fieldFive;
     /**
      * @return the fieldOne
      */
@@ -95,13 +94,13 @@ public class ObjectMappingTestUtil {
     /**
      * @return the fieldFive
      */
-    public List getFieldFive() {
+    public Set getFieldFive() {
       return _fieldFive;
     }
     /**
      * @param fieldFive the fieldFive to set
      */
-    public void setFieldFive(List fieldFive) {
+    public void setFieldFive(Set fieldFive) {
       _fieldFive = fieldFive;
     }
   }
@@ -146,15 +145,15 @@ public class ObjectMappingTestUtil {
     SimpleBean subBean = new SimpleBean();
     simpleBean.setFieldTwo(subBean);
     subBean.setFieldThree(99999);
-    Map map = new HashMap();
+    Map map = new LinkedHashMap<Object, Object>();
     map.put("Kirk Wylie", "Wrote This Test");
     map.put("Life, Universe, and Everything", 42);
     simpleBean.setFieldFour(map);
-    List list = new ArrayList();
-    list.add("Kirk Wylie");
-    list.add("Yan Tordoff");
-    list.add("Jim Moores");
-    simpleBean.setFieldFive(list);
+    Set set = new LinkedHashSet<Object>();
+    set.add("Kirk Wylie");
+    set.add("Yan Tordoff");
+    set.add("Jim Moores");
+    simpleBean.setFieldFive(set);
     return simpleBean;
   }
   

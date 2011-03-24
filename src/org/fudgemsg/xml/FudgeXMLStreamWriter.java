@@ -146,10 +146,17 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
         if ((schemaVersion != 0) && (getEnvelopeAttributeSchemaVersion() != null)) {
           getWriter().writeAttribute (getEnvelopeAttributeSchemaVersion(), Integer.toString (schemaVersion));
         }
+        if (getCurrentTaxonomyId() != 0 && getSettingsEnvelopeAttributeTaxonomy() != null) {
+          getWriter().writeAttribute(getSettingsEnvelopeAttributeTaxonomy(), Integer.toString(getCurrentTaxonomyId()));
+        }
       }
     } catch (XMLStreamException e) {
       throw wrapException ("write envelope header to", e);
     }
+  }
+
+  private String getSettingsEnvelopeAttributeTaxonomy() {
+    return _settings.getEnvelopeAttributeTaxonomy();
   }
 
   @Override
@@ -175,29 +182,31 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
 
   private boolean writeFudgeFieldStart(final Short ordinal, final String name, final FudgeFieldType<?> type)
       throws XMLStreamException {
-    String ename = null;
+    String elementName = null;
     if (getPreserveFieldNames()) {
-      ename = convertFieldName(name);
+      elementName = convertFieldName(name);
     }
-    if (ename == null) {
+    if (elementName == null) {
       if (ordinal != null) {
-        if (getCurrentTaxonomy () != null) {
-          ename = convertFieldName(getCurrentTaxonomy().getFieldName(ordinal));
+        if (getCurrentTaxonomy() != null) {
+          elementName = convertFieldName(getCurrentTaxonomy().getFieldName(ordinal));
         }
       }
-      if (ename == null) {
-        ename = getFieldElementName();
-        if ((ename != null) && (ordinal != null) && getAppendFieldOrdinal()) {
-          ename = ename + ordinal;
+      if (elementName == null) {
+        elementName = getFieldElementName();
+        if ((elementName != null) && (ordinal != null) && getAppendFieldOrdinal()) {
+          elementName = elementName + ordinal;
         }
       }
     }
-    if (ename == null) return false;
-    getWriter().writeStartElement(ename);
+    if (elementName == null) {
+      return false;
+    }
+    getWriter().writeStartElement(elementName);
     if ((ordinal != null) && (getFieldAttributeOrdinal() != null)) {
       getWriter().writeAttribute(getFieldAttributeOrdinal(), ordinal.toString());
     }
-    if ((name != null) && !name.equals(ename) && (getFieldAttributeName() != null)) {
+    if ((name != null) && !name.equals(elementName) && (getFieldAttributeName() != null)) {
       getWriter().writeAttribute(getFieldAttributeName(), name);
     }
     if (getFieldAttributeType() != null) {

@@ -224,22 +224,22 @@ public class FudgeXMLSettings {
     addBooleanFalseAlias (ALIAS_BOOLEAN_FALSE_OFF);
     addBooleanFalseAlias (ALIAS_BOOLEAN_FALSE_F);
     addBooleanFalseAlias (ALIAS_BOOLEAN_FALSE_0);
-    registerFudgeType (FudgeTypeDictionary.INDICATOR_TYPE_ID, null, "indicator");
-    registerFudgeType (FudgeTypeDictionary.BOOLEAN_TYPE_ID, null, "boolean", "bool");
-    registerFudgeType (FudgeTypeDictionary.BYTE_TYPE_ID, null, "byte", "int8");
-    registerFudgeType (FudgeTypeDictionary.SHORT_TYPE_ID, null, "short", "int16");
-    registerFudgeType (FudgeTypeDictionary.INT_TYPE_ID, null, "int", "int32");
-    registerFudgeType (FudgeTypeDictionary.LONG_TYPE_ID, null, "long", "int64");
+    registerFudgeType (FudgeTypeDictionary.INDICATOR_TYPE_ID, "indicator");
+    registerFudgeType (FudgeTypeDictionary.BOOLEAN_TYPE_ID, "boolean", "bool");
+    registerFudgeType (FudgeTypeDictionary.BYTE_TYPE_ID, "byte", "int8");
+    registerFudgeType (FudgeTypeDictionary.SHORT_TYPE_ID, "short", "int16");
+    registerFudgeType (FudgeTypeDictionary.INT_TYPE_ID, "int", "int32");
+    registerFudgeType (FudgeTypeDictionary.LONG_TYPE_ID, "long", "int64");
     registerFudgeType (FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID, "byte[]");
     registerFudgeType (FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID, "short[]");
     registerFudgeType (FudgeTypeDictionary.INT_ARRAY_TYPE_ID, "int[]");
     registerFudgeType (FudgeTypeDictionary.LONG_ARRAY_TYPE_ID, "long[]");
-    registerFudgeType (FudgeTypeDictionary.FLOAT_TYPE_ID, null, "float");
-    registerFudgeType (FudgeTypeDictionary.DOUBLE_TYPE_ID, null, "double");
+    registerFudgeType (FudgeTypeDictionary.FLOAT_TYPE_ID, "float");
+    registerFudgeType (FudgeTypeDictionary.DOUBLE_TYPE_ID, "double");
     registerFudgeType (FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID, "float[]");
     registerFudgeType (FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID, "double[]");
-    registerFudgeType (FudgeTypeDictionary.STRING_TYPE_ID, null, "string");
-    registerFudgeType (FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, null, "message");
+    registerFudgeType (FudgeTypeDictionary.STRING_TYPE_ID, "string");
+    registerFudgeType (FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, "message");
     registerFudgeType (FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID, "byte[4]");
     registerFudgeType (FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID, "byte[8]");
     registerFudgeType (FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID, "byte[16]");
@@ -885,14 +885,14 @@ public class FudgeXMLSettings {
   /**
    * @return
    */
-  protected Map<String,Integer> getIdentifiersToFudgeType () {
+  public Map<String,Integer> getIdentifiersToFudgeType () {
     return _identifiersToFudgeType;
   }
   
   /**
    * @return
    */
-  protected Map<Integer,String> getFudgeTypesToIdentifier () {
+  public Map<Integer,String> getFudgeTypesToIdentifier () {
     return _fudgeTypesToIdentifier;
   }
   
