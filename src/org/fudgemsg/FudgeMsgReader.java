@@ -27,142 +27,185 @@ import org.fudgemsg.types.FudgeMsgFieldType;
  * @author Andrew Griffin
  */
 public class FudgeMsgReader {
-  
+
   /**
    * The underlying source of Fudge elements.
    */
   private final FudgeStreamReader _streamReader;
-  
+
   /**
    * An envelope buffer for reading in the current message. {@link #hasNext} will read the envelope header, and create this object
    * with a {@link MutableFudgeFieldContainer} attached to it. The full call to {@link nextMessage} or {@link #nextMessageEnvelope} will
    * process the message fields.
    */
   private FudgeMsgEnvelope _currentEnvelope = null;
-  
+
+  /**
+   * Whether to decode sub-messages as they arrive, or defer until later. Lazy reads are only possible if the reading stream supports
+   * {@link FudgeStreamReader#skipMessageField}.
+   */
+  private boolean _lazyReads = false;
+
   /**
    * Creates a new {@link FudgeMsgReader} around an existing {@link FudgeStreamReader}.
    * 
    * @param streamReader the source of Fudge stream elements to read
    */
-  public FudgeMsgReader (final FudgeStreamReader streamReader) {
+  public FudgeMsgReader(final FudgeStreamReader streamReader) {
     if (streamReader == null) {
-      throw new NullPointerException ("streamReader cannot be null");
+      throw new NullPointerException("streamReader cannot be null");
     }
     _streamReader = streamReader;
   }
-  
+
+  /**
+   * Controls whether to decode sub-messages as they arrive, or defer until later. Lazy reads are only possible if the underlying
+   * stream supports {@link FudgeStreamReader#skipMessageField}.
+   * 
+   * @param lazyReads {@code true} to defer message decoding, or {@code false} to decode sub-message fields as they arrive
+   */
+  public void setLazyReads(final boolean lazyReads) {
+    _lazyReads = lazyReads;
+  }
+
+  /**
+   * Indicates whether sub-messages are being decoded as they arrive, or deferred. If the underlying stream does not support
+   * {@link FudgeStreamReader#skipMessageField} then {@code isLazyReads} may return {@code true} but the messages will be
+   * decoded as they are received.
+   * 
+   * @return {@code true} if deferred decoding of messages will be attempted, {@code false} to not attempt it
+   */
+  public boolean isLazyReads() {
+    return _lazyReads;
+  }
+
   /**
    * Closes this {@link FudgeMsgReader} and the underlying {@link FudgeStreamReader}.
    */
-  public void close () {
-    if (_streamReader == null) return;
-    _streamReader.close ();
+  public void close() {
+    if (_streamReader == null)
+      return;
+    _streamReader.close();
   }
-  
+
   /**
    * Returns the {@link FudgeContext} associated with the underlying source.
    * 
    * @return the {@code FudgeContext}
    */
-  public FudgeContext getFudgeContext () {
-    final FudgeStreamReader reader = getStreamReader ();
-    if (reader == null) return null;
-    return reader.getFudgeContext ();
+  public FudgeContext getFudgeContext() {
+    final FudgeStreamReader reader = getStreamReader();
+    if (reader == null)
+      return null;
+    return reader.getFudgeContext();
   }
-  
+
   /**
    * Returns the underlying {@link FudgeStreamReader} for this message reader.
    * 
    * @return the {@code FudgeStreamReader}
    */
-  protected FudgeStreamReader getStreamReader () {
+  protected FudgeStreamReader getStreamReader() {
     return _streamReader;
   }
-  
+
   /**
    * Returns true if there are more messages to read from the underlying source.
    * 
    * @return {@code true} if {@link #nextMessage()} or {@link #nextMessageEnvelope()} will return data
    */
-  public boolean hasNext () {
-    if (_currentEnvelope != null) return true;
-    _currentEnvelope = readMessageEnvelope ();
+  public boolean hasNext() {
+    if (_currentEnvelope != null)
+      return true;
+    _currentEnvelope = readMessageEnvelope();
     return (_currentEnvelope != null);
   }
-  
+
   /**
    * Reads the next message, discarding the envelope.
    * 
    * @return the message read without the envelope
    */
-  public FudgeFieldContainer nextMessage () {
-    final FudgeMsgEnvelope msgEnv = nextMessageEnvelope ();
-    if (msgEnv == null) return null;
-    return msgEnv.getMessage ();
+  public FudgeFieldContainer nextMessage() {
+    final FudgeMsgEnvelope msgEnv = nextMessageEnvelope();
+    if (msgEnv == null)
+      return null;
+    return msgEnv.getMessage();
   }
-  
+
   /**
    * Reads the next message, returning the envelope.
    * 
    * @return the {@link FudgeMsgEnvelope}
    */
-  public FudgeMsgEnvelope nextMessageEnvelope () {
+  public FudgeMsgEnvelope nextMessageEnvelope() {
     FudgeMsgEnvelope msgEnv;
     if (_currentEnvelope == null) {
-      msgEnv = readMessageEnvelope ();
-      if (msgEnv == null) return null;
+      msgEnv = readMessageEnvelope();
+      if (msgEnv == null)
+        return null;
     } else {
       msgEnv = _currentEnvelope;
       _currentEnvelope = null;
     }
-    processFields ((MutableFudgeFieldContainer)msgEnv.getMessage ());
+    processFields((MutableFudgeFieldContainer) msgEnv.getMessage());
     return msgEnv;
   }
-  
+
   /**
    * Reads the next message envelope from the underlying stream. No fields are read.
    * 
    * @return the {@link FudgeMsgEnvelope} read
    */
-  protected FudgeMsgEnvelope readMessageEnvelope () {
-    if (getStreamReader ().hasNext () == false) {
+  protected FudgeMsgEnvelope readMessageEnvelope() {
+    if (getStreamReader().hasNext() == false) {
       return null;
     }
-    FudgeStreamElement element = getStreamReader ().next();
-    if(element == null) {
+    FudgeStreamElement element = getStreamReader().next();
+    if (element == null) {
       return null;
     }
-    if(element != FudgeStreamElement.MESSAGE_ENVELOPE) {
+    if (element != FudgeStreamElement.MESSAGE_ENVELOPE) {
       throw new IllegalArgumentException("First element in encoding stream wasn't a message element.");
     }
     MutableFudgeFieldContainer msg = getFudgeContext().newMessage();
-    FudgeMsgEnvelope envelope = new FudgeMsgEnvelope (msg, getStreamReader ().getSchemaVersion(), getStreamReader ().getProcessingDirectives ());
+    FudgeMsgEnvelope envelope = new FudgeMsgEnvelope(msg, getStreamReader().getSchemaVersion(), getStreamReader()
+        .getProcessingDirectives());
     return envelope;
   }
-  
+
   /**
    * Processes all of the fields from the current message (or sub-message) in the stream, adding them to the supplied container.
    * 
    * @param msg container to add fields read to
    */
   protected void processFields(MutableFudgeFieldContainer msg) {
-    final FudgeStreamReader reader = getStreamReader ();
-    while(reader.hasNext()) {
+    final FudgeStreamReader reader = getStreamReader();
+    while (reader.hasNext()) {
       FudgeStreamElement element = reader.next();
-      switch(element) {
-      case SIMPLE_FIELD:
-        msg.add(reader.getFieldName(), reader.getFieldOrdinal(), reader.getFieldType(), reader.getFieldValue());
-        break;
-      case SUBMESSAGE_FIELD_START:
-        MutableFudgeFieldContainer subMsg = getFudgeContext().newMessage ();
-        msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeMsgFieldType.INSTANCE, subMsg);
-        processFields(subMsg);
-        break;
-      case SUBMESSAGE_FIELD_END:
-        return;
+      switch (element) {
+        case SIMPLE_FIELD:
+          msg.add(reader.getFieldName(), reader.getFieldOrdinal(), reader.getFieldType(), reader.getFieldValue());
+          break;
+        case SUBMESSAGE_FIELD_START:
+          if (isLazyReads()) {
+            try {
+              final EncodedFudgeMsg subMsg = new EncodedFudgeMsg(reader.skipMessageField());
+              msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeMsgFieldType.INSTANCE, subMsg);
+              continue;
+            } catch (UnsupportedOperationException e) {
+              // The stream doesn't support lazy reads, so turn it off again
+              setLazyReads(false);
+            }
+          }
+          final MutableFudgeFieldContainer subMsg = getFudgeContext().newMessage();
+          msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeMsgFieldType.INSTANCE, subMsg);
+          processFields(subMsg);
+          break;
+        case SUBMESSAGE_FIELD_END:
+          return;
       }
     }
   }
-  
+
 }

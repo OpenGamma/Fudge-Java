@@ -278,6 +278,21 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     return false;
   }
   
+  @Override
+  public FudgeStreamReader skipMessageField() {
+    assert _currentElement == FudgeStreamElement.SUBMESSAGE_FIELD_START;
+    assert _processingStack.size() > 1;
+    final MessageProcessingState processingState = _processingStack.pop();
+    _processingStack.peek().consumed += processingState.messageSize;
+    final byte[] buffer = new byte[processingState.messageSize];
+    try {
+      getDataInput().readFully(buffer);
+    } catch (IOException e) {
+      throw new FudgeRuntimeIOException(e);
+    }
+    return new EncodedFudgeMsg.Reader(buffer, getFudgeContext());
+  }
+
   /**
    * Returns the underlying {@link DataInput}.
    * 
@@ -349,10 +364,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     if(typeId == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
       _currentElement = FudgeStreamElement.SUBMESSAGE_FIELD_START;
       _fieldValue = null;
-      MessageProcessingState subState = new MessageProcessingState();
-      subState.messageSize = varSize;
-      subState.consumed = 0;
-      _processingStack.add(subState);
+      pushProcessingState(0, varSize);
     } else {
       _currentElement = FudgeStreamElement.SIMPLE_FIELD;
       _fieldValue = readFieldValue(getDataInput(), _fieldType, varSize);
@@ -367,7 +379,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
   /**
    * Reads a Fudge encoded field value from an input stream.
    * 
-   * @param is the {@link DataInput} wrapped input steram
+   * @param is the {@link DataInput} wrapped input stream
    * @param type the {@link FudgeFieldType} of the data to read
    * @param varSize number of bytes in a variable width field payload
    * @return the field value
@@ -425,11 +437,15 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
       FudgeTaxonomy taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy(_taxonomyId);
       _taxonomy = taxonomy;
     }
-    MessageProcessingState processingState = new MessageProcessingState();
-    processingState.consumed = 8;
-    processingState.messageSize = _envelopeSize;
-    _processingStack.add(processingState);
+    pushProcessingState(8, _envelopeSize);
     return true;
+  }
+
+  protected void pushProcessingState(final int consumedBytes, final int messageSize) {
+    MessageProcessingState processingState = new MessageProcessingState();
+    processingState.consumed = consumedBytes;
+    processingState.messageSize = messageSize;
+    _processingStack.add(processingState);
   }
   
 }

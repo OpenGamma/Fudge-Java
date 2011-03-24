@@ -18,6 +18,7 @@ package org.fudgemsg.types;
 import java.io.DataInput;
 import java.io.DataOutput;
 
+import org.fudgemsg.FudgeEncoded;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeSize;
@@ -45,7 +46,14 @@ public class FudgeMsgFieldType extends FudgeFieldType<FudgeFieldContainer> {
    */
   @Override
   public int getVariableSize(FudgeFieldContainer value, FudgeTaxonomy taxonomy) {
-    return FudgeSize.calculateMessageSize (taxonomy, value);
+    if (value instanceof FudgeEncoded) {
+      final FudgeEncoded fudgeEncoded = (FudgeEncoded) value;
+      final byte[] encoded = fudgeEncoded.getFudgeEncoded();
+      if (encoded != null) {
+        return encoded.length;
+      }
+    }
+    return FudgeSize.calculateMessageSize(taxonomy, value);
   }
 
   /**

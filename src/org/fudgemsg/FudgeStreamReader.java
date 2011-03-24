@@ -149,4 +149,14 @@ public interface FudgeStreamReader extends Closeable {
    */
   public void close ();
 
+  /**
+   * If a SUBMESSAGE_FIELD_START has just been encountered, advances the stream so that the next element read will be the field
+   * after the sub-message field. The returned stream will contain the elements skipped over. This is an optional operation and
+   * the stream may throw an UnsupportedOperationException if it does not support it.
+   * 
+   * @return a reader for the skipped fields
+   * @throws UnsupportedOperationException if the stream does not support this
+   */
+  public FudgeStreamReader skipMessageField();
+
 }

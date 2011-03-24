@@ -284,6 +284,8 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
       Iterator<String> i;
       if (_iteratorStack.isEmpty()) {
         _iteratorStack.push(i = (Iterator<String>) o.keys());
+        // Note: the keys collection is sorted and not in the message order, breaking the logic below
+        // File a jira to fix this
         int processingDirectives = 0;
         int schemaVersion = 0;
         int taxonomyId = 0;
@@ -365,6 +367,11 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
 
   public JSONSettings getSettings() {
     return _settings;
+  }
+
+  @Override
+  public FudgeStreamReader skipMessageField() {
+    throw new UnsupportedOperationException();
   }
 
 }

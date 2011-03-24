@@ -173,6 +173,13 @@ public class FudgeSize {
    * @return the number of bytes
    */
   public static int calculateMessageSize(final FudgeTaxonomy taxonomy, final FudgeFieldContainer fields) {
+    if (fields instanceof FudgeEncoded) {
+      final FudgeEncoded fudgeEncoded = (FudgeEncoded) fields;
+      final byte[] encoded = fudgeEncoded.getFudgeEncoded();
+      if (encoded != null) {
+        return encoded.length;
+      }
+    }
     int bytes = 0;
     for (FudgeField field : fields) {
       bytes += calculateFieldSize(taxonomy, field);
