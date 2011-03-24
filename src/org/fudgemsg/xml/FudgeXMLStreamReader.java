@@ -413,4 +413,9 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
     return _fudgeContext;
   }
 
+  @Override
+  public FudgeStreamReader skipMessageField() {
+    throw new UnsupportedOperationException();
+  }
+
 }
