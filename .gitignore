@@ -9,3 +9,6 @@ lib/
 /.fudge-proto-gitignore
 /MANIFEST.MF
 build.number
+
+# NetBeans specific
+nbproject/private
