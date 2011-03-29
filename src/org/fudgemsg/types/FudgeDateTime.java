@@ -29,274 +29,315 @@ import javax.time.calendar.OffsetTime;
 import javax.time.calendar.ZoneOffset;
 
 /**
- * Dummy class for holding a combined Date and Time with the other data available in the
- * Fudge encoding. 
- *
- * @author Andrew Griffin
+ * A date-time at varying precision.
+ * <p>
+ * This is the low level Fudge representation for a date-time.
+ * Date-times can be more easily used through the secondary type mechanism.
+ * <p>
+ * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>.
  */
 public class FudgeDateTime implements DateTimeProvider, InstantProvider {
-  
+
+  /**
+   * The Fudge date.
+   */
   private final FudgeDate _date;
+  /**
+   * The Fudge time.
+   */
   private final FudgeTime _time;
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param precision resolution of the representation
-   * @param year year
-   * @param month month
-   * @param day day
-   * @param timezoneOffset timezone offset in 15 minute intervals 
-   * @param seconds seconds since midnight
-   * @param nanos nanoseconds within the second
+   * @param precision  the resolution of the representation
+   * @param year  the year
+   * @param month  the month
+   * @param day  the day
+   * @param timezoneOffset  the time-zone offset in 15 minute intervals 
+   * @param seconds  the seconds since midnight
+   * @param nanos  the nanoseconds within the second
    */
-  public FudgeDateTime (final DateTimeAccuracy precision, final int year, final int month, final int day, final int timezoneOffset, final int seconds, final int nanos) {
-    this (new FudgeDate (year, month, day), new FudgeTime (precision, timezoneOffset, seconds, nanos));
+  public FudgeDateTime(
+      final DateTimeAccuracy precision, final int year, final int month, final int day,
+      final int timezoneOffset, final int seconds, final int nanos) {
+    this(new FudgeDate(year, month, day), new FudgeTime(precision, timezoneOffset, seconds, nanos));
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param date the date
-   * @param time the time
+   * @param date  the date, not null
+   * @param time  the time, not null
    */
-  public FudgeDateTime (final FudgeDate date, final FudgeTime time) {
-    if (date == null) throw new NullPointerException ("date cannot be null");
-    if (time == null) throw new NullPointerException ("time cannot be null");
-    if (date.getAccuracy ().lessThan (DateTimeAccuracy.DAY)) {
-      if (date.getAccuracy ().lessThan (DateTimeAccuracy.MONTH)) {
-        if (time.getAccuracy ().greaterThan (DateTimeAccuracy.YEAR)) {
-          throw new IllegalArgumentException (date.getAccuracy () + " date too low precision for " + time.getAccuracy () + " datetime");
+  public FudgeDateTime(final FudgeDate date, final FudgeTime time) {
+    if (date == null) {
+      throw new NullPointerException("date cannot be null");
+    }
+    if (time == null) {
+      throw new NullPointerException("time cannot be null");
+    }
+    if (date.getAccuracy().lessThan(DateTimeAccuracy.DAY)) {
+      if (date.getAccuracy().lessThan(DateTimeAccuracy.MONTH)) {
+        if (time.getAccuracy().greaterThan(DateTimeAccuracy.YEAR)) {
+          throw new IllegalArgumentException(date.getAccuracy() + " date too low precision for " + time.getAccuracy() + " datetime");
         }
       } else {
-        if (time.getAccuracy ().greaterThan (DateTimeAccuracy.MONTH)) {
-          throw new IllegalArgumentException (date.getAccuracy () + " date too low precision for " + time.getAccuracy () + " datetime");
-        } else if (time.getAccuracy ().lessThan (DateTimeAccuracy.MONTH)) {
-          throw new IllegalArgumentException (date.getAccuracy () + " date too high precision for " + time.getAccuracy () + " datetime");
+        if (time.getAccuracy().greaterThan(DateTimeAccuracy.MONTH)) {
+          throw new IllegalArgumentException(date.getAccuracy() + " date too low precision for " + time.getAccuracy() + " datetime");
+        } else if (time.getAccuracy().lessThan(DateTimeAccuracy.MONTH)) {
+          throw new IllegalArgumentException(date.getAccuracy() + " date too high precision for " + time.getAccuracy() + " datetime");
         }
       }
     }
     _date = date;
     _time = time;
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy resolution of the representation
-   * @param instant time instant - the date and time at UTC will be used
+   * @param accuracy  the resolution of the representation
+   * @param instant  the time instant, converted to a date-time using UTC
    */
-  protected FudgeDateTime (final DateTimeAccuracy accuracy, final Instant instant) {
-    this (accuracy, OffsetDateTime.ofInstant (instant, ZoneOffset.UTC));
+  protected FudgeDateTime(final DateTimeAccuracy accuracy, final Instant instant) {
+    this(accuracy, OffsetDateTime.ofInstant(instant, ZoneOffset.UTC));
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param offsetDateTime date and time
+   * @param offsetDateTime  the date and time
    */
-  public FudgeDateTime (final OffsetDateTime offsetDateTime) {
-    this (DateTimeAccuracy.NANOSECOND, offsetDateTime);
+  public FudgeDateTime(final OffsetDateTime offsetDateTime) {
+    this(DateTimeAccuracy.NANOSECOND, offsetDateTime);
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy resolution of the representation
-   * @param offsetDateTime date and time
+   * @param accuracy  the resolution of the representation
+   * @param offsetDateTime  the date and time
    */
-  public FudgeDateTime (final DateTimeAccuracy accuracy, final OffsetDateTime offsetDateTime) {
-    this (new FudgeDate (offsetDateTime.toOffsetDate ()), new FudgeTime (accuracy, offsetDateTime.toOffsetTime ()));
+  public FudgeDateTime(final DateTimeAccuracy accuracy, final OffsetDateTime offsetDateTime) {
+    this(new FudgeDate(offsetDateTime.toOffsetDate()), new FudgeTime(accuracy, offsetDateTime.toOffsetTime()));
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param offsetDate date - Midnight on this day will be used for the time
+   * @param offsetDate  the date, midnight on this day will be used for the time
    */
-  public FudgeDateTime (final OffsetDate offsetDate) {
-    this (new FudgeDate (offsetDate), new FudgeTime (DateTimeAccuracy.DAY, offsetDate.atMidnight ().toOffsetTime ()));
+  public FudgeDateTime(final OffsetDate offsetDate) {
+    this(new FudgeDate(offsetDate), new FudgeTime(DateTimeAccuracy.DAY, offsetDate.atMidnight().toOffsetTime()));
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param localDateTime date - Midnight on this day will be used for the time
+   * @param localDateTime  the date, Midnight on this day will be used for the time
    */
-  protected FudgeDateTime (final LocalDateTime localDateTime) {
-    this (DateTimeAccuracy.NANOSECOND, localDateTime);
+  protected FudgeDateTime(final LocalDateTime localDateTime) {
+    this(DateTimeAccuracy.NANOSECOND, localDateTime);
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy resolution of the representation 
-   * @param localDateTime date and time
+   * @param accuracy  the resolution of the representation 
+   * @param localDateTime  the date and time
    */
-  protected FudgeDateTime (final DateTimeAccuracy accuracy, final LocalDateTime localDateTime) {
-    this (new FudgeDate (localDateTime), new FudgeTime (accuracy, localDateTime));
+  protected FudgeDateTime(final DateTimeAccuracy accuracy, final LocalDateTime localDateTime) {
+    this(new FudgeDate(localDateTime), new FudgeTime(accuracy, localDateTime));
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param instantProvider provides an instant - the date and time at UTC will be used  
+   * @param instantProvider  the provider of an instant - the date and time at UTC will be used  
    */
-  public FudgeDateTime (final InstantProvider instantProvider) {
-    this (DateTimeAccuracy.NANOSECOND, instantProvider);
+  public FudgeDateTime(final InstantProvider instantProvider) {
+    this(DateTimeAccuracy.NANOSECOND, instantProvider);
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy resolution of the representation
-   * @param instantProvider provides an instant - the date and time at UTC will be used 
+   * @param accuracy  the resolution of the representation
+   * @param instantProvider  the provider of an instant - the date and time at UTC will be used 
    */
-  public FudgeDateTime (final DateTimeAccuracy accuracy, final InstantProvider instantProvider) {
-    this (accuracy, instantProvider.toInstant ());
+  public FudgeDateTime(final DateTimeAccuracy accuracy, final InstantProvider instantProvider) {
+    this(accuracy, instantProvider.toInstant());
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param dateTimeProvider provides the date and time 
+   * @param dateTimeProvider  the provider of date and time 
    */
-  public FudgeDateTime (final DateTimeProvider dateTimeProvider) {
-    this (DateTimeAccuracy.NANOSECOND, dateTimeProvider);
+  public FudgeDateTime(final DateTimeProvider dateTimeProvider) {
+    this(DateTimeAccuracy.NANOSECOND, dateTimeProvider);
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy resolution of the representation 
-   * @param dateTimeProvider provides the date and time
+   * @param accuracy  the resolution of the representation 
+   * @param dateTimeProvider  the provider of date and time
    */
-  public FudgeDateTime (final DateTimeAccuracy accuracy, final DateTimeProvider dateTimeProvider) {
-    this (accuracy, dateTimeProvider.toLocalDateTime ());
+  public FudgeDateTime(final DateTimeAccuracy accuracy, final DateTimeProvider dateTimeProvider) {
+    this(accuracy, dateTimeProvider.toLocalDateTime());
   }
-  
+
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param calendar representation of the date and time
+   * @param calendar  the representation of the date and time
    */
-  public FudgeDateTime (final Calendar calendar) {
-    this (new FudgeDate (calendar), new FudgeTime (calendar));
+  public FudgeDateTime(final Calendar calendar) {
+    this(new FudgeDate(calendar), new FudgeTime(calendar));
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Returns the date component.
    * 
-   * @return the date
+   * @return the date, not null
    */
-  public FudgeDate getDate () {
+  public FudgeDate getDate() {
     return _date;
   }
-  
+
   /**
    * Returns the time component.
    * 
-   * @return the time
+   * @return the time, not null
    */
-  public FudgeTime getTime () {
+  public FudgeTime getTime() {
     return _time;
   }
-  
+
   /**
    * Returns the resolution of the representation
    * 
-   * @return the resolution
+   * @return the resolution, not null
    */
-  public DateTimeAccuracy getAccuracy () {
-    return getTime ().getAccuracy ();
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean equals (final Object o) {
-    if (o == this) return true;
-    if (o == null) return false;
-    if (!(o instanceof FudgeDateTime)) return false;
-    final FudgeDateTime other = (FudgeDateTime)o;
-    return getDate ().equals (other.getDate ())
-        && getTime ().equals (other.getTime ());
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int hashCode () {
-    return getDate ().hashCode () * 17 + getTime ().hashCode ();
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString () {
-    return toOffsetDateTime ().toString ();
+  public DateTimeAccuracy getAccuracy() {
+    return getTime().getAccuracy();
   }
 
+  //-------------------------------------------------------------------------
   /**
-   * {@inheritDoc}
+   * Converts this date to a {@code LocalDate}, using the first appropriate
+   * value if any field is not set.
+   * 
+   * @return a {@code LocalDate} roughly equivalent to this date-time, not null
    */
   @Override
   public LocalDate toLocalDate() {
-    return getDate ().toLocalDate ();
+    return getDate().toLocalDate();
   }
 
   /**
-   * {@inheritDoc}
+   * Converts this date to a {@code LocalDateTime}, using the first appropriate
+   * value if any field is not set.
+   * 
+   * @return a {@code LocalDateTime} roughly equivalent to this date-time, not null
    */
   @Override
   public LocalDateTime toLocalDateTime() {
-    return LocalDateTime.of (getDate (), getTime ());
+    return LocalDateTime.of(getDate(), getTime());
   }
 
   /**
-   * {@inheritDoc}
+   * Converts this date to a {@code LocalTime}, using the first appropriate
+   * value if any field is not set.
+   * 
+   * @return a {@code LocalTime} roughly equivalent to this date-time, not null
    */
   @Override
   public LocalTime toLocalTime() {
-    return getTime ().toLocalTime ();
+    return getTime().toLocalTime();
   }
-  
+
   /**
-   * Returns the date representation as an {@link OffsetDate} object.
+   * Converts this date to a {@code OffsetDateTime}, using the first appropriate
+   * value if any field is not set.
    * 
-   * @return the date
-   */ 
-  public OffsetDate toOffsetDate () {
-    return OffsetDate.of (getDate (), getTime ().getOffset ());
-  }
-  
-  /**
-   * Returns the representation as an {@link OffsetDateTime} object.
-   * 
-   * @return the date and time
+   * @return a {@code OffsetDateTime} roughly equivalent to this date-time, not null
    */
-  public OffsetDateTime toOffsetDateTime () {
-    return OffsetDateTime.of (getDate (), getTime (), getTime ().getOffset ());
+  public OffsetDateTime toOffsetDateTime() {
+    return OffsetDateTime.of(getDate(), getTime(), getTime().getOffset());
   }
-  
+
   /**
-   * Returns the time representation as a {@link OffsetTime} object.
+   * Converts this date to a {@code OffsetDate}, using the first appropriate
+   * value if any field is not set.
    * 
-   * @return the time
+   * @return a {@code OffsetDate} roughly equivalent to this date-time, not null
    */
-  public OffsetTime toOffsetTime () {
-    return getTime ().toOffsetTime ();
+  public OffsetDate toOffsetDate() {
+    return OffsetDate.of(getDate(), getTime().getOffset());
   }
-  
+
   /**
-   * {@inheritDoc}
+   * Converts this date to a {@code OffsetTime}, using the first appropriate
+   * value if any field is not set.
+   * 
+   * @return a {@code OffsetTime} roughly equivalent to this date-time, not null
+   */
+  public OffsetTime toOffsetTime() {
+    return getTime().toOffsetTime();
+  }
+
+  /**
+   * Converts this date to an {@code Instant}, using the first appropriate
+   * value if any field is not set.
+   * 
+   * @return an {@code Instant} roughly equivalent to this date-time, not null
    */
   @Override
-  public Instant toInstant () {
-    return toOffsetDateTime ().toInstant ();
+  public Instant toInstant() {
+    return toOffsetDateTime().toInstant();
   }
-  
+
+  //-------------------------------------------------------------------------
+  /**
+   * Checks if this date-time equals another.
+   * 
+   * @param object  the object to compare to, null returns false
+   * @return true if equal
+   */
+  @Override
+  public boolean equals(final Object object) {
+    if (object == this) {
+      return true;
+    }
+    if (object instanceof FudgeDateTime) {
+      final FudgeDateTime other = (FudgeDateTime) object;
+      return getDate().equals(other.getDate()) && getTime().equals(other.getTime());
+    }
+    return false;
+  }
+
+  /**
+   * Returns a suitable hash code.
+   * 
+   * @return the hash code.
+   */
+  @Override
+  public int hashCode() {
+    return getDate().hashCode() * 17 + getTime().hashCode();
+  }
+
+  /**
+   * Returns a string representation of the date-time.
+   * 
+   * @return the date-time as a string, not null
+   */
+  @Override
+  public String toString() {
+    return toOffsetDateTime().toString();
+  }
+
 }

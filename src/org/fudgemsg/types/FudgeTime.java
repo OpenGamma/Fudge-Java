@@ -25,40 +25,50 @@ import javax.time.calendar.TimeProvider;
 import javax.time.calendar.ZoneOffset;
 
 /**
- * Dummy class for holding a time value on its own at varying precisions.
- * 
- * See <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>
- * for more details.
- * 
- * @author Andrew Griffin
+ * A time at varying precision.
+ * <p>
+ * This is the low level Fudge representation for a time.
+ * Times can be more easily used through the secondary type mechanism.
+ * <p>
+ * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>.
  */
 public class FudgeTime implements TimeProvider {
-  
+
   /**
-   * Reserved value to indicate there is no timezone offset.
+   * Reserved value to indicate there is no time-zone offset.
    */
-  /* package */ static final int NO_TIMEZONE_OFFSET = -128;
-  
+  /* package */static final int NO_TIMEZONE_OFFSET = -128;
+
+  /**
+   * The accuracy.
+   */
   private final DateTimeAccuracy _accuracy;
-  
+  /**
+   * The time-zone offset.
+   */
   private final int _timezoneOffset;
-  
+  /**
+   * The time.
+   */
   private final LocalTime _localTime;
-  
+
   /**
    * Creates a new {@link FudgeTime}.
    * 
-   * @param accuracy resolution of the time
-   * @param timezoneOffset timezoneOffset (15 minute intervals)
-   * @param seconds seconds since midnight
-   * @param nanos nanoseconds within the second
+   * @param accuracy  the resolution of the time, not null
+   * @param timezoneOffset  the time-zone offset (15 minute intervals)
+   * @param seconds  the seconds since midnight
+   * @param nanos  the nanoseconds within the second
    */
-  public FudgeTime (final DateTimeAccuracy accuracy, final int timezoneOffset, int seconds, int nanos) {
+  public FudgeTime(final DateTimeAccuracy accuracy, final int timezoneOffset, int seconds, int nanos) {
     _accuracy = accuracy;
     _timezoneOffset = timezoneOffset;
-    if (seconds < 0) throw new IllegalArgumentException ("seconds cannot be negative");
-    if (nanos < 0) throw new IllegalArgumentException ("nanos cannot be negative");
-    
+    if (seconds < 0) {
+      throw new IllegalArgumentException("seconds cannot be negative");
+    }
+    if (nanos < 0) {
+      throw new IllegalArgumentException("nanos cannot be negative");
+    }
     if (accuracy.greaterThan(DateTimeAccuracy.SECOND)) {
       if (accuracy.greaterThan(DateTimeAccuracy.MILLISECOND)) {
         if (accuracy.greaterThan(DateTimeAccuracy.MICROSECOND)) {
@@ -67,13 +77,13 @@ public class FudgeTime implements TimeProvider {
           nanos -= nanos % 1000;
         }
       } else {
-          nanos -= nanos % 1000000;
+        nanos -= nanos % 1000000;
       }
     } else {
       nanos = 0;
-      if (accuracy.greaterThan (DateTimeAccuracy.DAY)) {
-        if (accuracy.greaterThan (DateTimeAccuracy.HOUR)) {
-          if (accuracy.greaterThan (DateTimeAccuracy.MINUTE)) {
+      if (accuracy.greaterThan(DateTimeAccuracy.DAY)) {
+        if (accuracy.greaterThan(DateTimeAccuracy.HOUR)) {
+          if (accuracy.greaterThan(DateTimeAccuracy.MINUTE)) {
             // Accurate to the second - already rounded for this
           } else {
             seconds -= seconds % 60;
@@ -85,306 +95,343 @@ public class FudgeTime implements TimeProvider {
         seconds = 0;
       }
     }
-    _localTime = LocalTime.of (seconds / 3600, (seconds / 60) % 60, seconds % 60, nanos);
+    _localTime = LocalTime.of(seconds / 3600, (seconds / 60) % 60, seconds % 60, nanos);
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param accuracy granularity of the representation
-   * @param timezoneOffset timezone offset in 15 minute intervals from UTC
-   * @param localTime the time
+   * @param accuracy  the granularity of the representation, not null
+   * @param timezoneOffset  the time-zone offset in 15 minute intervals from UTC
+   * @param localTime  the time, not null
    */
-  protected FudgeTime (final DateTimeAccuracy accuracy, final int timezoneOffset, final LocalTime localTime) {
-    this (accuracy, timezoneOffset, localTime.toSecondOfDay (), localTime.getNanoOfSecond ());
+  protected FudgeTime(final DateTimeAccuracy accuracy, final int timezoneOffset, final LocalTime localTime) {
+    this(accuracy, timezoneOffset, localTime.toSecondOfDay(), localTime.getNanoOfSecond());
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param accuracy granularity of the representation
-   * @param localTime the time
+   * @param accuracy  the granularity of the representation, not null
+   * @param localTime  the time, not null
    */
-  protected FudgeTime (final DateTimeAccuracy accuracy, final LocalTime localTime) {
-    this (accuracy, NO_TIMEZONE_OFFSET, localTime);
+  protected FudgeTime(final DateTimeAccuracy accuracy, final LocalTime localTime) {
+    this(accuracy, NO_TIMEZONE_OFFSET, localTime);
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param accuracy granularity of the representation
-   * @param instant time instant - the corresponding time at UTC will be used
+   * @param accuracy  the granularity of the representation, not null
+   * @param instant  the time instant, the corresponding time at UTC will be used, not null
    */
-  protected FudgeTime (final DateTimeAccuracy accuracy, final Instant instant) {
-    this (accuracy, OffsetTime.ofInstant (instant, ZoneOffset.UTC));
+  protected FudgeTime(final DateTimeAccuracy accuracy, final Instant instant) {
+    this(accuracy, OffsetTime.ofInstant(instant, ZoneOffset.UTC));
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param offsetTime time
+   * @param offsetTime  the offset time, not null
    */
-  public FudgeTime (final OffsetTime offsetTime) {
-    this (DateTimeAccuracy.NANOSECOND, offsetTime);
+  public FudgeTime(final OffsetTime offsetTime) {
+    this(DateTimeAccuracy.NANOSECOND, offsetTime);
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param accuracy granularity of the representation
-   * @param offsetTime time
+   * @param accuracy  the granularity of the representation, not null
+   * @param offsetTime  the offset time, not null
    */
-  public FudgeTime (final DateTimeAccuracy accuracy, final OffsetTime offsetTime) {
-    this (accuracy, offsetTime.getOffset ().getAmountSeconds () / 900, offsetTime.toLocalTime ());
+  public FudgeTime(final DateTimeAccuracy accuracy, final OffsetTime offsetTime) {
+    this(accuracy, offsetTime.getOffset().getAmountSeconds() / 900, offsetTime.toLocalTime());
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param instantProvider provides a time instant - the corresponding time at UTC will be used
+   * @param instantProvider  the provider of a time instant - the corresponding time at UTC will be used
    */
-  public FudgeTime (final InstantProvider instantProvider) {
-    this (DateTimeAccuracy.NANOSECOND, instantProvider);
+  public FudgeTime(final InstantProvider instantProvider) {
+    this(DateTimeAccuracy.NANOSECOND, instantProvider);
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param accuracy granularity of the representation
-   * @param instantProvider provides a time instant - the corresponding time at UTC will be used
+   * @param accuracy  the granularity of the representation, not null
+   * @param instantProvider  the provider of a time instant - the corresponding time at UTC will be used
    */
-  public FudgeTime (final DateTimeAccuracy accuracy, final InstantProvider instantProvider) {
-    this (accuracy, instantProvider.toInstant ());
+  public FudgeTime(final DateTimeAccuracy accuracy, final InstantProvider instantProvider) {
+    this(accuracy, instantProvider.toInstant());
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param timeProvider provides the time
+   * @param timeProvider  the provider of the time
    */
-  public FudgeTime (final TimeProvider timeProvider) {
-    this (DateTimeAccuracy.NANOSECOND, timeProvider);
+  public FudgeTime(final TimeProvider timeProvider) {
+    this(DateTimeAccuracy.NANOSECOND, timeProvider);
   }
-  
+
   /**
    * Creates a new Fudge time representation.
    * 
-   * @param accuracy granularity of the representation
-   * @param timeProvider provides the time
+   * @param accuracy  the granularity of the representation, not null
+   * @param timeProvider  the provider of the time
    */
-  public FudgeTime (final DateTimeAccuracy accuracy, final TimeProvider timeProvider) {
-    this (accuracy, timeProvider.toLocalTime ());
+  public FudgeTime(final DateTimeAccuracy accuracy, final TimeProvider timeProvider) {
+    this(accuracy, timeProvider.toLocalTime());
   }
-  
+
   /**
    * Creates a new {@link FudgeTime} with the time from a {@link Calendar} object.
    * 
-   * @param time the {@code Calendar} to copy the time from
+   * @param time  the {@code Calendar} to copy the time from
    */
-  public FudgeTime (final Calendar time) {
+  public FudgeTime(final Calendar time) {
     _accuracy = DateTimeAccuracy.MILLISECOND;
-    if (time.isSet (Calendar.ZONE_OFFSET) || time.isSet (Calendar.DST_OFFSET)) {
-      _timezoneOffset = ((time.isSet (Calendar.ZONE_OFFSET) ? time.get (Calendar.ZONE_OFFSET) : 0) + (time.isSet (Calendar.DST_OFFSET) ? time.get (Calendar.DST_OFFSET) : 0)) / 900000;
+    if (time.isSet(Calendar.ZONE_OFFSET) || time.isSet(Calendar.DST_OFFSET)) {
+      _timezoneOffset = ((time.isSet(Calendar.ZONE_OFFSET) ? time.get(Calendar.ZONE_OFFSET) : 0) + (time
+          .isSet(Calendar.DST_OFFSET) ? time.get(Calendar.DST_OFFSET) : 0)) / 900000;
     } else {
       _timezoneOffset = NO_TIMEZONE_OFFSET;
     }
-    _localTime = LocalTime.of (time.get (Calendar.HOUR_OF_DAY), time.get (Calendar.MINUTE), time.get (Calendar.SECOND), time.get (Calendar.MILLISECOND) * 1000000); 
+    _localTime = LocalTime.of(time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.SECOND),
+        time.get(Calendar.MILLISECOND) * 1000000);
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * @return the resolution
+   * Gets the accuracy of the time.
+   * 
+   * @return the accuracy, not null
    */
-  public DateTimeAccuracy getAccuracy () {
+  public DateTimeAccuracy getAccuracy() {
     return _accuracy;
   }
-  
+
   /**
-   * @return {@code true} if the {@link FudgeTime} has a timezone offset, {@code false} otherwise
-   */
-  public boolean hasTimezoneOffset () {
-    return getRawTimezoneOffset () != NO_TIMEZONE_OFFSET;
-  }
-  
-  /**
-   * Returns the timezone offset as held. See also {@link #getOffset}.
+   * Checks if the time has an offset.
    * 
-   * @return the timezone offset (15 minute intervals) or 0 if there is no offset
+   * @return {@code true} if the {@link FudgeTime} has a time-zone offset, {@code false} otherwise
    */
-  public int getTimezoneOffset () {
+  public boolean hasTimezoneOffset() {
+    return getRawTimezoneOffset() != NO_TIMEZONE_OFFSET;
+  }
+
+  /**
+   * Gets the time-zone offset as it would be encoded returning zero when no offset.
+   * See also {@link #getOffset}.
+   * 
+   * @return the time-zone offset (15 minute intervals) or 0 if there is no offset
+   */
+  public int getTimezoneOffset() {
     if (_timezoneOffset != NO_TIMEZONE_OFFSET) {
       return _timezoneOffset;
     } else {
       return 0;
     }
   }
-  
+
   /**
-   * Returns the timezone offset as it would be encoded. I.e. if there is no timezone, the value of -128 will
-   * be returned. This is different to the behaviour of {@link #getTimezoneOffset} which would return 0 for both
-   * there being no timezone information and there being a timezone offset of 0.
+   * Gets the time-zone offset as it would be encoded.
+   * <p>
+   * This is the wire level encoded form of the offset.
+   * If there is no offset, the value of -128 will be returned.
+   * This is different to the behaviour of {@link #getTimezoneOffset} which would return 0
+   * for both there being no time-zone information and there being a time-zone offset of 0.
    * 
-   * @return the timezone offset (15 minute intervals) or -128 for none
+   * @return the time-zone offset (15 minute intervals) or -128 for none
    */
-  /* package */ int getRawTimezoneOffset () {
+  /* package */int getRawTimezoneOffset() {
     return _timezoneOffset;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Returns a {@link LocalTime} representation of the time.
+   * Gets the hour of the day.
    * 
-   * @return the time
+   * @return hour
+   */
+  public int getHour() {
+    return toLocalTime().getHourOfDay();
+  }
+
+  /**
+   * Gets the minute within the hour.
+   * 
+   * @return minutes
+   */
+  public int getMinute() {
+    return toLocalTime().getMinuteOfHour();
+  }
+
+  /**
+   * Gets the second within the minute.
+   * 
+   * @return seconds
+   */
+  public int getSeconds() {
+    return toLocalTime().getSecondOfMinute();
+  }
+
+  /**
+   * Gets the milliseconds within the second.
+   *
+   * @return milliseconds
+   */
+  public int getMillis() {
+    return getNanos() / 1000000;
+  }
+
+  /**
+   * Gets the microseconds within the second.
+   * 
+   * @return microseconds
+   */
+  public int getMicros() {
+    return getNanos() / 1000;
+  }
+
+  /**
+   * Gets the number of nanoseconds within the second.
+   * 
+   * @return nanoseconds within the second
+   */
+  public int getNanos() {
+    return toLocalTime().getNanoOfSecond();
+  }
+
+  /**
+   * Gets the number of seconds since midnight.
+   * 
+   * @return seconds
+   */
+  public int getSecondsSinceMidnight() {
+    return toLocalTime().toSecondOfDay();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Converts this date to a {@code LocalTime}, using the first appropriate
+   * value if any field is not set.
+   * 
+   * @return a {@code LocalTime} roughly equivalent to this time, not null
    */
   public LocalTime toLocalTime () {
     return _localTime;
   }
-  
+
   /**
-   * Returns the timezone offset as a {@link ZoneOffset} object. See also {@link #getTimezoneOffset}.
+   * Converts the time-zone offset to a {@link ZoneOffset}.
+   * See also {@link #getTimezoneOffset}.
    * 
-   * @return the timezone offset
+   * @return the time-zone offset
    */
-  protected ZoneOffset getOffset () {
-    return ZoneOffset.ofTotalSeconds (getTimezoneOffset () * 900);
+  protected ZoneOffset getOffset() {
+    return ZoneOffset.ofTotalSeconds(getTimezoneOffset() * 900);
   }
-  
+
   /**
-   * Returns a {@link OffsetTime} representation of the time.
+   * Converts this date to an {@code OffsetTime}, using the first appropriate
+   * value if any field is not set.
    * 
-   * @return the time
+   * @return an {@code OffsetTime} roughly equivalent to this time, not null
    */
-  public OffsetTime toOffsetTime () {
-    return OffsetTime.of (toLocalTime (), getOffset ());
+  public OffsetTime toOffsetTime() {
+    return OffsetTime.of(toLocalTime(), getOffset());
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Returns the number of seconds since midnight.
+   * Checks if this time equals another.
    * 
-   * @return seconds
-   */
-  public int getSecondsSinceMidnight () {
-    return toLocalTime ().toSecondOfDay (); 
-  }
-  
-  /**
-   * Returns the number of nanoseconds within the second.
-   * 
-   * @return nanoseconds
-   */
-  public int getNanos () {
-    return toLocalTime ().getNanoOfSecond ();
-  }
-  
-  /**
-   * Returns the hour of the day.
-   * 
-   * @return hour
-   */
-  public int getHour () {
-    return toLocalTime ().getHourOfDay ();
-  }
-  
-  /**
-   * Returns the minute within the hour.
-   * 
-   * @return minutes
-   */
-  public int getMinute () {
-    return toLocalTime ().getMinuteOfHour ();
-  }
-  
-  /**
-   * Returns the second within the minute.
-   * 
-   * @return seconds
-   */
-  public int getSeconds () {
-    return toLocalTime ().getSecondOfMinute ();
-  }
-  
-  /**
-   * Returns the milliseconds within the second.
-   *
-   * @return milliseconds
-   */
-  public int getMillis () {
-    return getNanos () / 1000000;
-  }
-  
-  /**
-   * Returns the microseconds within the second.
-   * 
-   * @return microseconds
-   */
-  public int getMicros () {
-    return getNanos () / 1000;
-  }
-  
-  /**
-   * {@inheritDoc}
+   * @param object  the object to compare to, null returns false
+   * @return true if equal
    */
   @Override
-  public String toString () {
-    final StringBuilder sb = new StringBuilder ();
-    if (getAccuracy ().greaterThan (DateTimeAccuracy.DAY)) {
-      if (getHour () < 10) sb.append ('0');
-      sb.append (getHour ());
-      if (getAccuracy ().greaterThan (DateTimeAccuracy.HOUR)) {
-        sb.append (':');
-        if (getMinute () < 10) sb.append ('0');
-        sb.append (getMinute ());
-        if (getAccuracy ().greaterThan (DateTimeAccuracy.MINUTE)) {
-          sb.append (':');
-          if (getSeconds () < 10) sb.append ('0');
-          sb.append (getSeconds ());
-          if (getAccuracy ().greaterThan (DateTimeAccuracy.SECOND)) {
-            int frac = getNanos ();
-            if (getAccuracy ().lessThan (DateTimeAccuracy.NANOSECOND)) {
+  public boolean equals (final Object object) {
+    if (object == this) {
+      return true;
+    }
+    if (object instanceof FudgeTime) {
+      final FudgeTime other = (FudgeTime) object;
+      return other.getAccuracy() == getAccuracy() &&
+            other.toLocalTime().equals(toLocalTime()) &&
+            other.getRawTimezoneOffset() == getRawTimezoneOffset();
+    }
+    return false;
+  }
+
+  /**
+   * Returns a suitable hash code.
+   * 
+   * @return the hash code.
+   */
+  @Override
+  public int hashCode() {
+    return (toLocalTime().hashCode() * 17 + _timezoneOffset + 1) * 17 + _accuracy.getEncodedValue();
+  }
+
+  /**
+   * Returns a string representation of the time.
+   * 
+   * @return the time as a string, not null
+   */
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    if (getAccuracy().greaterThan(DateTimeAccuracy.DAY)) {
+      if (getHour() < 10) {
+        sb.append('0');
+      }
+      sb.append(getHour());
+      if (getAccuracy().greaterThan(DateTimeAccuracy.HOUR)) {
+        sb.append(':');
+        if (getMinute() < 10) {
+          sb.append('0');
+        }
+        sb.append(getMinute());
+        if (getAccuracy().greaterThan(DateTimeAccuracy.MINUTE)) {
+          sb.append(':');
+          if (getSeconds() < 10) {
+            sb.append('0');
+          }
+          sb.append(getSeconds());
+          if (getAccuracy().greaterThan(DateTimeAccuracy.SECOND)) {
+            int frac = getNanos();
+            if (getAccuracy().lessThan(DateTimeAccuracy.NANOSECOND)) {
               frac /= 1000;
-              if (getAccuracy ().lessThan (DateTimeAccuracy.MICROSECOND)) {
+              if (getAccuracy().lessThan(DateTimeAccuracy.MICROSECOND)) {
                 frac /= 1000;
               }
             }
-            sb.append ('.').append (frac);
+            sb.append('.').append(frac);
           }
         }
       }
     }
-    if (hasTimezoneOffset ()) {
-      int tz = getTimezoneOffset () * 15;
+    if (hasTimezoneOffset()) {
+      int tz = getTimezoneOffset() * 15;
       if (tz == 0) {
-        sb.append (" UTC");
+        sb.append(" UTC");
       } else {
-        sb.append ((tz > 0) ? " +" : " -");
-        if (tz < 0) tz = -tz;
-        sb.append (tz / 60).append (':');
+        sb.append((tz > 0) ? " +" : " -");
+        if (tz < 0) {
+          tz = -tz;
+        }
+        sb.append(tz / 60).append(':');
         tz %= 60;
-        if (tz < 10) sb.append ('0');
-        sb.append (tz);
+        if (tz < 10) {
+          sb.append('0');
+        }
+        sb.append(tz);
       }
     }
-    return sb.toString ();
+    return sb.toString();
   }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean equals (final Object o) {
-    if (o == this) return true;
-    if (o == null) return false;
-    if (!(o instanceof FudgeTime)) return false;
-    final FudgeTime other = (FudgeTime)o;
-    return other.getAccuracy () == getAccuracy ()
-        && other.toLocalTime ().equals (toLocalTime ())
-        && other.getRawTimezoneOffset () == getRawTimezoneOffset ();
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int hashCode () {
-    return (toLocalTime ().hashCode () * 17 + _timezoneOffset + 1) * 17 + _accuracy.getEncodedValue ();
-  }
-  
+
 }
