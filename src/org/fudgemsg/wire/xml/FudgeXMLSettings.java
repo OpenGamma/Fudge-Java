@@ -33,9 +33,7 @@ import org.fudgemsg.FudgeTypeDictionary;
  * @author Andrew Griffin
  */
 public class FudgeXMLSettings {
-  
-  // TODO change the way this works to the approach used in the JSON package. I think I prefer that.
-  
+
   /**
    * Attributes available for the envelope element.
    */
@@ -53,7 +51,7 @@ public class FudgeXMLSettings {
      */
     TAXONOMY;
   }
-  
+
   /**
    * Attributes available for a field element.
    */
@@ -75,107 +73,88 @@ public class FudgeXMLSettings {
      */
     ENCODING;
   }
-  
+
   /**
    * Default element name for the outer envelope tag. 
    */
   public static final String DEFAULT_ENVELOPE_ELEMENT = "fudgeEnvelope";
-  
   /**
    * Default attribute name for the processing directives on the envelope.
    */
   public static final String DEFAULT_ENVELOPE_ATTRIBUTE_PROCESSINGDIRECTIVES = "processingDirectives";
-  
   /**
    * Default attribute name for the schema version on the envelope.
    */
   public static final String DEFAULT_ENVELOPE_ATTRIBUTE_SCHEMAVERSION = "schemaVersion";
-  
   /**
    * Default attribute name for the taxonomy on the envelope.
    */
   public static final String DEFAULT_ENVELOPE_ATTRIBUTE_TAXONOMY = "taxonomy";
-  
   /**
    * Default element name for an anonymous or unnamed field.
    */
   public static final String DEFAULT_FIELD_ELEMENT = "fudgeField";
-  
   /**
    * Default attribute name for the name of a field.
    */
   public static final String DEFAULT_FIELD_ATTRIBUTE_NAME = "name";
-  
   /**
    * Default attribute name for the ordinal index of a field.
    */
   public static final String DEFAULT_FIELD_ATTRIBUTE_ORDINAL = "ordinal";
-  
   /**
    * Alternative attribute name (not written but recognized by default) for the ordinal index of a field. 
    */
   public static final String ALIAS_FIELD_ATTRIBUTE_ORDINAL_INDEX = "index";
-  
   /**
    * Alternative attribute name (not written but recognized by default) for the ordinal index of a field.
    */
   public static final String ALIAS_FIELD_ATTRIBUTE_ORDINAL_KEY = "key";
-  
   /**
    * Default attribute name for the type of a field.
    */
   public static final String DEFAULT_FIELD_ATTRIBUTE_TYPE = "type";
-  
   /**
    * Default attribute name for the encoding of a field.
    */
   public static final String DEFAULT_FIELD_ATTRIBUTE_ENCODING = "encoding";
-  
   /**
    * Default value for a {@code true} boolean field.
    */
   public static final String DEFAULT_BOOLEAN_TRUE = "true";
-  
   /**
    * Alternative value (not written but recognized by default) for a {@code true} boolean field.
    */
   public static final String ALIAS_BOOLEAN_TRUE_ON = "on";
-  
   /**
    * Alternative value (not written but recognized by default) for a {@code true} boolean field.
    */
   public static final String ALIAS_BOOLEAN_TRUE_T = "T";
-  
   /**
    * Alternative value (not written but recognized by default) for a {@code true} boolean field.
    */
   public static final String ALIAS_BOOLEAN_TRUE_1 = "1";
-  
   /**
    * Default value for a {@code false} boolean field.
    */
   public static final String DEFAULT_BOOLEAN_FALSE = "false";
-  
   /**
    * Alternative value (not written but recognized by default) for a {@code false} boolean field.
    */
   public static final String ALIAS_BOOLEAN_FALSE_OFF = "off";
-  
   /**
    * Alternative value (not written but recognized by default) for a {@code false} boolean field.
    */
   public static final String ALIAS_BOOLEAN_FALSE_F = "F";
-  
   /**
    * Alternative value (not written but recognized by default) for a {@code false} boolean field.
    */
   public static final String ALIAS_BOOLEAN_FALSE_0 = "0";
-  
   /**
    * Default value for base-64 encoded data.
    */
   public static final String DEFAULT_ENCODING_BASE64 = "base64";
-  
+
   private String _envelopeElementName;
   private final Set<String> _envelopeElementAliases = new HashSet<String> ();
   private String _fieldElementName;
@@ -200,7 +179,7 @@ public class FudgeXMLSettings {
   
   private String _base64EncodingName;
   private final Set<String> _base64EncodingAliases = new HashSet<String> ();
-  
+
   /**
    * Creates a new settings object with all of the defaults.
    */
@@ -429,8 +408,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
-   * @param attributeName
+   * @param attribute  the attribute
+   * @param attributeName  the attribute name
    */
   protected void setEnvelopeAttribute (final XMLEnvelopeAttribute attribute, final String attributeName) {
     getEnvelopeAttributesToName ().put (attribute, attributeName);
@@ -465,8 +444,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
-   * @return
+   * @param attribute  the attribute
+   * @return the attribute value
    */
   protected String getEnvelopeAttribute (final XMLEnvelopeAttribute attribute) {
     return getEnvelopeAttributesToName ().get (attribute);
@@ -500,8 +479,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
-   * @param attributeName
+   * @param attribute  the attribute
+   * @param attributeName  the attribute name
    */
   protected void addEnvelopeAttributeAlias (final XMLEnvelopeAttribute attribute, final String attributeName) {
     if (attributeName != null) {
@@ -531,7 +510,7 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
+   * @param attribute  the attribute
    */
   protected void clearEnvelopeAttributeAliases (final XMLEnvelopeAttribute attribute) {
     final String preserve = getEnvelopeAttribute (attribute);
@@ -583,8 +562,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
-   * @param attributeName
+   * @param attribute  the attribute
+   * @param attributeName  the attribute name
    */
   protected void setFieldAttribute (XMLFieldAttribute attribute, final String attributeName) {
     getFieldAttributesToName ().put (attribute, attributeName);
@@ -628,8 +607,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
-   * @return
+   * @param attribute  the attribute
+   * @return the attribute value
    */
   protected String getFieldAttribute (final XMLFieldAttribute attribute) {
     return getFieldAttributesToName ().get (attribute);
@@ -672,8 +651,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
-   * @param attributeName
+   * @param attribute  the attribute
+   * @param attributeName  the attribute name
    */
   protected void addFieldAttributeAlias (final XMLFieldAttribute attribute, final String attributeName) {
     if (attributeName != null) {
@@ -710,7 +689,7 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param attribute
+   * @param attribute  the attribute
    */
   protected void clearFieldAttributeAliases (final XMLFieldAttribute attribute) {
     final String preserve = getFieldAttribute (attribute);
@@ -736,6 +715,7 @@ public class FudgeXMLSettings {
   
   /**
    * Returns whether to map the field name to/from the element name.
+   * @return true if preserving field names
    */
   public boolean getPreserveFieldNames () {
     return _preserveFieldNames;
@@ -754,6 +734,7 @@ public class FudgeXMLSettings {
   
   /**
    * Returns the value to use for encoding a boolean {@code true} value, or to expect when decoding XML input.
+   * @return the value for boolean true
    */
   public String getBooleanTrue () {
     return _booleanTrue;
@@ -761,6 +742,7 @@ public class FudgeXMLSettings {
   
   /**
    * Adds an additional alias to recognize as a boolean {@code true} when decoding XML input.
+   * @param trueValue  the alias for true
    */
   public void addBooleanTrueAlias (final String trueValue) {
     addBooleanAlias (true, trueValue);
@@ -786,6 +768,7 @@ public class FudgeXMLSettings {
   
   /**
    * Returns the value to use for encoding a boolean {@code false} value, or to expect when decoding XML input.
+   * @return the value for boolean false
    */
   public String getBooleanFalse () {
     return _booleanFalse;
@@ -793,6 +776,7 @@ public class FudgeXMLSettings {
   
   /**
    * Adds an additional alias to recognize as a boolean {@code false} value when decoding XML input.
+   * @param falseValue  the alias for false
    */
   public void addBooleanFalseAlias (final String falseValue) {
     addBooleanAlias (false, falseValue);
@@ -806,8 +790,8 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param value
-   * @param alias
+   * @param value  the value
+   * @param alias  the alias
    */
   protected void addBooleanAlias (final boolean value, final String alias) {
     if (alias == null) throw new NullPointerException ("alias cannot be null");
@@ -815,7 +799,7 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @param value
+   * @param value  the value
    */
   protected void clearBooleanAliases (final Boolean value) {
     final String preserve = (value ? getBooleanTrue () : getBooleanFalse ()).toLowerCase ();
@@ -831,7 +815,7 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @return
+   * @return the map of strings used for boolean
    */
   protected Map<String,Boolean> getStringsToBoolean () {
     return _stringsToBoolean;
@@ -839,6 +823,7 @@ public class FudgeXMLSettings {
   
   /**
    * Sets the value to use, or expect, on an encoding attribute if the field data is written in Base-64.
+   * @param value  the value used to indicate base-64
    */
   public void setBase64EncodingName (final String value) {
     if (value == null) throw new NullPointerException ("value cannot be null");
@@ -848,6 +833,7 @@ public class FudgeXMLSettings {
   
   /**
    * Returns the value to use, or expect, on an encoding attribute if the field data is written in Base-64. 
+   * @return the base-64 encoding name
    */
   public String getBase64EncodingName () {
     return _base64EncodingName;
@@ -855,6 +841,7 @@ public class FudgeXMLSettings {
   
   /**
    * Adds an additional alias to recognize as a Base-64 encoding when reading XML input.
+   * @param value  the alias for base-64
    */
   public void addBase64EncodingAlias (final String value) {
     if (value == null) throw new NullPointerException ("value cannot be null");
@@ -862,7 +849,7 @@ public class FudgeXMLSettings {
   }
   
   /**
-   * @return
+   * @return the aliases for base-64
    */
   protected Set<String> getBase64EncodingAliases () {
     return _base64EncodingAliases;
@@ -870,6 +857,7 @@ public class FudgeXMLSettings {
   
   /**
    * Returns true if the data for unknown types should be encoded in Base-64.
+   * @return true if unknown type data should be sent as base-64
    */
   public boolean getBase64UnknownTypes () {
     return _base64UnknownTypes;
@@ -877,28 +865,29 @@ public class FudgeXMLSettings {
   
   /**
    * Sets whether to encode unknown types in Base-64.
+   * @param base64UnknownTypes  whether to send unknown data as base-64
    */
   public void setBase64UnknownTypes (final boolean base64UnknownTypes) {
     _base64UnknownTypes = base64UnknownTypes;
   }
   
   /**
-   * @return
+   * @return the map of identifiers
    */
   public Map<String,Integer> getIdentifiersToFudgeType () {
     return _identifiersToFudgeType;
   }
   
   /**
-   * @return
+   * @return the map of identifiers
    */
   public Map<Integer,String> getFudgeTypesToIdentifier () {
     return _fudgeTypesToIdentifier;
   }
   
   /**
-   * @param type
-   * @param identifiers
+   * @param type  the type code
+   * @param identifiers  the type identifiers
    */
   protected void registerFudgeType (final int type, final String ... identifiers) {
     getFudgeTypesToIdentifier ().put (type, (identifiers[0] == null) ? "" : identifiers[0]);
@@ -911,6 +900,8 @@ public class FudgeXMLSettings {
   
   /**
    * Returns a type string for a Fudge type identifier.
+   * @param type  the type code
+   * @return the textual name
    */
   public String fudgeTypeIdToString (final int type) {
     String s = getFudgeTypesToIdentifier ().get (type);
@@ -919,6 +910,8 @@ public class FudgeXMLSettings {
   
   /**
    * Returns a Fudge type identifier for a given string.
+   * @param str  the textual type name
+   * @return the type code
    */
   public Integer stringToFudgeTypeId (final String str) {
     return getIdentifiersToFudgeType ().get (str.toLowerCase ());
@@ -926,6 +919,7 @@ public class FudgeXMLSettings {
 
   /**
    * Returns {@code true} if the field ordinal should be appended to the field name when generating field elements.
+   * @return true if the ordinal should be appended to the field name
    */
   public boolean getAppendFieldOrdinal () {
     return _appendFieldOrdinal;
@@ -933,6 +927,7 @@ public class FudgeXMLSettings {
   
   /**
    * Sets whether to append the field ordinal to the default field name when generating field elements.
+   * @param appendFieldOrdinal  true if the ordinal should be appended to the field name
    */
   public void setAppendFieldOrdinal (final boolean appendFieldOrdinal) {
     _appendFieldOrdinal = appendFieldOrdinal;
