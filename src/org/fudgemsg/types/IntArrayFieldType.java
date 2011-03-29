@@ -44,7 +44,7 @@ public class IntArrayFieldType extends FudgeFieldType {
   //-------------------------------------------------------------------------
   @Override
   public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    short[] data = (short[]) value;
+    int[] data = (int[]) value;
     return data.length * 4;
   }
 
@@ -60,7 +60,7 @@ public class IntArrayFieldType extends FudgeFieldType {
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    short[] data = (short[]) value;
+    int[] data = (int[]) value;
     for (int i : data) {
       output.writeInt(i);
     }
