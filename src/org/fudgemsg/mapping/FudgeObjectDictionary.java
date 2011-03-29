@@ -23,10 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.fudgemsg.ClasspathUtilities;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.util.ClasspathUtilities;
 
 /**
  * Extensible dictionary of types that Fudge can convert to and from wire format.

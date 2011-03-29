@@ -58,9 +58,9 @@ public class UnknownFudgeFieldValue {
 
   //-------------------------------------------------------------------------
   /**
-   * Gets the raw contents of the original data.
+   * Gets the raw contents of the original data which should not be modified.
    * 
-   * @return the data content, not null
+   * @return the data content, treat as unmodifiable, not null
    */
   public byte[] getContents() {
     return _contents;

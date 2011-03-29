@@ -18,12 +18,12 @@ package org.fudgemsg.types;
 import java.io.DataInput;
 import java.io.DataOutput;
 
-import org.fudgemsg.FudgeEncoded;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeSize;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.wire.FudgeEncoded;
+import org.fudgemsg.wire.FudgeSize;
 
 /**
  * The type definition for a sub-message in a hierarchical message format.

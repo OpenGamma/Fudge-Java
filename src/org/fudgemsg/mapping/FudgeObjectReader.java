@@ -18,7 +18,7 @@ package org.fudgemsg.mapping;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.FudgeMsgReader;
+import org.fudgemsg.wire.FudgeMsgReader;
 
 /**
  * Reader to access and deserialize Java objects from an underlying stream of Fudge messages.

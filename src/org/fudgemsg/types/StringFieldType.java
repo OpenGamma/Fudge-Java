@@ -21,8 +21,8 @@ import java.io.IOException;
 
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.UTF8;
 import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.wire.UTF8;
 
 /**
  * The type definition for a Modified UTF-8 encoded string.

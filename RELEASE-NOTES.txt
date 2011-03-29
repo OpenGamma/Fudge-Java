@@ -1,0 +1,24 @@
+Release notes
+=============
+These notes describe the Java reference implementation of the Fudge Messaging encoding system.
+
+For more information about the project, please see
+   http://www.fudgemsg.org/
+   
+This software is licensed under the Apache Public License, version 2.0.
+For more information, please see the LICENSE.txt file contained in
+this distribution.
+
+Version 0.4
+===========
+Compatibility:
+- Not Source or Binary compatible
+  Wire protocol unchanged
+
+Changes:
+- Move code to new package structure.
+  This minimizes the classes in the top package to avoid overwhelming users with
+  low-level knowledge at first glance.
+
+- Add EncodedFudgeMsg
+

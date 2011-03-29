@@ -47,6 +47,7 @@ import org.fudgemsg.types.StringFieldTypeConverter;
 import org.fudgemsg.types.TimeFieldType;
 import org.fudgemsg.types.UnknownFudgeFieldType;
 import org.fudgemsg.types.secondary.SecondaryTypeLoader;
+import org.fudgemsg.util.ClasspathUtilities;
 
 /**
  * The dictionary of all known Fudge types.
