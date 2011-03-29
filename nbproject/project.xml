@@ -76,19 +76,19 @@
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/2">
             <compilation-unit>
                 <package-root>src</package-root>
-                <classpath mode="compile">lib/jar/org.mongodb/java-driver/mongo-1.0.jar:lib/jar/org.apache.commons/commons-beanutils/commons-beanutils-core-1.8.2.jar</classpath>
+                <classpath mode="compile">lib/jar/javax.time/jsr-310-ri/jsr-310-ri-0.6.3.jar:lib/jar/javax.time/jsr-310-ri/jsr-310-TZDB-all-0.6.3.jar:lib/jar/org.apache.commons/commons-beanutils/commons-beanutils-core-1.8.2.jar:lib/jar/org.apache.commons/commons-codec/commons-codec-1.4.jar:lib/jar/org.apache.commons/commons-logging/commons-logging-1.1.1.jar:lib/jar/org.json/json/json-20090211.jar:lib/jar/org.junit/junit/junit-4.8.2.jar:lib/jar/org.mongodb/java-driver/mongo-2.1.jar:lib/jar/org.scannotation/scannotation/scannotation-1.0.2.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>tests/interop</package-root>
                 <unit-tests/>
-                <classpath mode="compile">lib/jar/org.junit/junit/junit-4.8.2.jar:build/classes:tests/classes</classpath>
+                <classpath mode="compile">build/classes:tests/classes:lib/jar/org.junit/junit/junit-4.8.2.jar:lib/jar/org.junit/junit/junit-dep-4.8.2.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>tests/unit</package-root>
                 <unit-tests/>
-                <classpath mode="compile">lib/jar/org.junit/junit/junit-4.8.2.jar:build/classes:lib/jar/org.mongodb/java-driver/mongo-1.0.jar</classpath>
+                <classpath mode="compile">build/classes:lib/jar/javax.time/jsr-310-ri/jsr-310-ri-0.6.3.jar:lib/jar/org.junit/junit/junit-4.8.2.jar:lib/jar/org.mongodb/java-driver/mongo-2.1.jar</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
         </java-data>
