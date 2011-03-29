@@ -25,37 +25,38 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 
 /**
- * <p>The type definition for a date. This is currently backed by a {@link FudgeTime}. The secondary
- * type mechanism is used to support additional Java representations, such as {@link Date}, {@link Calendar}
- * and {@code javax.time} classes.</p>
- *
- * @author Andrew Griffin
+ * The type definition for a date.
+ * <p>
+ * This is currently backed by a {@link FudgeTime}.
+ * The secondary type mechanism is used to support additional Java representations,
+ * such as {@link Date}, {@link Calendar} and {@code javax.time} classes.</p>
+ * <p>
+ * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.
  */
-public class TimeFieldType extends FudgeFieldType<FudgeTime> {
-  
+public class TimeFieldType extends FudgeFieldType {
+
   /**
-   * Standard Fudge field type: date. See {@link FudgeTypeDictionary#TIME_TYPE_ID}.
+   * Standard Fudge field type: date.
+   * See {@link FudgeTypeDictionary#TIME_TYPE_ID}.
    */
   public static final TimeFieldType INSTANCE = new TimeFieldType();
-  
+
+  /**
+   * Restricted constructor.
+   */
   private TimeFieldType() {
     super(FudgeTypeDictionary.TIME_TYPE_ID, FudgeTime.class, false, 8);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
   public FudgeTime readValue(DataInput input, int dataSize) throws IOException {
-    return DateTimeFieldType.readFudgeTime (input);
+    return DateTimeFieldType.readFudgeTime(input);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, FudgeTime value) throws IOException {
-    DateTimeFieldType.writeFudgeTime (output, value);
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    FudgeTime data = (FudgeTime) value;
+    DateTimeFieldType.writeFudgeTime(output, data);
   }
-
 }

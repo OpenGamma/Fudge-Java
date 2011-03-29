@@ -37,7 +37,7 @@ public class FudgeTypeDictionaryTest {
 
   @Test
   public void simpleTypeLookup() {
-    FudgeFieldType<?> type = null;
+    FudgeFieldType type = null;
     final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
     
     type = dictionary.getByJavaType(Boolean.TYPE);
@@ -56,8 +56,8 @@ public class FudgeTypeDictionaryTest {
     final UUID uuidIn = new UUID (0x0F0E0D0C0B0A0908l, 0x0706050403020100l);
     final byte[] byteIn = new byte[] { 15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0 };
     
-    final FudgeFieldType<?> uuidType = dictionary.getByJavaType (uuidIn.getClass ());
-    final FudgeFieldType<?> byteType = dictionary.getByJavaType (byteIn.getClass ());
+    final FudgeFieldType uuidType = dictionary.getByJavaType (uuidIn.getClass ());
+    final FudgeFieldType byteType = dictionary.getByJavaType (byteIn.getClass ());
     
     assertNotSame (uuidType, byteType);
     assertEquals (((SecondaryFieldType<?,?>)uuidType).getPrimaryType ().getJavaType (), byteType.getJavaType ());

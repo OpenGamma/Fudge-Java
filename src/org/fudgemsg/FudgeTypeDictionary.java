@@ -47,6 +47,7 @@ import org.fudgemsg.types.StringFieldTypeConverter;
 import org.fudgemsg.types.TimeFieldType;
 import org.fudgemsg.types.UnknownFudgeFieldType;
 import org.fudgemsg.types.secondary.SecondaryTypeLoader;
+import org.fudgemsg.util.ClasspathUtilities;
 
 /**
  * The dictionary of all known Fudge types.
@@ -61,7 +62,7 @@ public class FudgeTypeDictionary {
   /**
    * The types indexed in an array.
    */
-  private volatile FudgeFieldType<?>[] _typesById = new FudgeFieldType<?>[0];
+  private volatile FudgeFieldType[] _typesById = new FudgeFieldType[0];
   /**
    * The unknown types indexed in an array.
    */
@@ -69,7 +70,7 @@ public class FudgeTypeDictionary {
   /**
    * The types indexed by Java type.
    */
-  private final ConcurrentMap<Class<?>, FudgeFieldType<?>> _typesByJavaType;
+  private final ConcurrentMap<Class<?>, FudgeFieldType> _typesByJavaType;
   /**
    * The types converters indexed by Java type.
    */
@@ -84,7 +85,7 @@ public class FudgeTypeDictionary {
    * Some standard secondary types will also be loaded.
    */
   public FudgeTypeDictionary() {
-    _typesByJavaType = new ConcurrentHashMap<Class<?>, FudgeFieldType<?>>();
+    _typesByJavaType = new ConcurrentHashMap<Class<?>, FudgeFieldType>();
     _convertersByJavaType = new ConcurrentHashMap<Class<?>, FudgeTypeConverter<?, ?>>();
     // primary types
     addType(ByteArrayFieldType.LENGTH_4_INSTANCE);
@@ -137,7 +138,7 @@ public class FudgeTypeDictionary {
   protected FudgeTypeDictionary(final FudgeTypeDictionary other) {
     _typesById = other._typesById;
     _unknownTypesById = other._unknownTypesById;
-    _typesByJavaType = new ConcurrentHashMap<Class<?>, FudgeFieldType<?>>(other._typesByJavaType);
+    _typesByJavaType = new ConcurrentHashMap<Class<?>, FudgeFieldType>(other._typesByJavaType);
     _convertersByJavaType = new ConcurrentHashMap<Class<?>, FudgeTypeConverter<?, ?>>(other._convertersByJavaType);
   }
 
@@ -174,7 +175,7 @@ public class FudgeTypeDictionary {
    * @param type  the {@code FudgeFieldType} definition of the type, not null
    * @param alternativeTypes  any additional Java classes that are synonymous with this type
    */
-  public void addType(FudgeFieldType<?> type, Class<?>... alternativeTypes) {
+  public void addType(FudgeFieldType type, Class<?>... alternativeTypes) {
     if (type == null) {
       throw new NullPointerException("Must not provide a null FudgeFieldType to add.");
     }
@@ -183,7 +184,7 @@ public class FudgeTypeDictionary {
     } else {
       synchronized (this) {
         int newLength = Math.max(type.getTypeId() + 1, _typesById.length);
-        FudgeFieldType<?>[] newArray = Arrays.copyOf(_typesById, newLength);
+        FudgeFieldType[] newArray = Arrays.copyOf(_typesById, newLength);
         newArray[type.getTypeId()] = type;
         _typesById = newArray;
         /*for (int i = 0; i < newArray.length; i++) {
@@ -204,11 +205,11 @@ public class FudgeTypeDictionary {
    * @param javaType the class to resolve
    * @return the matching Fudge type, null if none is found
    */
-  public FudgeFieldType<?> getByJavaType(final Class<?> javaType) {
+  public FudgeFieldType getByJavaType(final Class<?> javaType) {
     if (javaType == null) {
       return null;
     }
-    FudgeFieldType<?> fieldType = _typesByJavaType.get(javaType);
+    FudgeFieldType fieldType = _typesByJavaType.get(javaType);
     if (fieldType != null) {
       return fieldType;
     }
@@ -247,7 +248,7 @@ public class FudgeTypeDictionary {
    * @param typeId  the numeric type identifier
    * @return the type with the specified type identifier, null if no type for the id
    */
-  public FudgeFieldType<?> getByTypeId(int typeId) {
+  public FudgeFieldType getByTypeId(int typeId) {
     if (typeId >= _typesById.length) {
       return null;
     }
@@ -299,7 +300,7 @@ public class FudgeTypeDictionary {
     if (clazz.isAssignableFrom(value.getClass())) {
       return (T) value;
     }
-    final FudgeFieldType<?> type = field.getType();
+    final FudgeFieldType type = field.getType();
     if (type instanceof SecondaryFieldType) {
       final SecondaryFieldType sourceType = (SecondaryFieldType) type;
       if (clazz.isAssignableFrom(sourceType.getPrimaryType().getJavaType())) {
@@ -356,7 +357,7 @@ public class FudgeTypeDictionary {
    * @return {@code true} if a conversion is possible, {@code false} otherwise
    *  (when {@link #getFieldValue} might return {@code null} or throw an exception)
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings("rawtypes")
   public <T> boolean canConvertField (final Class<T> clazz, final FudgeField field) {
     if (field == null) {
       return false;
@@ -368,7 +369,7 @@ public class FudgeTypeDictionary {
     if (clazz.isAssignableFrom(value.getClass())) {
       return true;
     }
-    final FudgeFieldType<?> type = field.getType();
+    final FudgeFieldType type = field.getType();
     if (type instanceof SecondaryFieldType) {
       final SecondaryFieldType sourceType = (SecondaryFieldType) type;
       if (clazz.isAssignableFrom(sourceType.getPrimaryType().getJavaType())) {
@@ -424,7 +425,6 @@ public class FudgeTypeDictionary {
    * 
    * @param className  the fully qualified name of the builder class.
    */
-  @SuppressWarnings("rawtypes")
   public void addAnnotatedSecondaryTypeClass(String className) {
     Class<?> builderClass = null;
     try {

@@ -29,6 +29,12 @@ import org.fudgemsg.mapping.FudgeObjectWriter;
 import org.fudgemsg.mapping.FudgeSerializationContext;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.taxon.TaxonomyResolver;
+import org.fudgemsg.wire.FudgeDataInputStreamReader;
+import org.fudgemsg.wire.FudgeDataOutputStreamWriter;
+import org.fudgemsg.wire.FudgeMsgReader;
+import org.fudgemsg.wire.FudgeMsgWriter;
+import org.fudgemsg.wire.FudgeStreamReader;
+import org.fudgemsg.wire.FudgeStreamWriter;
 
 /**
  * <p>The primary entry-point for code to interact with the rest of the Fudge system.

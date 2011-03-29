@@ -25,47 +25,43 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
  * The type definition for an array of double-precision floating point numbers.
- *
- * @author Kirk Wylie
  */
-public class DoubleArrayFieldType extends FudgeFieldType<double[]> {
-  
+public class DoubleArrayFieldType extends FudgeFieldType {
+
   /**
-   * Standard Fudge field type: arbitrary length 64-bit floating point array. See {@link FudgeTypeDictionary#DOUBLE_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: arbitrary length 64-bit floating point array.
+   * See {@link FudgeTypeDictionary#DOUBLE_ARRAY_TYPE_ID}.
    */
   public static final DoubleArrayFieldType INSTANCE = new DoubleArrayFieldType();
-  
+
+  /**
+   * Restricted constructor.
+   */
   private DoubleArrayFieldType() {
     super(FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID, double[].class, true, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(double[] value, FudgeTaxonomy taxonomy) {
-    return value.length * 8;
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    double[] data = (double[]) value;
+    return data.length * 8;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public double[] readValue(DataInput input, int dataSize) throws IOException {
     int nDoubles = dataSize / 8;
     double[] result = new double[nDoubles];
-    for(int i = 0; i < nDoubles; i++) {
+    for (int i = 0; i < nDoubles; i++) {
       result[i] = input.readDouble();
     }
     return result;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, double[] value) throws IOException {
-    for(double d : value) {
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    double[] data = (double[]) value;
+    for (double d : data) {
       output.writeDouble(d);
     }
   }

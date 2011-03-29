@@ -24,16 +24,12 @@ import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.UnknownFudgeFieldValue;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
-
 /**
  * A type class for handling variable sized field values where the type
  * isn't available in the current {@link FudgeTypeDictionary}.
- *
- * @author Kirk Wylie
  */
-public class UnknownFudgeFieldType extends
-    FudgeFieldType<UnknownFudgeFieldValue> {
-  
+public class UnknownFudgeFieldType extends FudgeFieldType {
+
   /**
    * Creates a new {@link UnknownFudgeFieldType} for the given type identifier.
    * 
@@ -43,32 +39,24 @@ public class UnknownFudgeFieldType extends
     super(typeId, UnknownFudgeFieldValue.class, true, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(UnknownFudgeFieldValue value,
-      FudgeTaxonomy taxonomy) {
-    return value.getContents().length;
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    UnknownFudgeFieldValue data = (UnknownFudgeFieldValue) value;
+    return data.getContents().length;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public UnknownFudgeFieldValue readValue(DataInput input, int dataSize)
-      throws IOException {
+  public UnknownFudgeFieldValue readValue(DataInput input, int dataSize) throws IOException {
     byte[] contents = new byte[dataSize];
     input.readFully(contents);
     return new UnknownFudgeFieldValue(contents, this);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, UnknownFudgeFieldValue value) throws IOException {
-    output.write(value.getContents());
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    UnknownFudgeFieldValue data = (UnknownFudgeFieldValue) value;
+    output.write(data.getContents());
   }
 
 }

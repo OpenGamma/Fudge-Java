@@ -24,48 +24,44 @@ import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
- * Type definition for arrays of 32-bit integers.
- *
- * @author Kirk Wylie
+ * The type definition for arrays of 32-bit integers.
  */
-public class IntArrayFieldType extends FudgeFieldType<int[]> {
-  
+public class IntArrayFieldType extends FudgeFieldType {
+
   /**
-   * Standard Fudge field type: array of 32-bit integers. See {@link FudgeTypeDictionary#INT_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: array of 32-bit integers.
+   * See {@link FudgeTypeDictionary#INT_ARRAY_TYPE_ID}.
    */
   public static final IntArrayFieldType INSTANCE = new IntArrayFieldType();
 
+  /**
+   * Restricted constructor.
+   */
   private IntArrayFieldType() {
     super(FudgeTypeDictionary.INT_ARRAY_TYPE_ID, int[].class, true, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(int[] value, FudgeTaxonomy taxonomy) {
-    return value.length * 4;
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    int[] data = (int[]) value;
+    return data.length * 4;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int[] readValue(DataInput input, int dataSize) throws IOException {
     int nInts = dataSize / 4;
     int[] result = new int[nInts];
-    for(int i = 0; i < nInts; i++) {
+    for (int i = 0; i < nInts; i++) {
       result[i] = input.readInt();
     }
     return result;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, int[] value) throws IOException {
-    for(int i : value) {
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    int[] data = (int[]) value;
+    for (int i : data) {
       output.writeInt(i);
     }
   }

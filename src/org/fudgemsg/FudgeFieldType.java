@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.util.ArgumentChecker;
 
 /**
  * The type of a field as defined by Fudge.
@@ -32,10 +33,8 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
  * <p>
  * This class is not final but is thread-safe in isolation.
  * Subclasses must be immutable and thread-safe.
- *
- * @param <T> underlying Java class this type represents
  */
-public class FudgeFieldType<T> implements Serializable {
+public class FudgeFieldType implements Serializable {
 
   /**
    * The Fudge type id, from the specification.
@@ -44,7 +43,7 @@ public class FudgeFieldType<T> implements Serializable {
   /**
    * The Java equivalent type.
    */
-  private final Class<T> _javaType;
+  private final Class<?> _javaType;
   /**
    * Whether the type is sent as a variable size in the protocol.
    */
@@ -64,12 +63,10 @@ public class FudgeFieldType<T> implements Serializable {
    * @param isVariableSize  true if the field may contain variable width data
    * @param fixedSize  the size in bytes if fixed size, zero for variable width
    */
-  public FudgeFieldType(int typeId, Class<T> javaType, boolean isVariableSize, int fixedSize) {
-    if (javaType == null) {
-      throw new NullPointerException("Must specify a valid Java type for conversion.");
-    }
+  public FudgeFieldType(int typeId, Class<?> javaType, boolean isVariableSize, int fixedSize) {
+    ArgumentChecker.notNull(javaType, "Java type must not be null");
     if (typeId < 0 || typeId > 255) {
-      throw new IllegalArgumentException("The type id must fit in an unsigned byte.");
+      throw new IllegalArgumentException("The type id must fit in an unsigned byte");
     }
     _typeId = typeId;
     _javaType = javaType;
@@ -80,6 +77,8 @@ public class FudgeFieldType<T> implements Serializable {
   //-------------------------------------------------------------------------
   /**
    * Gets the Fudge type identifier.
+   * <p>
+   * This is the unsigned byte used on the wire to identify the type.
    * 
    * @return the type identifier, from 0 to 255
    */
@@ -92,17 +91,26 @@ public class FudgeFieldType<T> implements Serializable {
    * 
    * @return the equivalent Java type, not null
    */
-  public final Class<T> getJavaType() {
+  public final Class<?> getJavaType() {
     return _javaType;
   }
 
   /**
-   * Checks if the field may contain variable width data.
+   * Checks if the type has a variable width.
    * 
    * @return true if variable width, false for fixed width
    */
   public final boolean isVariableSize() {
     return _isVariableSize;
+  }
+
+  /**
+   * Checks if the type has a fixed width.
+   * 
+   * @return true if variable width, false for fixed width
+   */
+  public final boolean isFixedSize() {
+    return !_isVariableSize;
   }
 
   /**
@@ -125,7 +133,7 @@ public class FudgeFieldType<T> implements Serializable {
    * @param taxonomy  the taxonomy being used for the encoding, not used for fixed width types
    * @return the size in bytes
    */
-  public int getVariableSize(T value, FudgeTaxonomy taxonomy) {
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
     if (isVariableSize()) {
       throw new UnsupportedOperationException("This method must be overridden for variable size types");
     }
@@ -145,7 +153,7 @@ public class FudgeFieldType<T> implements Serializable {
    * @throws IOException if an error occurs, which must be wrapped by the caller
    */
   @SuppressWarnings("unused")
-  public void writeValue(DataOutput output, T value) throws IOException {
+  public void writeValue(DataOutput output, Object value) throws IOException {
     if (isVariableSize()) {
       throw new UnsupportedOperationException("This method must be overridden for variable size types");
     }
@@ -164,7 +172,7 @@ public class FudgeFieldType<T> implements Serializable {
    * @throws IOException if an error occurs, which must be wrapped by the caller
    */
   @SuppressWarnings("unused")
-  public T readValue(DataInput input, int dataSize) throws IOException {
+  public Object readValue(DataInput input, int dataSize) throws IOException {
     if (isVariableSize()) {
       throw new UnsupportedOperationException("This method must be overridden for variable size types");
     }
@@ -174,9 +182,9 @@ public class FudgeFieldType<T> implements Serializable {
 
   //-------------------------------------------------------------------------
   /**
-   * Checks if this type equals another.
+   * Checks if this type equals another at the wire type level.
    * <p>
-   * For performance, this only checks the type identifier.
+   * Note that this only checks the wire type identifier, not the Java type.
    * 
    * @param obj  the object to compare to, null returns false
    * @return true if equal
@@ -186,8 +194,8 @@ public class FudgeFieldType<T> implements Serializable {
     if (obj == this) {
       return true;
     }
-    if (obj instanceof FudgeFieldType<?>) {
-      FudgeFieldType<?> other = (FudgeFieldType<?>) obj;
+    if (obj instanceof FudgeFieldType) {
+      FudgeFieldType other = (FudgeFieldType) obj;
       return getTypeId() == other.getTypeId();  // assume system is correctly setup and type is unique
     }
     return false;

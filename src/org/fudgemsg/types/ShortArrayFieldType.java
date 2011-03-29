@@ -23,50 +23,45 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
-
 /**
  * Type definition for arrays of 16-bit integers.
- *
- * @author Kirk Wylie
  */
-public class ShortArrayFieldType extends FudgeFieldType<short[]> {
-  
+public class ShortArrayFieldType extends FudgeFieldType {
+
   /**
-   * Standard Fudge field type: array of 16-bit integers. See {@link FudgeTypeDictionary#SHORT_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: array of 16-bit integers.
+   * See {@link FudgeTypeDictionary#SHORT_ARRAY_TYPE_ID}.
    */
   public static final ShortArrayFieldType INSTANCE = new ShortArrayFieldType();
 
+  /**
+   * Restricted constructor.
+   */
   private ShortArrayFieldType() {
     super(FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID, short[].class, true, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(short[] value, FudgeTaxonomy taxonomy) {
-    return value.length * 2;
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    short[] data = (short[]) value;
+    return data.length * 2;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public short[] readValue(DataInput input, int dataSize) throws IOException {
     int nShorts = dataSize / 2;
     short[] result = new short[nShorts];
-    for(int i = 0; i < nShorts; i++) {
+    for (int i = 0; i < nShorts; i++) {
       result[i] = input.readShort();
     }
     return result;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, short[] value) throws IOException {
-    for(short f : value) {
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    short[] data = (short[]) value;
+    for (short f : data) {
       output.writeShort(f);
     }
   }

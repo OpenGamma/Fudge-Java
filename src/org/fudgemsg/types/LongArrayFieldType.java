@@ -25,32 +25,30 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
 
 
 /**
- * Type definition for arrays of 64-bit integers.
- *
- * @author Kirk Wylie
+ * The type definition for arrays of 64-bit integers.
  */
-public class LongArrayFieldType extends FudgeFieldType<long[]> {
+public class LongArrayFieldType extends FudgeFieldType {
   
   /**
-   * Standard Fudge field type: arrays of 64-bit integers. See {@link FudgeTypeDictionary#LONG_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: arrays of 64-bit integers.
+   * See {@link FudgeTypeDictionary#LONG_ARRAY_TYPE_ID}.
    */
   public static final LongArrayFieldType INSTANCE = new LongArrayFieldType();
 
+  /**
+   * Restricted constructor.
+   */
   private LongArrayFieldType() {
     super(FudgeTypeDictionary.LONG_ARRAY_TYPE_ID, long[].class, true, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(long[] value, FudgeTaxonomy taxonomy) {
-    return value.length * 8;
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    long[] data = (long[]) value;
+    return data.length * 8;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public long[] readValue(DataInput input, int dataSize) throws IOException {
     int nLongs = dataSize / 8;
@@ -61,12 +59,10 @@ public class LongArrayFieldType extends FudgeFieldType<long[]> {
     return result;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, long[] value) throws IOException {
-    for(long l : value) {
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    long[] data = (long[]) value;
+    for(long l : data) {
       output.writeLong(l);
     }
   }

@@ -38,7 +38,7 @@ public interface FudgeField {
    * 
    * @return the Fudge field type, not null
    */
-  FudgeFieldType<?> getType();
+  FudgeFieldType getType();
 
   /**
    * Gets the field value.

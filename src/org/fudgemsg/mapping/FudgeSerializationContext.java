@@ -120,7 +120,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
     if (object == null) {
       return;
     }
-    final FudgeFieldType<?> fieldType = getFudgeContext().getTypeDictionary().getByJavaType(object.getClass());
+    final FudgeFieldType fieldType = getFudgeContext().getTypeDictionary().getByJavaType(object.getClass());
     if ((fieldType != null) && !FudgeMsgFieldType.INSTANCE.equals(fieldType)) {
       // goes natively into a message
       message.add(name, ordinal, fieldType, object);
@@ -171,7 +171,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
       return;
     }
     final Class<?> clazz = object.getClass();
-    final FudgeFieldType<?> fieldType = getFudgeContext().getTypeDictionary().getByJavaType(clazz);
+    final FudgeFieldType fieldType = getFudgeContext().getTypeDictionary().getByJavaType(clazz);
     if ((fieldType != null) && !FudgeMsgFieldType.INSTANCE.equals(fieldType)) {
       // goes natively into a message
       message.add(name, ordinal, fieldType, object);

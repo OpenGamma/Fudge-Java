@@ -25,19 +25,25 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 
 /**
- * <p>The type definition for a date. This is currently backed by a {@link FudgeDateTime}. The secondary
- * type mechanism is used to support additional Java representations, such as {@link Date}, {@link Calendar}
- * and {@code javax.time} classes.</p>
- *
- * @author Andrew Griffin
+ * The type definition for a date.
+ * <p>
+ * This is currently backed by a {@link FudgeDateTime}.
+ * The secondary type mechanism is used to support additional Java representations,
+ * such as {@link Date}, {@link Calendar} and {@code javax.time} classes.</p>
+ * <p>
+ * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.
  */
-public class DateTimeFieldType extends FudgeFieldType<FudgeDateTime> {
+public class DateTimeFieldType extends FudgeFieldType {
 
   /**
-   * Standard Fudge field type: combined date and time. See {@link FudgeTypeDictionary#DATETIME_TYPE_ID}.
+   * Standard Fudge field type: combined date and time.
+   * See {@link FudgeTypeDictionary#DATETIME_TYPE_ID}.
    */
   public static final DateTimeFieldType INSTANCE = new DateTimeFieldType();
-  
+
+  /**
+   * Restricted constructor.
+   */
   private DateTimeFieldType() {
     super(FudgeTypeDictionary.DATETIME_TYPE_ID, FudgeDateTime.class, false, 12);
   }
@@ -45,19 +51,19 @@ public class DateTimeFieldType extends FudgeFieldType<FudgeDateTime> {
   /**
    * Reads a Fudge date representation from an input source.
    * 
-   * @param input input source
+   * @param input  the input source
    * @return the date
    * @throws IOException if there is an error from the input source
    */
-  /* package */ static FudgeDate readFudgeDate (final DataInput input) throws IOException {
-    final int n = input.readInt ();
+  /* package */static FudgeDate readFudgeDate(final DataInput input) throws IOException {
+    final int n = input.readInt();
     final int dayOfMonth = (n & 31);
     final int monthOfYear = (n >> 5) & 15;
     final int year = n >> 9; // will sign-extend
     //System.out.println ("readFudgeDate: " + n + ", " + year + ", " + monthOfYear + ", " + dayOfMonth);
-    return new FudgeDate (year, monthOfYear, dayOfMonth);
+    return new FudgeDate(year, monthOfYear, dayOfMonth);
   }
-  
+
   /**
    * Reads a Fudge time representation from an input source.
    * 
@@ -65,17 +71,17 @@ public class DateTimeFieldType extends FudgeFieldType<FudgeDateTime> {
    * @return the time
    * @throws IOException if there is an error from the input source
    */
-  /* package */ static FudgeTime readFudgeTime (final DataInput input) throws IOException {
-    final int hi = input.readInt ();
-    final int lo = input.readInt ();
+  /* package */static FudgeTime readFudgeTime(final DataInput input) throws IOException {
+    final int hi = input.readInt();
+    final int lo = input.readInt();
     final int timezoneOffset = (hi >> 24); // sign extend
     final int accuracy = (hi >> 20) & 15;
     final int seconds = hi & 0x1FFFF;
     final int nanos = lo & 0x3FFFFFFF;
     //System.out.println ("readFudgeTime: " + hi + ", " + lo + ", " + timezoneOffset + ", " + accuracy + ", " + seconds + ", " + nanos);
-    return new FudgeTime (DateTimeAccuracy.fromEncodedValue (accuracy), timezoneOffset, seconds, nanos);
+    return new FudgeTime(DateTimeAccuracy.fromEncodedValue(accuracy), timezoneOffset, seconds, nanos);
   }
-  
+
   /**
    * Writes a Fudge date representation to an output target.
    * 
@@ -83,15 +89,15 @@ public class DateTimeFieldType extends FudgeFieldType<FudgeDateTime> {
    * @param value Fudge date
    * @throws IOException if there is an error from the output target
    */
-  /* package */ static void writeFudgeDate (final DataOutput output, final FudgeDate value) throws IOException {
-    final int dayOfMonth = value.getDayOfMonth ();
-    final int monthOfYear = value.getMonthOfYear ();
-    final int year = value.getYear ();
+  /* package */static void writeFudgeDate(final DataOutput output, final FudgeDate value) throws IOException {
+    final int dayOfMonth = value.getDayOfMonth();
+    final int monthOfYear = value.getMonthOfYear();
+    final int year = value.getYear();
     final int n = (year << 9) | ((monthOfYear & 15) << 5) | (dayOfMonth & 31);
     //System.out.println ("writeFudgeDate: " + n + ", " + year + ", " + monthOfYear + ", " + dayOfMonth);
-    output.writeInt (n);
+    output.writeInt(n);
   }
-  
+
   /**
    * Writes a Fudge time representation to an output target.
    * 
@@ -99,31 +105,28 @@ public class DateTimeFieldType extends FudgeFieldType<FudgeDateTime> {
    * @param value the Fudge time
    * @throws IOException if there is an error from the output target
    */
-  /* package */ static void writeFudgeTime (final DataOutput output, final FudgeTime value) throws IOException {
-    final int hi = (value.getSecondsSinceMidnight () & 0x1FFFF) | (value.getAccuracy ().getEncodedValue () << 20) | (value.getRawTimezoneOffset () << 24);
-    final int lo = value.getNanos () & 0x3FFFFFFF;
+  /* package */static void writeFudgeTime(final DataOutput output, final FudgeTime value) throws IOException {
+    final int hi = (value.getSecondsSinceMidnight() & 0x1FFFF) | (value.getAccuracy().getEncodedValue() << 20)
+        | (value.getRawTimezoneOffset() << 24);
+    final int lo = value.getNanos() & 0x3FFFFFFF;
     //System.out.println ("writeFudgeTime: " + hi + ", " + lo);
-    output.writeInt (hi);
-    output.writeInt (lo);
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public FudgeDateTime readValue(DataInput input, int dataSize) throws IOException {
-    final FudgeDate date = readFudgeDate (input);
-    final FudgeTime time = readFudgeTime (input);
-    return new FudgeDateTime (date, time);
+    output.writeInt(hi);
+    output.writeInt(lo);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public void writeValue(DataOutput output, FudgeDateTime datetime) throws IOException {
-    writeFudgeDate (output, datetime.getDate ());
-    writeFudgeTime (output, datetime.getTime ());
+  public FudgeDateTime readValue(DataInput input, int dataSize) throws IOException {
+    final FudgeDate date = readFudgeDate(input);
+    final FudgeTime time = readFudgeTime(input);
+    return new FudgeDateTime(date, time);
+  }
+
+  @Override
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    FudgeDateTime data = (FudgeDateTime) value;
+    writeFudgeDate(output, data.getDate());
+    writeFudgeTime(output, data.getTime());
   }
 
 }

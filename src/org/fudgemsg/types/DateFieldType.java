@@ -25,39 +25,39 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 
 /**
- * <p>The type definition for a date. This is currently backed by a {@link FudgeDate}. The secondary
- * type mechanism is used to support additional Java representations, such as {@link Date}, {@link Calendar}
- * and {@code javax.time} classes.</p>
- * 
- * <p>For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.</p>
- *
- * @author Andrew Griffin
+ * The type definition for a date.
+ * <p>
+ * This is currently backed by a {@link FudgeDate}.
+ * The secondary type mechanism is used to support additional Java representations,
+ * such as {@link Date}, {@link Calendar} and {@code javax.time} classes.</p>
+ * <p>
+ * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.
  */
-public class DateFieldType extends FudgeFieldType<FudgeDate> {
+public class DateFieldType extends FudgeFieldType {
 
   /**
-   * Standard Fudge field type: date. See {@link FudgeTypeDictionary#DATE_TYPE_ID}.
+   * Standard Fudge field type: date.
+   * See {@link FudgeTypeDictionary#DATE_TYPE_ID}.
    */
   public static final DateFieldType INSTANCE = new DateFieldType();
-  
+
+  /**
+   * Restricted constructor.
+   */
   private DateFieldType() {
     super(FudgeTypeDictionary.DATE_TYPE_ID, FudgeDate.class, false, 4);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
   public FudgeDate readValue(DataInput input, int dataSize) throws IOException {
-    return DateTimeFieldType.readFudgeDate (input);
+    return DateTimeFieldType.readFudgeDate(input);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, FudgeDate value) throws IOException {
-    DateTimeFieldType.writeFudgeDate (output, value);
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    FudgeDate data = (FudgeDate) value;
+    DateTimeFieldType.writeFudgeDate(output, data);
   }
 
 }
