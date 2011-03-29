@@ -28,57 +28,53 @@ import org.fudgemsg.FudgeFieldType;
  * the tools available in the mapping package, but also limited as there is
  * no access to the {@link FudgeContext} when the conversion takes place.
  *
- * @author Andrew Griffin
  * @param <SecondaryType> secondary type
  * @param <PrimitiveType> type there is a primary {@link FudgeFieldType} for
  */
-public abstract class SecondaryFieldType<SecondaryType,PrimitiveType> extends SecondaryFieldTypeBase<SecondaryType,PrimitiveType,PrimitiveType> {
-  
+public abstract class SecondaryFieldType<SecondaryType, PrimitiveType> extends
+    SecondaryFieldTypeBase<SecondaryType, PrimitiveType, PrimitiveType> {
+
   /**
    * Creates a new secondary type on top of an existing Fudge type.
    * 
    * @param type existing Fudge primitive type
    * @param javaType Java type for conversion
    */
-  protected SecondaryFieldType (FudgeFieldType<PrimitiveType> type, Class<SecondaryType> javaType) {
-    super (type, javaType);
+  protected SecondaryFieldType(FudgeFieldType type, Class<SecondaryType> javaType) {
+    super(type, javaType);
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Converts Fudge primitive data to the secondary type. This is an optional operation - it will only be
    * invoked if the user attempts to convert from the underlying type used for transport back to the 
    * secondary type. An implementation may assume that the {@code object} parameter is not {@code null}.
    * 
-   * @param object the Fudge data
+   * @param object  the Fudge data
    * @return a secondary type instance
    */
   @Override
-  public SecondaryType primaryToSecondary (PrimitiveType object) {
-    throw new UnsupportedOperationException ("cannot convert from " + getTypeId () + " to " + getJavaType ()); 
+  public SecondaryType primaryToSecondary(PrimitiveType object) {
+    throw new UnsupportedOperationException("cannot convert from " + getTypeId() + " to " + getJavaType());
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean canConvertPrimary (Class<? extends PrimitiveType> clazz) {
-    return getPrimaryType ().getJavaType ().isAssignableFrom (clazz);
+  public boolean canConvertPrimary(Class<? extends PrimitiveType> clazz) {
+    return getPrimaryType().getJavaType().isAssignableFrom(clazz);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  @SuppressWarnings("unchecked")
   @Override
-  public void writeValue(DataOutput output, SecondaryType value) throws IOException {
-    getPrimaryType ().writeValue (output, secondaryToPrimary (value));
+  public SecondaryType readValue(DataInput input, int dataSize) throws IOException {
+    PrimitiveType readValue = (PrimitiveType) getPrimaryType().readValue(input, dataSize);
+    return primaryToSecondary(readValue);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  @SuppressWarnings("unchecked")
   @Override
-  public SecondaryType readValue (DataInput input, int dataSize) throws IOException {
-    return primaryToSecondary (getPrimaryType ().readValue (input, dataSize));
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    SecondaryType data = (SecondaryType) value;
+    getPrimaryType().writeValue(output, secondaryToPrimary(data));
   }
-  
+
 }

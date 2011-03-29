@@ -73,7 +73,7 @@ import com.mongodb.DBObject;
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   private Object encodePrimitiveFieldValue(final FudgeDeserializationContext context, Object fieldValue) {
-    FudgeFieldType<?> valueType = context.getFudgeContext().getTypeDictionary().getByJavaType(fieldValue.getClass());
+    FudgeFieldType valueType = context.getFudgeContext().getTypeDictionary().getByJavaType(fieldValue.getClass());
     if (valueType == null) {
       throw new IllegalArgumentException("Cannot handle serialization of object " + fieldValue + " of type "
           + fieldValue.getClass() + " as no Fudge type available in context");

@@ -24,24 +24,23 @@ import org.fudgemsg.FudgeTypeDictionary;
  * 
  * @param <Primary> type to convert from (or {@link Object} to support any type
  * @param <Secondary> type to convert to
- * @author Andrew Griffin
  */
-public interface FudgeTypeConverter<Primary,Secondary> {
-  
+public interface FudgeTypeConverter<Primary, Secondary> {
+
   /**
    * Returns true if this converter can manipulate the requested class.
    * 
-   * @param clazz to query
+   * @param clazz  the class to query
    * @return {@code true} if a call to {@link #primaryToSecondary} will succeed, {@code false} if it would fail
    */
-  public boolean canConvertPrimary (Class<? extends Primary> clazz);
-  
+  public boolean canConvertPrimary(Class<? extends Primary> clazz);
+
   /**
    * Converts an object to the secondary type this converter supports.
    * 
-   * @param object to convert
+   * @param object  the to convert
    * @return the converted object
    */
-  public Secondary primaryToSecondary (Primary object);
-  
+  public Secondary primaryToSecondary(Primary object);
+
 }

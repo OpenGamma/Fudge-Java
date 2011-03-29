@@ -237,7 +237,6 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
   /**
    * {@inheritDoc}
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
   @Override
   public void writeField(Short ordinal, String name, FudgeFieldType type, Object fieldValue) {
     if (fieldValue == null) {
@@ -294,7 +293,6 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
    * @param valueSize the size of the value
    * @returns number of bytes written
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
   protected void writeFieldValue(FudgeFieldType type, Object value, int valueSize) {
     // Note that we fast-path types for which at compile time we know how to handle
     // in an optimized way. This is because this particular method is known to

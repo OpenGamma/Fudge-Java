@@ -91,7 +91,7 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
     }
 
     @Override
-    public FudgeFieldType<?> getFieldType() {
+    public FudgeFieldType getFieldType() {
       return getStreamReader().getFieldType();
     }
 

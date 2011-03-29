@@ -25,43 +25,39 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.wire.UTF8;
 
 /**
- * The type definition for a Modified UTF-8 encoded string.
- *
- * @author Kirk Wylie
+ * The type definition for a UTF-8 encoded string.
  */
-public class StringFieldType extends FudgeFieldType<String> {
+public class StringFieldType extends FudgeFieldType {
 
   /**
-   * Standard Fudge field type: string. See {@link FudgeTypeDictionary#STRING_TYPE_ID}.
+   * Standard Fudge field type: string.
+   * See {@link FudgeTypeDictionary#STRING_TYPE_ID}.
    */
   public static final StringFieldType INSTANCE = new StringFieldType();
-  
+
+  /**
+   * Restricted constructor.
+   */
   private StringFieldType() {
     super(FudgeTypeDictionary.STRING_TYPE_ID, String.class, true, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(String value, FudgeTaxonomy taxonomy) {
-    return UTF8.getLengthBytes(value);
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    String data = (String) value;
+    return UTF8.getLengthBytes(data);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String readValue(DataInput input, int dataSize) throws IOException {
     return UTF8.readString(input, dataSize);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, String value) throws IOException {
-    UTF8.writeString(output, value);
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    String data = (String) value;
+    UTF8.writeString(output, data);
   }
 
 }

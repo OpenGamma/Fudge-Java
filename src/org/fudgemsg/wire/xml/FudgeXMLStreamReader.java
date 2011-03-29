@@ -40,7 +40,6 @@ import org.fudgemsg.wire.FudgeStreamReader;
 
 /**
  * Reader that decodes XML into Fudge messages.
- * 
  */
 public class FudgeXMLStreamReader implements FudgeStreamReader {
   
@@ -58,7 +57,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   private String _fieldName = null;
   private Integer _fieldOrdinal = null;
   private Object _fieldValue = null;
-  private FudgeFieldType<?> _fieldType = null;
+  private FudgeFieldType _fieldType = null;
   private int _currentEvent = XMLStreamConstants.START_DOCUMENT;
   
   public FudgeXMLStreamReader(final FudgeContext fudgeContext, final Reader reader) {
@@ -110,7 +109,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   /**
    * @param fieldType the fieldType to set
    */
-  public void setFieldType(FudgeFieldType<?> fieldType) {
+  public void setFieldType(FudgeFieldType fieldType) {
     _fieldType = fieldType;
   }
 
@@ -195,7 +194,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
       return FudgeStreamElement.SUBMESSAGE_FIELD_START;
     } else {
       Integer fudgeTypeId = _settings.getIdentifiersToFudgeType().get(type);
-      FudgeFieldType<?> fudgeType = _fudgeContext.getTypeDictionary().getByTypeId(fudgeTypeId);
+      FudgeFieldType fudgeType = _fudgeContext.getTypeDictionary().getByTypeId(fudgeTypeId);
       _fieldType = fudgeType;
       _fieldValue = convertFieldValue(fudgeType, _xmlStreamReader.getElementText());
       return FudgeStreamElement.SIMPLE_FIELD;
@@ -206,7 +205,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
     return element.equalsIgnoreCase(_settings.getEnvelopeElementName());
   }
   
-  private Object convertFieldValue(FudgeFieldType<?> fudgeType, String elementValue) {
+  private Object convertFieldValue(FudgeFieldType fudgeType, String elementValue) {
     switch (fudgeType.getTypeId()) {
       case FudgeTypeDictionary.INDICATOR_TYPE_ID:
         return IndicatorType.INSTANCE;
@@ -389,7 +388,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   }
 
   @Override
-  public FudgeFieldType<?> getFieldType() {
+  public FudgeFieldType getFieldType() {
     return _fieldType;
   }
 

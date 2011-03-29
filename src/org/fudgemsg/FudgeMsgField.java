@@ -30,7 +30,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
   /**
    * The Fudge field type.
    */
-  private final FudgeFieldType<?> _type;
+  private final FudgeFieldType _type;
   /**
    * The value.
    */
@@ -67,7 +67,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param value  the payload value, may be null
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType<?> type, Object value) {
+  public static FudgeMsgField of(FudgeFieldType type, Object value) {
     return new FudgeMsgField(type, value, null, null);
   }
 
@@ -79,7 +79,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param name  the optional field name, null if no name
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType<?> type, Object value, String name) {
+  public static FudgeMsgField of(FudgeFieldType type, Object value, String name) {
     return new FudgeMsgField(type, value, name, null);
   }
 
@@ -91,7 +91,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param ordinal  the optional field ordinal, null if no ordinal
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType<?> type, Object value, Short ordinal) {
+  public static FudgeMsgField of(FudgeFieldType type, Object value, Short ordinal) {
     return new FudgeMsgField(type, value, null, ordinal);
   }
 
@@ -104,7 +104,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param ordinal  the optional field ordinal, null if no ordinal
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType<?> type, Object value, String name, Short ordinal) {
+  public static FudgeMsgField of(FudgeFieldType type, Object value, String name, Short ordinal) {
     return new FudgeMsgField(type, value, name, ordinal);
   }
 
@@ -117,7 +117,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param name  the optional field name, null if no name
    * @param ordinal  the optional field ordinal, null if no ordinal
    */
-  public FudgeMsgField(FudgeFieldType<?> type, Object value, String name, Short ordinal) {
+  public FudgeMsgField(FudgeFieldType type, Object value, String name, Short ordinal) {
     if (type == null) {
       throw new NullPointerException("Type must not be null");
     }
@@ -127,7 +127,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
     _ordinal = ordinal;
   }
 
-    /**
+  /**
    * Constructs a field as a copy of another.
    * 
    * @param field the {@code FudgeMsgField} to copy.
@@ -137,25 +137,21 @@ public class FudgeMsgField implements FudgeField, Serializable {
   }
 
 //-------------------------------------------------------------------------
-  /** {@inheritDoc} */
   @Override
-  public FudgeFieldType<?> getType() {
+  public FudgeFieldType getType() {
     return _type;
   }
 
-  /** {@inheritDoc} */
   @Override
   public Object getValue() {
     return _value;
   }
 
-  /** {@inheritDoc} */
   @Override
   public String getName() {
     return _name;
   }
 
-  /** {@inheritDoc} */
   @Override
   public Short getOrdinal() {
     return _ordinal;

@@ -37,8 +37,6 @@ import org.json.JSONTokener;
 
 /**
  * Reader that decodes JSON into Fudge messages.
- * 
- * @author Andrew Griffin
  */
 public class FudgeJSONStreamReader implements FudgeStreamReader {
 
@@ -138,7 +136,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
   }
 
   @Override
-  public FudgeFieldType<?> getFieldType() {
+  public FudgeFieldType getFieldType() {
     return getFudgeContext().getTypeDictionary().getByJavaType(getFieldValue().getClass());
   }
 

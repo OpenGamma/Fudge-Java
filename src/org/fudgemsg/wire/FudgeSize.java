@@ -35,7 +35,6 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    *
-   * @param <T> the underlying Java type of the field data
    * @param taxonomy  the taxonomy in use, null if no taxonomy
    * @param ordinal  the field ordinal, null if no ordinal
    * @param name  the field name, null if no name
@@ -43,7 +42,7 @@ public class FudgeSize {
    * @param value  the field value
    * @return the number of bytes
    */
-  public static <T> int calculateFieldSize(final FudgeTaxonomy taxonomy, final Short ordinal, final String name, final FudgeFieldType<T> type, final T value) {
+  public static int calculateFieldSize(final FudgeTaxonomy taxonomy, final Short ordinal, final String name, final FudgeFieldType type, final Object value) {
     int size = 0;
     // field prefix
     size += 2;
@@ -84,14 +83,12 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    * 
-   * @param <T> the underlying Java type of the field data
    * @param taxonomy  the taxonomy in use, null if no taxonomy
    * @param field  the field to calculate a size for, not null
    * @return the number of bytes
    */
-  @SuppressWarnings("unchecked")
-  public static <T> int calculateFieldSize(final FudgeTaxonomy taxonomy, final FudgeField field) {
-    return calculateFieldSize(taxonomy, field.getOrdinal(), field.getName(), (FudgeFieldType<T>) field.getType(), (T) field.getValue());
+  public static int calculateFieldSize(final FudgeTaxonomy taxonomy, final FudgeField field) {
+    return calculateFieldSize(taxonomy, field.getOrdinal(), field.getName(), field.getType(), field.getValue());
   }
 
   /**
@@ -99,13 +96,11 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    * 
-   * @param <T> the underlying Java type of the field data
    * @param field  the field to calculate a size for, not null
    * @return the number of bytes
    */
-  @SuppressWarnings("unchecked")
-  public static <T> int calculateFieldSize(final FudgeField field) {
-    return calculateFieldSize(null, field.getOrdinal(), field.getName(), (FudgeFieldType<T>) field.getType(), (T) field.getValue());
+  public static int calculateFieldSize(final FudgeField field) {
+    return calculateFieldSize(null, field.getOrdinal(), field.getName(), field.getType(), field.getValue());
   }
 
   /**
@@ -113,14 +108,13 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    * 
-   * @param <T> the underlying Java type of the field data
    * @param ordinal  the field ordinal, null if no ordinal
    * @param name  the field name, null if no name
    * @param type  the Fudge field type, not null
    * @param value  the field value
    * @return the number of bytes
    */
-  public static <T> int calculateFieldSize(final Short ordinal, final String name, final FudgeFieldType<T> type, final T value) {
+  public static int calculateFieldSize(final Short ordinal, final String name, final FudgeFieldType type, final Object value) {
     return calculateFieldSize(null, ordinal, name, type, value);
   }
 
@@ -129,13 +123,12 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    * 
-   * @param <T> the underlying Java type of the field data
    * @param ordinal  the field ordinal, null if no ordinal
    * @param type  the Fudge field type, not null
    * @param value  the field value
    * @return the number of bytes
    */
-  public static <T> int calculateFieldSize(final Short ordinal, final FudgeFieldType<T> type, final T value) {
+  public static int calculateFieldSize(final Short ordinal, final FudgeFieldType type, final Object value) {
     return calculateFieldSize(null, ordinal, null, type, value);
   }
 
@@ -144,13 +137,12 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    * 
-   * @param <T> the underlying Java type of the field data
    * @param name  the field name, null if no name
    * @param type  the Fudge field type, not null
    * @param value  the field value
    * @return the number of bytes
    */
-  public static <T> int calculateFieldSize(final String name, final FudgeFieldType<T> type, final T value) {
+  public static int calculateFieldSize(final String name, final FudgeFieldType type, final Object value) {
     return calculateFieldSize(null, null, name, type, value);
   }
 
@@ -159,12 +151,11 @@ public class FudgeSize {
    * <p>
    * The calculation takes account of the value being reduced to fit in a smaller space.
    * 
-   * @param <T> the underlying Java type of the field data
    * @param type  the Fudge field type, not null
    * @param value  the field value
    * @return the number of bytes
    */
-  public static <T> int calculateFieldSize(final FudgeFieldType<T> type, final T value) {
+  public static int calculateFieldSize(final FudgeFieldType type, final Object value) {
     return calculateFieldSize(null, null, null, type, value);
   }
 

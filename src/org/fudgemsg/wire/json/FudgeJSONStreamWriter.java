@@ -34,8 +34,6 @@ import org.json.JSONWriter;
  * <p>
  * Please refer to <a href="http://wiki.fudgemsg.org/display/FDG/JSON+Fudge+Messages">JSON Fudge Messages</a>
  * for details onO the representation.
- * 
- * @author Andrew Griffin
  */
 public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
 
@@ -168,7 +166,7 @@ public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
    * Writes out the field name to the JSON object.
    */
   @Override
-  protected boolean fudgeFieldStart (Short ordinal, String name, FudgeFieldType<?> type) {
+  protected boolean fudgeFieldStart (Short ordinal, String name, FudgeFieldType type) {
     try {
       if (getSettings ().getPreferFieldNames ()) {
         if (name != null) {
@@ -246,7 +244,7 @@ public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
    */
   @SuppressWarnings("unchecked")
   @Override
-  protected void fudgeFieldValue (FudgeFieldType<?> type, Object fieldValue) {
+  protected void fudgeFieldValue (FudgeFieldType type, Object fieldValue) {
     try {
       if (type instanceof SecondaryFieldTypeBase<?,?,?>) {
         fieldValue = ((SecondaryFieldTypeBase<Object,Object,Object>)type).secondaryToPrimary(fieldValue);

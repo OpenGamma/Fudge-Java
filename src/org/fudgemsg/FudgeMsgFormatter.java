@@ -256,10 +256,10 @@ public class FudgeMsgFormatter {
   /**
    * Creates a string type name for a Fudge type.
    * 
-   * @param type the Fudge type
+   * @param type  the Fudge type
    * @return the type name, not null
    */
-  protected String getTypeName(FudgeFieldType<?> type) {
+  protected String getTypeName(FudgeFieldType type) {
     if (type == null) {
       throw new NullPointerException("FudgeFieldType must not be null");
     }

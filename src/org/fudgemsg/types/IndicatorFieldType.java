@@ -21,36 +21,30 @@ import java.io.DataOutput;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 
-
 /**
  * The type handler for the singleton {@link IndicatorType} value.
- *
- * @author Kirk Wylie
  */
-public class IndicatorFieldType extends FudgeFieldType<IndicatorType> {
+public class IndicatorFieldType extends FudgeFieldType {
 
   /**
    * Standard Fudge field type: zero length indicator. See {@link FudgeTypeDictionary#INDICATOR_TYPE_ID}.
    */
   public static final IndicatorFieldType INSTANCE = new IndicatorFieldType();
 
+  /**
+   * Restricted constructor.
+   */
   private IndicatorFieldType() {
     super(FudgeTypeDictionary.INDICATOR_TYPE_ID, IndicatorType.class, false, 0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public IndicatorType readValue(DataInput input, int dataSize) {
     return IndicatorType.INSTANCE;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void writeValue(DataOutput output, IndicatorType value) {
+  public void writeValue(DataOutput output, Object value) {
     // Intentional no-op.
   }
 

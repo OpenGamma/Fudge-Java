@@ -37,30 +37,30 @@ public interface FudgeStreamWriter extends Flushable, Closeable {
    * 
    * @return the {@code FudgeContext}
    */
-  public FudgeContext getFudgeContext ();
-  
+  public FudgeContext getFudgeContext();
+
   /**
    * Returns the taxonomy (if any) that is currently being used to encode fields. Returns {@code null}
    * if no taxonomy is specified or the taxonomy identifier cannot be resolved by the bound {@link FudgeContext}.
    * 
    *  @return the {@code FudgeTaxonomy}
    */
-  public FudgeTaxonomy getCurrentTaxonomy ();
-  
+  public FudgeTaxonomy getCurrentTaxonomy();
+
   /**
    * Sets the current taxonomy, by identifier, to be used to encode fields.
    * 
    * @param taxonomyId the taxonomy identifier
    */
-  public void setCurrentTaxonomyId (final int taxonomyId);
-  
+  public void setCurrentTaxonomyId(final int taxonomyId);
+
   /**
    * Returns the current taxonomy identifier.
    * 
    * @return current taxonomy identifier
    */
-  public int getCurrentTaxonomyId ();
-  
+  public int getCurrentTaxonomyId();
+
   /**
    * Writes a message envelope header.
    * 
@@ -68,22 +68,22 @@ public interface FudgeStreamWriter extends Flushable, Closeable {
    * @param schemaVersion the schema version value
    * @param messageSize the Fudge encoded size of the underlying message, including the message envelope
    */
-  public void writeEnvelopeHeader (int processingDirectives, int schemaVersion, int messageSize);
-  
+  public void writeEnvelopeHeader(int processingDirectives, int schemaVersion, int messageSize);
+
   /**
    * Signal the end of the message contained within an envelope. An implementation may not need to take
    * any action at this point as the end of the envelope can be detected based on the message size in the
    * header.
    */
-  public void envelopeComplete ();
-  
+  public void envelopeComplete();
+
   /**
    * Writes a message field.
    * 
    * @param field the message field to write
    */
-  public void writeField (FudgeField field);
-  
+  public void writeField(FudgeField field);
+
   /**
    * Writes a message field.
    * 
@@ -92,23 +92,23 @@ public interface FudgeStreamWriter extends Flushable, Closeable {
    * @param type the type of the underlying data
    * @param fieldValue value of the field
    */
-  public void writeField (Short ordinal, String name, FudgeFieldType<?> type, Object fieldValue);
-  
+  public void writeField(Short ordinal, String name, FudgeFieldType type, Object fieldValue);
+
   /**
    * Writes a set of fields.
    * 
    * @param fields the fields to write.
    */
-  public void writeFields (FudgeFieldContainer fields);
-  
+  public void writeFields(FudgeFieldContainer fields);
+
   /**
    * Flushes any data from the internal buffers to the target stream and attempts to flush the underlying stream if appropriate.
    */
-  public void flush ();
-  
+  public void flush();
+
   /**
    * Flushes and closes this writer and attempts to close the underlying stream if appropriate.
    */
-  public void close ();
-  
+  public void close();
+
 }

@@ -93,7 +93,7 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
    */
   @Override
   public void add(String name, Integer ordinal, Object value) {
-    FudgeFieldType<?> type = determineTypeFromValue(value);
+    FudgeFieldType type = determineTypeFromValue(value);
     if (type == null) {
       throw new IllegalArgumentException("Cannot determine a Fudge type for value " + value + " of type " + value.getClass());
     } else if (type == IndicatorFieldType.INSTANCE) {
@@ -103,12 +103,9 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @SuppressWarnings("unchecked")
   @Override
-  public void add(String name, Integer ordinal, FudgeFieldType<?> type, Object value) {
+  public void add(String name, Integer ordinal, FudgeFieldType type, Object value) {
     if (type == null) {
       throw new NullPointerException("FudgeFieldType must not be null");
     }
@@ -156,14 +153,14 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
    * @param value  the object to resolve, null returns the indicator type
    * @return the field type, null if no intrinsic type (or registered secondary type) is available
    */
-  protected FudgeFieldType<?> determineTypeFromValue(Object value) {
+  protected FudgeFieldType determineTypeFromValue(Object value) {
     if (value == null) {
       return IndicatorFieldType.INSTANCE;
     }
     if (value instanceof byte[]) {
       return ByteArrayFieldType.getBestMatch((byte[]) value);
     }
-    FudgeFieldType<?> type = getFudgeContext().getTypeDictionary().getByJavaType(value.getClass());
+    FudgeFieldType type = getFudgeContext().getTypeDictionary().getByJavaType(value.getClass());
     if (type == null && value instanceof UnknownFudgeFieldValue) {
       UnknownFudgeFieldValue unknownValue = (UnknownFudgeFieldValue) value;
       type = unknownValue.getType();

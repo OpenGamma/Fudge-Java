@@ -55,7 +55,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
   private int _envelopeSize;
   
   // Set for each non-sub-msg field
-  private FudgeFieldType<?> _fieldType;
+  private FudgeFieldType _fieldType;
   private Integer _fieldOrdinal;
   private String _fieldName;
   private Object _fieldValue;
@@ -157,7 +157,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
    * {@inheritDoc}
    */
   @Override
-  public FudgeFieldType<?> getFieldType() {
+  public FudgeFieldType getFieldType() {
     return _fieldType;
   }
 
@@ -338,7 +338,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
       }
     }
     
-    FudgeFieldType<?> type = getFudgeContext().getTypeDictionary().getByTypeId(typeId);
+    FudgeFieldType type = getFudgeContext().getTypeDictionary().getByTypeId(typeId);
     if(type == null) {
       if(fixedWidth) {
         throw new IOException("Unknown fixed width type " + typeId + " for field " + ordinal + ":" + name + " cannot be handled.");
@@ -389,7 +389,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
    */
   public static Object readFieldValue(
       DataInput is,
-      FudgeFieldType<?> type,
+      FudgeFieldType type,
       int varSize) {
     //System.out.println ("FudgeDataInputStreamReader::readFieldValue(" + is + ", " + type + ", " + varSize + ")");
     assert type != null;

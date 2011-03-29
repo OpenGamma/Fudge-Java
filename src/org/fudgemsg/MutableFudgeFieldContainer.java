@@ -72,7 +72,7 @@ public interface MutableFudgeFieldContainer extends FudgeFieldContainer {
    * @param type  the field type, not null
    * @param value  the field value, not null
    */
-  public void add(String name, Integer ordinal, FudgeFieldType<?> type, Object value);
+  public void add(String name, Integer ordinal, FudgeFieldType type, Object value);
 
   //-------------------------------------------------------------------------
   /**

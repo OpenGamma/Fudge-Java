@@ -28,7 +28,7 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
  * from Fudge streams.
  */
 public interface FudgeStreamReader extends Closeable {
-  
+
   /**
    * Constants for the four stream element types as returned by {@link #next()} and {@link #getCurrentElement()}.
    */
@@ -50,7 +50,7 @@ public interface FudgeStreamReader extends Closeable {
      */
     SUBMESSAGE_FIELD_END
   }
-  
+
   /**
    * <p>Returns true if there is at least one more element to be returned by a call to {@link #next()}. A return of {@code false}
    * indicates the end of a message (or submessage) has been reached. After the end of a sub-message, the next immediate call will
@@ -64,37 +64,37 @@ public interface FudgeStreamReader extends Closeable {
    * 
    * @return {@code true} if there is at least one more element to read
    */
-  public boolean hasNext ();
-  
+  public boolean hasNext();
+
   /**
    * Reads the next stream element from the source and returns the element type.
    * 
    * @return the type of the next element in the stream, or {@code null} if the end of stream has been reached at a message
    *         boundary (i.e. attempting to read the first byte of an envelope)
    */
-  public FudgeStreamElement next ();
-  
+  public FudgeStreamElement next();
+
   /**
    * Returns the value last returned by {@link #next()}.
    * 
    * @return the type of the current element in the stream
    */
-  public FudgeStreamElement getCurrentElement ();
-  
+  public FudgeStreamElement getCurrentElement();
+
   /**
    * If the current stream element is a field, returns the field value.
    * 
    * @return current field value
    */
-  public Object getFieldValue ();
-  
+  public Object getFieldValue();
+
   /**
    * Returns the processing directivies specified in the last envelope header read.
    * 
    * @return current processing directive flags 
    */
-  public int getProcessingDirectives ();
-  
+  public int getProcessingDirectives();
+
   /**
    * Returns the schema version specified in the last envelope header read.
    * 
@@ -113,8 +113,8 @@ public interface FudgeStreamReader extends Closeable {
    * If the current stream element is a field, returns the {@link FudgeFieldType}.
    * 
    * @return current field type
-   */ 
-  public FudgeFieldType<?> getFieldType();
+   */
+  public FudgeFieldType getFieldType();
 
   /**
    * If the current stream element is a field, returns the ordinal index, or {@code null} if the field did not include an ordinal.
@@ -130,7 +130,7 @@ public interface FudgeStreamReader extends Closeable {
    * @return current field name
    */
   public String getFieldName();
-  
+
   /**
    * Returns the current {@link FudgeTaxonomy} corresponding to the taxonomy identifier specified in the message envelope. Returns
    * {@code null} if the message did not specify a taxonomy or the taxonomy identifier cannot be resolved by the bound {@link FudgeContext}.
@@ -138,18 +138,18 @@ public interface FudgeStreamReader extends Closeable {
    * @return current taxonomy if available
    */
   public FudgeTaxonomy getTaxonomy();
-  
+
   /**
    * Returns the {@link FudgeContext} bound to the reader used for type and taxonomy resolution.
    * 
    * @return the {@code FudgeContext}
    */
-  public FudgeContext getFudgeContext ();
-  
+  public FudgeContext getFudgeContext();
+
   /**
    * Closes the {@link FudgeStreamReader} and attempts to close the underlying data source if appropriate.
    */
-  public void close ();
+  public void close();
 
   /**
    * If a SUBMESSAGE_FIELD_START has just been encountered, advances the stream so that the next element read will be the field

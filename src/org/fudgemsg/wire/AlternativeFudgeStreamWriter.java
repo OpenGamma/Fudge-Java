@@ -28,21 +28,19 @@ import org.fudgemsg.util.ArgumentChecker;
  * Abstract implementation of a {@code FudgeStreamWriter} that detects major state changes and invokes
  * other methods. Can be used to build alternative stream writers for converting streamed Fudge messages
  * to XML, JSON or other formats.
- * 
- * @author Andrew Griffin
  */
 public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter {
-  
+
   private final FudgeContext _fudgeContext;
   private FudgeTaxonomy _taxonomy = null;
   private int _taxonomyId = 0;
-  
+
   /**
    * Creates a new {@link AlternativeFudgeStreamWriter} instance.
    * 
    * @param fudgeContext the associated {@link FudgeContext}
    */
-  protected AlternativeFudgeStreamWriter (final FudgeContext fudgeContext) {
+  protected AlternativeFudgeStreamWriter(final FudgeContext fudgeContext) {
     ArgumentChecker.notNull(fudgeContext, "fudgeContext");
     _fudgeContext = fudgeContext;
   }
@@ -70,7 +68,7 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
   public FudgeContext getFudgeContext() {
     return _fudgeContext;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -83,21 +81,21 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * {@inheritDoc}
    */
   @Override
-  public void setCurrentTaxonomyId (final int taxonomyId) {
+  public void setCurrentTaxonomyId(final int taxonomyId) {
     _taxonomyId = taxonomyId;
-    if(getFudgeContext().getTaxonomyResolver() != null) {
-      FudgeTaxonomy taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short)taxonomyId);
+    if (getFudgeContext().getTaxonomyResolver() != null) {
+      FudgeTaxonomy taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) taxonomyId);
       _taxonomy = taxonomy;
     } else {
       _taxonomy = null;
     }
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public int getCurrentTaxonomyId () {
+  public int getCurrentTaxonomyId() {
     return _taxonomyId;
   }
 
@@ -105,63 +103,56 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * {@inheritDoc}
    */
   @Override
-  public void writeEnvelopeHeader(
-      int processingDirectives,
-      int schemaVersion,
-      int messageSize) {
-    fudgeEnvelopeStart (processingDirectives, schemaVersion);
+  public void writeEnvelopeHeader(int processingDirectives, int schemaVersion, int messageSize) {
+    fudgeEnvelopeStart(processingDirectives, schemaVersion);
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public void envelopeComplete () {
-    fudgeEnvelopeEnd ();
+  public void envelopeComplete() {
+    fudgeEnvelopeEnd();
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
   public void writeFields(FudgeFieldContainer msg) {
-    for(FudgeField field : msg.getAllFields()) {
+    for (FudgeField field : msg.getAllFields()) {
       writeField(field);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public void writeField (FudgeField field) {
+  public void writeField(FudgeField field) {
     if (field == null) {
-      throw new NullPointerException ("Cannot write a null field to a Fudge stream");
+      throw new NullPointerException("Cannot write a null field to a Fudge stream");
     }
-    writeField (field.getOrdinal (), field.getName (), field.getType (), field.getValue ());
+    writeField(field.getOrdinal(), field.getName(), field.getType(), field.getValue());
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public void writeField(
-      Short ordinal,
-      String name,
-      @SuppressWarnings("rawtypes") FudgeFieldType type,
-      Object fieldValue) {
-    if (fudgeFieldStart (ordinal, name, type)) {
-      if (type.getTypeId () == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
-        fudgeSubMessageStart ();
-        writeFields ((FudgeFieldContainer)fieldValue);
-        fudgeSubMessageEnd ();
+  public void writeField(Short ordinal, String name, FudgeFieldType type, Object fieldValue) {
+    if (fudgeFieldStart(ordinal, name, type)) {
+      if (type.getTypeId() == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
+        fudgeSubMessageStart();
+        writeFields((FudgeFieldContainer) fieldValue);
+        fudgeSubMessageEnd();
       } else {
-        fudgeFieldValue (type, fieldValue);
+        fudgeFieldValue(type, fieldValue);
       }
-      fudgeFieldEnd ();
+      fudgeFieldEnd();
     }
   }
-  
+
   /**
    * Called when a Fudge message envelope is starting.
    * 
@@ -171,14 +162,14 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
   protected void fudgeEnvelopeStart(final int processingDirectives, final int schemaVersion) {
     // no-op
   }
-  
+
   /**
    * Called at the end of the envelope after all fields have been processed.
    */
   protected void fudgeEnvelopeEnd() {
     // no-op
   }
-  
+
   /**
    * Called as a field starts.
    * 
@@ -187,39 +178,39 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * @param type the field type
    * @return {@code true} to continue processing the field, {@code false} to ignore it ({@link #fudgeFieldValue}, {@link #fudgeSubMessageStart}, {@link #fudgeSubMessageEnd} and {@link #fudgeFieldEnd} will not be called for this field)
    */
-  protected boolean fudgeFieldStart(Short ordinal, String name, FudgeFieldType<?> type) {
+  protected boolean fudgeFieldStart(Short ordinal, String name, FudgeFieldType type) {
     return true;
   }
-  
+
   /**
    * Called after a field has been processed.
    */
   protected void fudgeFieldEnd() {
     // no-op
   }
-  
+
   /**
    * Called between {@link #fudgeFieldStart} and {@link #fudgeFieldEnd} for fields that are not sub messages.
    * 
    * @param type the field type
    * @param fieldValue the value
    */
-  protected void fudgeFieldValue(FudgeFieldType<?> type, Object fieldValue) {
+  protected void fudgeFieldValue(FudgeFieldType type, Object fieldValue) {
     // no-op
   }
-  
+
   /**
    * Called after {@link #fudgeFieldStart} when a sub-message is starting.
    */
   protected void fudgeSubMessageStart() {
     // no-op
   }
-  
+
   /**
    * Called when a sub-message has been processed, before {@link #fudgeFieldEnd} is called for the field.
    */
   protected void fudgeSubMessageEnd() {
     // no-op
   }
-  
+
 }

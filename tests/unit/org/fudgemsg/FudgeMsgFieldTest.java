@@ -41,7 +41,7 @@ public class FudgeMsgFieldTest {
     FudgeField expected = FudgeMsgField.of(PrimitiveFieldTypes.INT_TYPE, 9, "number", (short) 12);
     FudgeField field = new FudgeField() {
       @Override
-      public FudgeFieldType<?> getType() {
+      public FudgeFieldType getType() {
         return PrimitiveFieldTypes.INT_TYPE;
       }
       @Override

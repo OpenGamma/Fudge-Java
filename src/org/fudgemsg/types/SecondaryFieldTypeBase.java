@@ -31,35 +31,40 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
  * {@link SecondaryFieldType} class provides a simpler interface to use for most
  * extensions.
  *
- * @author Andrew Griffin
  * @param <SecondaryType> secondary type
  * @param <PrimitiveType> type there is a primary {@link FudgeFieldType} for
  * @param <ConversionType> base type to support mappings from, e.g. use Object to convert from any of the Fudge primitives
  */
-public abstract class SecondaryFieldTypeBase<SecondaryType,ConversionType,PrimitiveType extends ConversionType> extends FudgeFieldType<SecondaryType> implements FudgeTypeConverter<ConversionType,SecondaryType> {
-  
-  private final FudgeFieldType<PrimitiveType> _delegate;
+public abstract class SecondaryFieldTypeBase<SecondaryType, ConversionType, PrimitiveType extends ConversionType>
+    extends FudgeFieldType implements FudgeTypeConverter<ConversionType, SecondaryType> {
+
+  /**
+   * The wire type.
+   */
+  private final FudgeFieldType _delegate;
 
   /**
    * Creates a new secondary type on top of an existing Fudge type.
    * 
-   * @param type existing Fudge primitive type
-   * @param javaType Java type for conversion
+   * @param wireType  the existing Fudge primitive type
+   * @param javaType  the Java type for conversion
    */
-  protected SecondaryFieldTypeBase (FudgeFieldType<PrimitiveType> type, Class<SecondaryType> javaType) {
-    super (type.getTypeId (), javaType, type.isVariableSize (), type.getFixedSize ());
-    _delegate = type;
+  protected SecondaryFieldTypeBase(FudgeFieldType wireType, Class<SecondaryType> javaType) {
+    super(wireType.getTypeId(), javaType, wireType.isVariableSize(), wireType.getFixedSize());
+    _delegate = wireType;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Returns the underlying (primary) Fudge type.
+   * Gets the underlying Fudge wire type.
    * 
-   * @return the primary type
+   * @return the primary wire type
    */
-  public FudgeFieldType<PrimitiveType> getPrimaryType () {
+  public FudgeFieldType getPrimaryType() {
     return _delegate;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Converts an object from the secondary type to a primitive Fudge type for writing. An implementation
    * may assume that the {@code object} parameter is not {@code null}.
@@ -67,7 +72,7 @@ public abstract class SecondaryFieldTypeBase<SecondaryType,ConversionType,Primit
    * @param object the secondary instance
    * @return the underlying Fudge data to write out
    */
-  public abstract PrimitiveType secondaryToPrimary (SecondaryType object);
+  public abstract PrimitiveType secondaryToPrimary(SecondaryType object);
 
   /**
    * Calculates the resultant size by converting to the primary object and invoking the delegate. If conversion
@@ -76,25 +81,25 @@ public abstract class SecondaryFieldTypeBase<SecondaryType,ConversionType,Primit
    * @param value the value to convert (if it will not be a fixed width type)
    * @param taxonomy the taxonomy used to encode
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public int getVariableSize(SecondaryType value, FudgeTaxonomy taxonomy) {
-    return getPrimaryType ().getVariableSize (secondaryToPrimary (value), taxonomy);
+  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+    SecondaryType data = (SecondaryType) value;
+    return getPrimaryType().getVariableSize(secondaryToPrimary(data), taxonomy);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  @SuppressWarnings("unchecked")
   @Override
-  public void writeValue(DataOutput output, SecondaryType value) throws IOException {
-    getPrimaryType ().writeValue (output, secondaryToPrimary (value));
+  public SecondaryType readValue(DataInput input, int dataSize) throws IOException {
+    PrimitiveType readValue = (PrimitiveType) getPrimaryType().readValue(input, dataSize);
+    return primaryToSecondary(readValue);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  @SuppressWarnings("unchecked")
   @Override
-  public SecondaryType readValue (DataInput input, int dataSize) throws IOException {
-    return primaryToSecondary (getPrimaryType ().readValue (input, dataSize));
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    SecondaryType data = (SecondaryType) value;
+    getPrimaryType().writeValue(output, secondaryToPrimary(data));
   }
-  
+
 }

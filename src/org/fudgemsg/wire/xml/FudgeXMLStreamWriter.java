@@ -46,7 +46,6 @@ import org.fudgemsg.wire.FudgeStreamWriter;
  * <p>Note that no pretty printing options are available here. This implementation uses the systems default {@link XMLOutputFactory} if only passed
  * a {@link Writer} object at construction. If you require control over the output, you will need to use a suitable {@link XMLStreamWriter}
  * implementation that allows it. For example <a href="http://www.java2s.com/Open-Source/Java-Document/XML/stax-utils/javanet.staxutils.htm">javanet.staxutils</a>.</p>
- * 
  */
 public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
 
@@ -172,7 +171,7 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
   }
   
   @Override
-  protected boolean fudgeFieldStart (final Short ordinal, final String name, final FudgeFieldType<?> type) {
+  protected boolean fudgeFieldStart (final Short ordinal, final String name, final FudgeFieldType type) {
     try {
       return writeFudgeFieldStart(ordinal, name, type);
     } catch (XMLStreamException e) {
@@ -180,7 +179,7 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
     }
   }
 
-  private boolean writeFudgeFieldStart(final Short ordinal, final String name, final FudgeFieldType<?> type)
+  private boolean writeFudgeFieldStart(final Short ordinal, final String name, final FudgeFieldType type)
       throws XMLStreamException {
     String elementName = null;
     if (getPreserveFieldNames()) {
@@ -247,7 +246,7 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
   }
 
   @Override
-  protected void fudgeFieldValue (final FudgeFieldType<?> type, final Object fieldValue) {
+  protected void fudgeFieldValue (final FudgeFieldType type, final Object fieldValue) {
     try {
       writeFudgeFieldValue(type, fieldValue);
     } catch (XMLStreamException e) {
@@ -256,7 +255,7 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
   }
   
   @SuppressWarnings("unchecked")
-  private void writeFudgeFieldValue(@SuppressWarnings("rawtypes") FudgeFieldType type, Object fieldValue) throws XMLStreamException {
+  private void writeFudgeFieldValue(FudgeFieldType type, Object fieldValue) throws XMLStreamException {
 
     if (type instanceof SecondaryFieldTypeBase<?,?,?>) {
       fieldValue = ((SecondaryFieldTypeBase<Object,Object,Object>)type).secondaryToPrimary(fieldValue);
