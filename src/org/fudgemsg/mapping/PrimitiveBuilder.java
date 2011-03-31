@@ -157,10 +157,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Float object) {
+    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Float objectVal) {
       final MutableFudgeFieldContainer message = context.newMessage();
-      message.add(VALUE_KEY, object);
-      // TODO what about NaN and infinite ?
+      message.add(VALUE_KEY, objectVal);
+
+      if (Float.isNaN(objectVal) || Float.isInfinite(objectVal)) {
+          throw new ArithmeticException("Illegal float value: " + objectVal);
+      }
+
       return message;
     }
 
