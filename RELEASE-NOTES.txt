@@ -20,7 +20,13 @@ Changes:
   This minimizes the classes in the top package to avoid overwhelming users with
   low-level knowledge at first glance.
 
+- Create FudgeWireType.
+  Move wire types to new package under new superclass.
+  This allows certain places in the API to specifically require a wire type.
+
 - Add EncodedFudgeMsg
 
 - Changed IndicatorType from singleton to enum singleton
+
+- Move API to using Integer rather than Short for ordinals
 

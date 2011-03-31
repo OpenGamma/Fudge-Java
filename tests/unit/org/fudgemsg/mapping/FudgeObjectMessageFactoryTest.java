@@ -45,7 +45,7 @@ public class FudgeObjectMessageFactoryTest {
     SimpleBean simpleBean = ObjectMappingTestUtil.constructSimpleBean();
     MutableFudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(simpleBean, FudgeContext.GLOBAL_DEFAULT);
     assertNotNull(msg);
-    msg.remove((short)0);
+    msg.remove(0);
     FudgeUtils.assertAllFieldsMatch(ObjectMappingTestUtil.constructSimpleMessage(FudgeContext.GLOBAL_DEFAULT), msg, false);
   }
   
@@ -112,7 +112,7 @@ public class FudgeObjectMessageFactoryTest {
     SimpleBean simpleBean = ObjectMappingTestUtil.constructSimpleBean();
     MutableFudgeFieldContainer msg = (MutableFudgeFieldContainer)FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (simpleBean).getMessage ();
     assertNotNull(msg);
-    msg.remove((short)0);
+    msg.remove(0);
     FudgeUtils.assertAllFieldsMatch(ObjectMappingTestUtil.constructSimpleMessage(FudgeContext.GLOBAL_DEFAULT), msg, false);
   }
   

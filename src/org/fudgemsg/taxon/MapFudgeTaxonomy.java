@@ -106,17 +106,17 @@ public class MapFudgeTaxonomy implements FudgeTaxonomy {
 
   //-------------------------------------------------------------------------
   @Override
-  public String getFieldName(short ordinal) {
-    return _ordinalToNameMap.get((int) ordinal);
+  public String getFieldName(int ordinal) {
+    return _ordinalToNameMap.get(ordinal);
   }
 
   @Override
-  public Short getFieldOrdinal(String fieldName) {
+  public Integer getFieldOrdinal(String fieldName) {
     Integer ordinal = _nameToOrdinalMap.get(fieldName);
     if (ordinal == null) {
       return null;
     }
-    return ordinal.shortValue();
+    return ordinal;
   }
 
   //-------------------------------------------------------------------------
@@ -151,7 +151,7 @@ public class MapFudgeTaxonomy implements FudgeTaxonomy {
     final Map<Integer, String> ordinalToNameMap = new HashMap<Integer, String>(fields.size());
     int i = 0;
     for (FudgeField field : fields) {
-      final Short ordinal = field.getOrdinal();
+      final Integer ordinal = field.getOrdinal();
       if (ordinal == null) {
         throw new IllegalArgumentException("Fudge message does not contain a FudgeTaxonomy - field at index " + i + " has no ordinal");
       }

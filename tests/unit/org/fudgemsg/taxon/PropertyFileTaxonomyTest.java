@@ -28,8 +28,6 @@ import org.junit.Test;
 
 /**
  * Test the PropertyFileTaxonomy implementation
- * 
- * @author Andrew Griffin
  */
 public class PropertyFileTaxonomyTest {
   
@@ -45,10 +43,10 @@ public class PropertyFileTaxonomyTest {
     assertEquals ("telephone", taxon.getFieldName ((short)4));
     assertEquals (null, taxon.getFieldName ((short)5));
     assertEquals (null, taxon.getFieldOrdinal ("class"));
-    assertEquals (1, (short)taxon.getFieldOrdinal ("id"));
-    assertEquals (2, (short)taxon.getFieldOrdinal ("name"));
-    assertEquals (3, (short)taxon.getFieldOrdinal ("email"));
-    assertEquals (4, (short)taxon.getFieldOrdinal ("telephone"));
+    assertEquals (1, (int) taxon.getFieldOrdinal ("id"));
+    assertEquals (2, (int) taxon.getFieldOrdinal ("name"));
+    assertEquals (3, (int) taxon.getFieldOrdinal ("email"));
+    assertEquals (4, (int) taxon.getFieldOrdinal ("telephone"));
     assertEquals (null, taxon.getFieldOrdinal (null));
   }
   

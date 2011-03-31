@@ -127,7 +127,7 @@ public class EncodedFudgeMsgTest {
   public void testGetByIndex() {
     final FudgeField field = _testMessageEnc.getByIndex(1);
     assertNotNull(field);
-    assertEquals((Short) (short) 42, field.getOrdinal());
+    assertEquals((Integer) 42, field.getOrdinal());
     assertTrue(field.getValue() instanceof EncodedFudgeMsg);
   }
 

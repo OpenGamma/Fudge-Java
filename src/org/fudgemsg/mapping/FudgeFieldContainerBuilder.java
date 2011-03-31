@@ -52,7 +52,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
   public FudgeFieldContainer buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
     final MutableFudgeFieldContainer msg = context.getFudgeContext().newMessage(message);
     // remove the class name(s) if added
-    final Short ordinal = FudgeSerializationContext.TYPES_HEADER_ORDINAL;
+    final Integer ordinal = FudgeSerializationContext.TYPES_HEADER_ORDINAL;
     final Iterator<FudgeField> fields = msg.iterator();
     while (fields.hasNext()) {
       final FudgeField field = fields.next();

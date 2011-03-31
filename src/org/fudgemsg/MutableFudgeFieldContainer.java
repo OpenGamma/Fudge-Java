@@ -87,7 +87,7 @@ public interface MutableFudgeFieldContainer extends FudgeFieldContainer {
    * 
    * @param ordinal ordinal index of fields, null matches fields without an ordinal
    */
-  public void remove(Short ordinal);
+  public void remove(Integer ordinal);
 
   /**
    * Removes all fields matching both the name and ordinal supplied.
@@ -95,7 +95,7 @@ public interface MutableFudgeFieldContainer extends FudgeFieldContainer {
    * @param name  the name of the fields to remove
    * @param ordinal  the ordinal of the fields to remove
    */
-  public void remove(String name, Short ordinal);
+  public void remove(String name, Integer ordinal);
 
   /**
    * Removes all fields from the message.

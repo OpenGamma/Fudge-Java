@@ -141,7 +141,7 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * {@inheritDoc}
    */
   @Override
-  public void writeField(Short ordinal, String name, FudgeFieldType type, Object fieldValue) {
+  public void writeField(Integer ordinal, String name, FudgeFieldType type, Object fieldValue) {
     if (fudgeFieldStart(ordinal, name, type)) {
       if (type.getTypeId() == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
         fudgeSubMessageStart();
@@ -174,12 +174,12 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
   /**
    * Called as a field starts.
    * 
-   * @param ordinal the field ordinal
-   * @param name the field name
-   * @param type the field type
+   * @param ordinal  the field ordinal
+   * @param name  the field name
+   * @param type  the field type
    * @return {@code true} to continue processing the field, {@code false} to ignore it ({@link #fudgeFieldValue}, {@link #fudgeSubMessageStart}, {@link #fudgeSubMessageEnd} and {@link #fudgeFieldEnd} will not be called for this field)
    */
-  protected boolean fudgeFieldStart(Short ordinal, String name, FudgeFieldType type) {
+  protected boolean fudgeFieldStart(Integer ordinal, String name, FudgeFieldType type) {
     return true;
   }
 

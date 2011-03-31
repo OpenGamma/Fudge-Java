@@ -166,19 +166,19 @@ public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
    * Writes out the field name to the JSON object.
    */
   @Override
-  protected boolean fudgeFieldStart (Short ordinal, String name, FudgeFieldType type) {
+  protected boolean fudgeFieldStart (Integer ordinal, String name, FudgeFieldType type) {
     try {
       if (getSettings ().getPreferFieldNames ()) {
         if (name != null) {
           getWriter ().key (name);
         } else if (ordinal != null) {
-          getWriter ().key (Integer.toString (ordinal));
+          getWriter ().key (ordinal.toString());
         } else {
           getWriter ().key ("");
         }
       } else {
         if (ordinal != null) {
-          getWriter ().key (Integer.toString (ordinal));
+          getWriter ().key (ordinal.toString());
         } else if (name != null) {
           getWriter ().key (name);
         } else {

@@ -174,7 +174,7 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
   }
   
   @Override
-  protected boolean fudgeFieldStart (final Short ordinal, final String name, final FudgeFieldType type) {
+  protected boolean fudgeFieldStart (final Integer ordinal, final String name, final FudgeFieldType type) {
     try {
       return writeFudgeFieldStart(ordinal, name, type);
     } catch (XMLStreamException e) {
@@ -182,7 +182,7 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
     }
   }
 
-  private boolean writeFudgeFieldStart(final Short ordinal, final String name, final FudgeFieldType type)
+  private boolean writeFudgeFieldStart(final Integer ordinal, final String name, final FudgeFieldType type)
       throws XMLStreamException {
     String elementName = null;
     if (getPreserveFieldNames()) {

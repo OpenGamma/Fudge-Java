@@ -50,17 +50,17 @@ public interface FudgeTaxonomy {
    * @param ordinal  the ordinal to lookup
    * @return the field name, null if the ordinal is not mapped to a name
    */
-  String getFieldName(short ordinal);
+  String getFieldName(int ordinal);
 
   /**
    * Looks up the field ordinal for the given name.
    * <p>
    * Not all names will necessarily be mapped to an ordinal.
-   * This must be implemented to be bidirectional with {@link #getFieldName(short)}.
+   * This must be implemented to be bidirectional with {@link #getFieldName}.
    * 
    * @param name  the name to lookup, null returns null
    * @return the field ordinal, null if the name is not mapped to a ordinal
    */
-  Short getFieldOrdinal(String name);
+  Integer getFieldOrdinal(String name);
 
 }

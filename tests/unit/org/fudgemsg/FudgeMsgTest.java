@@ -273,7 +273,7 @@ public class FudgeMsgTest {
     assertEquals ("bar1", msg.getString ("foo"));
     assertEquals ("bar2", msg.getString (999));
     msg.remove ("foo");
-    msg.remove ((short)999);
+    msg.remove (999);
     assertEquals (null, msg.getString ("foo"));
     assertEquals (null, msg.getString (999));
     int sizeBefore = msg.getNumFields ();

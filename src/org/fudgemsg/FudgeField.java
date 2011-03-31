@@ -32,6 +32,26 @@ package org.fudgemsg;
 public interface FudgeField {
 
   /**
+   * Gets the optional field name.
+   * <p>
+   * The name is a string that identifies the meaning of the data.
+   * This is similar to the tag name in XML.
+   * 
+   * @return the field name, null if the field has no name
+   */
+  String getName();
+
+  /**
+   * Gets the optional field ordinal.
+   * <p>
+   * The ordinal is a number that identifies the meaning of the data.
+   * It is typically a reference into the taxonomy.
+   * 
+   * @return the field ordinal which will fit in 2 bytes, null if the field has no ordinal
+   */
+  Integer getOrdinal();
+
+  /**
    * Gets the Fudge type of the value.
    * <p>
    * The type should match the value.
@@ -48,25 +68,5 @@ public interface FudgeField {
    * @return the field value, may be null
    */
   Object getValue();
-
-  /**
-   * Gets the optional field ordinal.
-   * <p>
-   * The ordinal is a number that identifies the meaning of the data.
-   * It is typically a reference into the taxonomy.
-   * 
-   * @return the field ordinal, null if the field has no ordinal
-   */
-  Short getOrdinal();
-
-  /**
-   * Gets the optional field name.
-   * <p>
-   * The name is a string that identifies the meaning of the data.
-   * This is similar to the tag name in XML.
-   * 
-   * @return the field name, null if the field has no name
-   */
-  String getName();
 
 }

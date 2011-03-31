@@ -238,7 +238,7 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
    * {@inheritDoc}
    */
   @Override
-  public void writeField(Short ordinal, String name, FudgeFieldType type, Object fieldValue) {
+  public void writeField(Integer ordinal, String name, FudgeFieldType type, Object fieldValue) {
     if (fieldValue == null) {
       throw new NullPointerException("Cannot write a null field value to a Fudge stream.");
     }
@@ -261,7 +261,7 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
       valueSize = type.getFixedSize();
       varDataSize = 0;
     }
-    int fieldPrefix = FudgeFieldPrefixCodec.composeFieldPrefix(!type.isVariableSize(), varDataSize, (ordinal != null),
+    int fieldPrefix = FudgeFieldPrefixCodec.composeFieldPrefix(type.isFixedSize(), varDataSize, (ordinal != null),
         (name != null));
 
     // Start writing.

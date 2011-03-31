@@ -94,7 +94,7 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
   /**
    * Checks whether this container has any field which matches the given name.
    * 
-   * @param name  the field name to check, null returns false
+   * @param name  the field name to check, null matches fields without a name
    * @return true if this container has at least one field with the specified name
    */
   boolean hasField(String name);
@@ -124,10 +124,10 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
   /**
    * Checks whether this container has any field which matches the given ordinal.
    * 
-   * @param ordinal  the field ordinal to check
+   * @param ordinal  the field ordinal to check, null matches fields without an ordinal
    * @return true if this container has at least one field with the specified ordinal
    */
-  boolean hasField(int ordinal);
+  boolean hasField(Integer ordinal);
 
   /**
    * Gets the list of all fields with the given ordinal.
@@ -135,10 +135,10 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
    * A container is ordered and may contain multiple fields with the same ordinal.
    * This method returns all matching fields in the order of the container.
    * 
-   * @param ordinal  the field ordinal
+   * @param ordinal  the field ordinal, null matches fields without an ordinal
    * @return the unmodifiable list of matching fields, not null
    */
-  List<FudgeField> getAllByOrdinal(int ordinal);
+  List<FudgeField> getAllByOrdinal(Integer ordinal);
 
   /**
    * Gets the first field with the given ordinal.
@@ -146,10 +146,10 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
    * A container is ordered and may contain multiple fields with the same ordinal.
    * This method returns the first that matches.
    * 
-   * @param ordinal  the field ordinal
+   * @param ordinal  the field ordinal, null matches fields without an ordinal
    * @return the first matching field, null if not found
    */
-  FudgeField getByOrdinal(int ordinal);
+  FudgeField getByOrdinal(Integer ordinal);
 
   //-------------------------------------------------------------------------
   /**

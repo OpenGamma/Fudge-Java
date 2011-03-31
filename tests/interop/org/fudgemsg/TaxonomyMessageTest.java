@@ -50,10 +50,10 @@ public class TaxonomyMessageTest {
     assertEquals (taxon.getFieldName ((short)2), FIELD_2);
     assertEquals (taxon.getFieldName ((short)3), FIELD_3);
     assertEquals (taxon.getFieldName ((short)42), FIELD_42);
-    assertEquals (taxon.getFieldOrdinal (FIELD_1), (Short)(short)1);
-    assertEquals (taxon.getFieldOrdinal (FIELD_2), (Short)(short)2);
-    assertEquals (taxon.getFieldOrdinal (FIELD_3), (Short)(short)3);
-    assertEquals (taxon.getFieldOrdinal (FIELD_42), (Short)(short)42);
+    assertEquals (taxon.getFieldOrdinal (FIELD_1), (Integer) 1);
+    assertEquals (taxon.getFieldOrdinal (FIELD_2), (Integer) 2);
+    assertEquals (taxon.getFieldOrdinal (FIELD_3), (Integer) 3);
+    assertEquals (taxon.getFieldOrdinal (FIELD_42), (Integer) 42);
   }
 
   /**

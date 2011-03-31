@@ -219,15 +219,12 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
     FudgeField field = null;
     switch (element) {
       case SIMPLE_FIELD: {
-        final Integer ordinalInt = reader.getFieldOrdinal();
-        field = FudgeMsgField.of(reader.getFieldType(), reader.getFieldValue(), reader.getFieldName(),
-            (ordinalInt != null) ? ordinalInt.shortValue() : null);
+        field = FudgeMsgField.of(reader.getFieldType(), reader.getFieldValue(), reader.getFieldName(), reader.getFieldOrdinal());
         break;
       }
       case SUBMESSAGE_FIELD_START: {
-        final Integer ordinalInt = reader.getFieldOrdinal();
-        field = FudgeMsgField.of(FudgeWireType.SUB_MESSAGE, new EncodedFudgeMsg(reader.skipMessageField()), reader
-            .getFieldName(), (ordinalInt != null) ? ordinalInt.shortValue() : null);
+        field = FudgeMsgField.of(FudgeWireType.SUB_MESSAGE, new EncodedFudgeMsg(reader.skipMessageField()),
+            reader.getFieldName(), reader.getFieldOrdinal());
         break;
       }
       case SUBMESSAGE_FIELD_END:
@@ -319,13 +316,12 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
 
   @SuppressWarnings("unchecked")
   @Override
-  protected <T> T getFirstTypedValue(Class<T> clazz, int ordinal, int typeId) {
+  protected <T> T getFirstTypedValue(Class<T> clazz, Integer ordinal, int typeId) {
     if (!_complete) {
       final Iterator<FudgeField> itr = getFieldIterator();
-      final Short ordinalAsShort = (short) ordinal;
       while (itr.hasNext()) {
         final FudgeField field = itr.next();
-        if (fieldOrdinalEquals(ordinalAsShort, field)) {
+        if (fieldOrdinalEquals(ordinal, field)) {
           if (field.getType().getTypeId() == typeId) {
             return (T) field.getValue();
           }
@@ -368,12 +364,11 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
   }
 
   @Override
-  public FudgeField getByOrdinal(int ordinal) {
-    final Short ordinalAsShort = (short) ordinal;
+  public FudgeField getByOrdinal(Integer ordinal) {
     final Iterator<FudgeField> itr = getFieldIterator();
     while (itr.hasNext()) {
       final FudgeField field = itr.next();
-      if (fieldOrdinalEquals(ordinalAsShort, field)) {
+      if (fieldOrdinalEquals(ordinal, field)) {
         return field;
       }
     }
@@ -396,11 +391,10 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
   @Override
   public <T> T getValue(Class<T> clazz, int ordinal) {
     final FudgeTypeDictionary dictionary = getFudgeContext().getTypeDictionary();
-    final Short ordinalAsShort = (short) ordinal;
     final Iterator<FudgeField> itr = getFieldIterator();
     while (itr.hasNext()) {
       final FudgeField field = itr.next();
-      if (fieldOrdinalEquals(ordinalAsShort, field) && dictionary.canConvertField(clazz, field)) {
+      if (fieldOrdinalEquals(ordinal, field) && dictionary.canConvertField(clazz, field)) {
         return dictionary.getFieldValue(clazz, field);
       }
     }

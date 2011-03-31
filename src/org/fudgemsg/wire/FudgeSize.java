@@ -42,7 +42,7 @@ public class FudgeSize {
    * @param value  the field value
    * @return the number of bytes
    */
-  public static int calculateFieldSize(final FudgeTaxonomy taxonomy, final Short ordinal, final String name, final FudgeFieldType type, final Object value) {
+  public static int calculateFieldSize(final FudgeTaxonomy taxonomy, final Integer ordinal, final String name, final FudgeFieldType type, final Object value) {
     int size = 0;
     // field prefix
     size += 2;
@@ -114,7 +114,7 @@ public class FudgeSize {
    * @param value  the field value
    * @return the number of bytes
    */
-  public static int calculateFieldSize(final Short ordinal, final String name, final FudgeFieldType type, final Object value) {
+  public static int calculateFieldSize(final Integer ordinal, final String name, final FudgeFieldType type, final Object value) {
     return calculateFieldSize(null, ordinal, name, type, value);
   }
 
@@ -128,7 +128,7 @@ public class FudgeSize {
    * @param value  the field value
    * @return the number of bytes
    */
-  public static int calculateFieldSize(final Short ordinal, final FudgeFieldType type, final Object value) {
+  public static int calculateFieldSize(final Integer ordinal, final FudgeFieldType type, final Object value) {
     return calculateFieldSize(null, ordinal, null, type, value);
   }
 

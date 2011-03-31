@@ -87,12 +87,12 @@ public interface FudgeStreamWriter extends Flushable, Closeable {
   /**
    * Writes a message field.
    * 
-   * @param ordinal the ordinal index of the field, or {@code null} to omit.
-   * @param name the name of the field, {@code null} to omit. If the ordinal is omitted and the name matches an entry in the current taxonomy the name will be replaced by the taxonomy resolved ordinal.
-   * @param type the type of the underlying data
-   * @param fieldValue value of the field
+   * @param ordinal  the ordinal index of the field, or {@code null} to omit.
+   * @param name  the name of the field, {@code null} to omit. If the ordinal is omitted and the name matches an entry in the current taxonomy the name will be replaced by the taxonomy resolved ordinal.
+   * @param type  the type of the underlying data
+   * @param fieldValue  value of the field
    */
-  public void writeField(Short ordinal, String name, FudgeFieldType type, Object fieldValue);
+  public void writeField(Integer ordinal, String name, FudgeFieldType type, Object fieldValue);
 
   /**
    * Writes a set of fields.

@@ -137,11 +137,7 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
         break;
     }
     
-    Short ordinalAsShort = null;
-    if (ordinal != null) {
-      ordinalAsShort = ordinal.shortValue();
-    }
-    FudgeMsgField field = FudgeMsgField.of(type, value, name, ordinalAsShort);
+    FudgeMsgField field = FudgeMsgField.of(type, value, name, ordinal);
     getFields().add(field);
   }
 
@@ -196,20 +192,14 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Iterator<FudgeField> iterator() {
     // return the real iterator since this is a mutable message
     return getFields().iterator();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void remove(Short ordinal) {
+  public void remove(Integer ordinal) {
     final Iterator<FudgeField> i = iterator();
     while (i.hasNext()) {
       final FudgeField field = i.next();
@@ -218,9 +208,6 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void remove(String name) {
     final Iterator<FudgeField> i = iterator();
@@ -231,11 +218,8 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void remove(String name, Short ordinal) {
+  public void remove(String name, Integer ordinal) {
     final Iterator<FudgeField> i = iterator();
     while (i.hasNext()) {
       final FudgeField field = i.next();
@@ -244,17 +228,11 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void clear() {
     getFields().clear();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == this) {
