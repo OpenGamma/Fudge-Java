@@ -239,7 +239,7 @@ public class FudgeInteropTest {
     if (interopDir != null) {
       fullPath = interopDir + File.pathSeparator + filename;
     } else {
-      fullPath = filename; // fall back to current directory.
+      fullPath = "tests/" + filename; // fall back to tests directory.
     }
     System.out.println("Creating file " + fullPath);
     s_filesToRemove.add(new File(fullPath));
@@ -259,7 +259,7 @@ public class FudgeInteropTest {
     if (interopDir != null) {
       fullPath = interopDir + File.pathSeparator + filename;
     } else {
-      fullPath = filename; // fall back to current directory.
+      fullPath = "tests/" + filename; // fall back to current directory.
     }
     FileInputStream stream = new FileInputStream(fullPath);
     DataInputStream dis = new DataInputStream(stream);
