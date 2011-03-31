@@ -107,7 +107,7 @@ public class DateTimeFieldType extends FudgeFieldType {
    */
   /* package */static void writeFudgeTime(final DataOutput output, final FudgeTime value) throws IOException {
     final int hi = (value.getSecondsSinceMidnight() & 0x1FFFF) | (value.getAccuracy().getEncodedValue() << 20)
-        | (value.getRawTimezoneOffset() << 24);
+        | (value.getEncodedTimezoneOffset() << 24);
     final int lo = value.getNanos() & 0x3FFFFFFF;
     //System.out.println ("writeFudgeTime: " + hi + ", " + lo);
     output.writeInt(hi);

@@ -16,20 +16,18 @@
 package org.fudgemsg.types;
 
 /**
- * The only value of a field with the Indicator type. This value is used
- * to indicate that there is a field in a file with the given name/index/ordinal,
- * but that the type does not matter.
- * It is intentionally a pure singleton.
- *
- * @author Kirk Wylie
+ * An object that represents the presence of the message-level indicator flag.
+ * <p>
+ * The indicator can be used as a flag in the message, for example to clear a
+ * previously set value.
+ * <p>
+ * This class is a singleton, as only one value is needed of the indicator type.
  */
-public final class IndicatorType {
-  private IndicatorType() {
-  }
-  
+public enum IndicatorType {
+
   /**
    * The only instance of this type.
    */
-  public static final IndicatorType INSTANCE = new IndicatorType();
+  INSTANCE
 
 }

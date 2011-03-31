@@ -79,23 +79,24 @@ public enum DateTimeAccuracy {
   }
 
   /**
-   * The numeric value to be encoded in Fudge time and datetime representations.
+   * Converts the enum to the Fudge wire value for date and time.
    * See <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>
    * 
    * @return the numeric value
    */
-  /* package */ int getEncodedValue() {
+  public final int getEncodedValue() {
     return _encodedValue;
   }
 
   /**
-   * Resolves the symbolic enum value from an encoded value (e.g. one returned by {@link #getEncodedValue} or received in a Fudge message).
+   * Converts the Fudge wire value to the enum for date and time.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>
    * 
-   * @param n numeric value
-   * @return the {@link DateTimeAccuracy} or {@code null} if the value is invalid
+   * @param value  numeric value
+   * @return the {@link DateTimeAccuracy}, {@code null} if the value is invalid
    */
-  /* package */ static DateTimeAccuracy fromEncodedValue(int n) {
-    switch (n) {
+  public final static DateTimeAccuracy fromEncodedValue(int value) {
+    switch (value) {
       case 10 : return NANOSECOND;
       case 9 : return MICROSECOND;
       case 8 : return MILLISECOND;

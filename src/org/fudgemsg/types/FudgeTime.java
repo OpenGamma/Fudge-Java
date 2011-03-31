@@ -37,7 +37,7 @@ public class FudgeTime implements TimeProvider {
   /**
    * Reserved value to indicate there is no time-zone offset.
    */
-  /* package */static final int NO_TIMEZONE_OFFSET = -128;
+  static final int NO_TIMEZONE_OFFSET = -128;
 
   /**
    * The accuracy.
@@ -219,7 +219,7 @@ public class FudgeTime implements TimeProvider {
    * @return {@code true} if the {@link FudgeTime} has a time-zone offset, {@code false} otherwise
    */
   public boolean hasTimezoneOffset() {
-    return getRawTimezoneOffset() != NO_TIMEZONE_OFFSET;
+    return getEncodedTimezoneOffset() != NO_TIMEZONE_OFFSET;
   }
 
   /**
@@ -246,7 +246,7 @@ public class FudgeTime implements TimeProvider {
    * 
    * @return the time-zone offset (15 minute intervals) or -128 for none
    */
-  /* package */int getRawTimezoneOffset() {
+  public final int getEncodedTimezoneOffset() {
     return _timezoneOffset;
   }
 
@@ -361,7 +361,7 @@ public class FudgeTime implements TimeProvider {
       final FudgeTime other = (FudgeTime) object;
       return other.getAccuracy() == getAccuracy() &&
             other.toLocalTime().equals(toLocalTime()) &&
-            other.getRawTimezoneOffset() == getRawTimezoneOffset();
+            other.getEncodedTimezoneOffset() == getEncodedTimezoneOffset();
     }
     return false;
   }
