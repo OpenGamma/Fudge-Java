@@ -36,7 +36,7 @@ public class ObjectMappingTestUtil {
   /**
    * 
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public static class SimpleBean {
     private String _fieldOne;
     private SimpleBean _fieldTwo;
@@ -137,7 +137,7 @@ public class ObjectMappingTestUtil {
   /**
    * @return [documentation not available]
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes" })
   public static SimpleBean constructSimpleBean() {
     SimpleBean simpleBean = new SimpleBean();
     simpleBean.setFieldOne("Kirk Wylie");

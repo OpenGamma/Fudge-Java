@@ -29,8 +29,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * Builder for {@code Set} objects.
  * <p>
  * This builder is immutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 /* package */final class SetBuilder implements FudgeBuilder<Set<?>> {
   // a list is sent as a sub-message where each field is a set element

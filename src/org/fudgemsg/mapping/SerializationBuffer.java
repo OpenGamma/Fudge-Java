@@ -26,8 +26,6 @@ import org.fudgemsg.FudgeRuntimeException;
  * Some structures are graphs that contain cycles.
  * When the method for processing object graphs has been agreed, this will process
  * back and forward references.
- * 
- * @author Andrew Griffin
  */
 /* package */class SerializationBuffer {
 

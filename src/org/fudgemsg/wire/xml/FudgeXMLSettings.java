@@ -29,8 +29,6 @@ import org.fudgemsg.FudgeTypeDictionary;
  * writer as defined by the specification that can be customized for a
  * specific XML source or destination. The default settings are based on
  * <a href="http://wiki.fudgemsg.org/display/FDG/XML+Fudge+Messages">XML Fudge Message specification</a>.
- * 
- * @author Andrew Griffin
  */
 public class FudgeXMLSettings {
 

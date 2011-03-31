@@ -35,8 +35,6 @@ import java.lang.annotation.Target;
  * <p>
  * The Fudge system can, if desired, locate this annotation and automatically
  * configure using {@link FudgeObjectDictionary#addAllAnnotatedBuilders()}.
- *
- * @author Kirk Wylie
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -21,8 +21,6 @@ package org.fudgemsg.wire.json;
  * <p>
  * Please refer to <a href="http://wiki.fudgemsg.org/display/FDG/JSON+Fudge+Messages">JSON Fudge Messages</a>
  * for details on the representation.
- * 
- * @author Andrew Griffin
  */
 public class JSONSettings {
 

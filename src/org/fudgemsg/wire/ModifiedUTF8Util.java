@@ -29,8 +29,6 @@ import java.io.UTFDataFormatException;
  * to suit the use of Fudge in a superior way.
  * 
  * Deprecated in favour of using proper UTF8 instead.
- *
- * @author Kirk Wylie
  */
 @Deprecated
 public class ModifiedUTF8Util {

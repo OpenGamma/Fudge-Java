@@ -17,8 +17,6 @@ package org.fudgemsg.types;
 
 /**
  * Converts any object values to a string using the object's toString method.
- * 
- * @author Andrew Griffin
  */
 public class StringFieldTypeConverter implements FudgeTypeConverter<Object, String> {
 

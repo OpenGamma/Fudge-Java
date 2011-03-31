@@ -22,8 +22,6 @@ import org.fudgemsg.mapping.FudgeObjectDictionary;
  * types or a specific taxonomy resolver. This can be used with {@link FudgeContext#setConfiguration}
  * to inject configuration into a context through Bean based frameworks such as Spring, or allow
  * different components of an application to be composed to register a complete set of types.
- * 
- * @author Andrew Griffin
  */
 public abstract class FudgeContextConfiguration {
   

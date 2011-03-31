@@ -33,8 +33,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * <p>
  * <p>
  * This class is mutable but thread-safe via concurrent collections.
- * 
- * @author Andrew Griffin
  */
 public class FudgeSerializationContext implements FudgeMessageFactory {
 

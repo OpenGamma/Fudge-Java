@@ -27,8 +27,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * A Java class name is mapped to a string in the Fudge message.
  * <p>
  * This builder is immutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 /* package */final class JavaClassBuilder implements FudgeBuilder<Class<?>> {
 

@@ -40,8 +40,6 @@ import com.mongodb.DBObject;
  * This class is very much a work in progress. For details on why, please see
  * http://kirkwylie.blogspot.com/2010/06/performance-of-fudge-persistence-in.html and the comments
  * from the 10gen team at the bottom.
- *
- * @author Kirk Wylie
  */
 public class FudgeMongoDBObject implements DBObject {
 

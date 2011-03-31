@@ -15,6 +15,8 @@
  */
 package org.fudgemsg.wire;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.CharArrayReader;
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
@@ -27,19 +29,12 @@ import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.taxon.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxon.MapFudgeTaxonomy;
-import org.fudgemsg.wire.FudgeMsgReader;
-import org.fudgemsg.wire.FudgeMsgWriter;
 import org.fudgemsg.wire.json.FudgeJSONStreamReader;
 import org.fudgemsg.wire.json.FudgeJSONStreamWriter;
 import org.junit.Test;
 
-import static org.fudgemsg.test.FudgeUtils.assertAllFieldsMatch;
-import static org.junit.Assert.assertNotNull;
-
 /**
- * 
- *
- * @author Andrew
+ * Test Fudge JSON.
  */
 public class FudgeJSONTest {
   

@@ -27,7 +27,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * This interface must be implemented in a thread-safe manner.
  * 
  * @param <T> the Java type this builder creates Fudge message from
- * @author Andrew Griffin
  */
 public interface FudgeMessageBuilder<T> {
 

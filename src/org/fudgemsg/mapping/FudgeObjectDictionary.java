@@ -60,8 +60,6 @@ import org.fudgemsg.types.ClasspathUtilities;
  * handle later additions.
  * <p>
  * This class is mutable but effectively thread-safe via concurrent collections.
- * 
- * @author Andrew Griffin
  */
 public class FudgeObjectDictionary {
 

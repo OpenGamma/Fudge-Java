@@ -31,8 +31,6 @@ import com.mongodb.DBObject;
 
 /**
  * Builder for encoding and decoding MongoDB objects.
- * 
- * @author Andrew Griffin
  */
 /* package */ class MongoDBFudgeBuilder implements FudgeBuilder<DBObject> {
   

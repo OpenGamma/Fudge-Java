@@ -26,8 +26,6 @@ import java.lang.annotation.ElementType;
  * <p>
  * When an object is converted to a Fudge message using reflection, this annotation
  * is used to provide a specific field ordinal in corresponding Fudge messages.
- * 
- * @author Andrew Griffin
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

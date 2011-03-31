@@ -33,7 +33,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * and will probably be removed from future releases.</p>
  * 
  * @param <T> class that can be serialized using this builder
- * @author Andrew Griffin
  */
 /* package */class ReflectionMessageBuilder<T> extends ReflectionBuilderBase<T> implements FudgeMessageBuilder<T> {
 

@@ -31,8 +31,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * Builder for {@code Map} objects.
  * <p>
  * This builder is immutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 /* package */final class MapBuilder implements FudgeBuilder<Map<?, ?>> {
   // map stored as sub-message where each entry is stored as two fields

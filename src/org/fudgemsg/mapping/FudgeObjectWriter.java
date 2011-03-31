@@ -22,8 +22,6 @@ import org.fudgemsg.wire.FudgeMsgWriter;
 
 /**
  * Reader to serialize Java objects to an underlying stream of Fudge messages.
- * 
- * @author Andrew Griffin
  */
 public class FudgeObjectWriter {
 

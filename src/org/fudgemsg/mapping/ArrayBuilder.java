@@ -28,7 +28,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * This builder is immutable and thread safe.
  *
  * @param <E> the element type of the array
- * @author Andrew Griffin
  */
 /* package */final class ArrayBuilder<E> implements FudgeBuilder<E[]> {
 

@@ -32,9 +32,7 @@ import org.fudgemsg.mapping.ObjectMappingTestUtil.StaticTransientBean;
 import org.junit.Test;
 
 /**
- * 
- *
- * @author Kirk Wylie
+ * Test.
  */
 public class FudgeObjectStreamReaderTest {
   private static final FudgeContext s_fudgeContext = new FudgeContext();
@@ -54,14 +52,14 @@ public class FudgeObjectStreamReaderTest {
     assertEquals("Kirk Wylie", simple.getFieldOne());
     assertEquals(98, simple.getFieldThree());
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     Map map = simple.getFieldFour();
     assertNotNull(map);
     assertEquals(2, map.size());
     assertEquals("Wrote This Test", map.get("Kirk Wylie"));
     assertEquals(new Byte((byte)42), map.get("Life, Universe, and Everything"));
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     Set set = simple.getFieldFive();
     assertNotNull(set);
     assertEquals(3, set.size());

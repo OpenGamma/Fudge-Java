@@ -58,7 +58,7 @@ public class MongoDBEncoderTest {
   /**
    * 
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   @Test
   public void repeatedValueEncoding() {
     MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage();

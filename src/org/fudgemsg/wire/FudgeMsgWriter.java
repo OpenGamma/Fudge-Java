@@ -26,8 +26,6 @@ import org.fudgemsg.FudgeMsgEnvelope;
  * A writer for passing Fudge messages ({@link FudgeFieldContainer} instances) to an underlying {@link FudgeStreamWriter} instance. This implementation
  * assumes that the whole message (or envelope) is available to the caller before writing starts. This is provided for convenience - greater runtime
  * efficiency may be possible by working directly with a {@link FudgeStreamWriter} to emit Fudge stream elements as they are generated.
- * 
- * @author Andrew Griffin
  */
 public class FudgeMsgWriter implements Flushable {
   

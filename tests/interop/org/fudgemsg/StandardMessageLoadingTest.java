@@ -18,7 +18,6 @@ package org.fudgemsg;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.fudgemsg.test.FudgeUtils;
@@ -28,8 +27,6 @@ import org.junit.Test;
 /**
  * Checks that we can load all the files that correspond to standard messages
  * and that they match up.
- *
- * @author Kirk Wylie
  */
 public class StandardMessageLoadingTest {
   private static final FudgeContext s_fudgeContext = new FudgeContext();

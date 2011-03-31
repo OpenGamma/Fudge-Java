@@ -20,8 +20,6 @@ package org.fudgemsg.mapping;
  * A decorator creating an immutable dictionary.
  * <p>
  * This class is not mutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 public final class ImmutableFudgeObjectDictionary extends FudgeObjectDictionary {
 

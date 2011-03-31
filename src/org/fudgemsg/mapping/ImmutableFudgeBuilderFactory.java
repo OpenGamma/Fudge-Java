@@ -20,8 +20,6 @@ package org.fudgemsg.mapping;
  * A decorator creating a factory that is immutable.
  * <p>
  * This class is not mutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 /* package */final class ImmutableFudgeBuilderFactory extends FudgeBuilderFactoryAdapter {
 

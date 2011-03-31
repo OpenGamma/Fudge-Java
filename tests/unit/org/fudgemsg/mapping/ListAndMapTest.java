@@ -42,7 +42,7 @@ public class ListAndMapTest {
   /**
    * 
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   @Test
   public void test2DArray() {
     final double[][] a = new double[8][8];

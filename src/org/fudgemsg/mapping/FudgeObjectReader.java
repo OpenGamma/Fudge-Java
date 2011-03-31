@@ -22,8 +22,6 @@ import org.fudgemsg.wire.FudgeMsgReader;
 
 /**
  * Reader to access and deserialize Java objects from an underlying stream of Fudge messages.
- * 
- * @author Andrew Griffin
  */
 public class FudgeObjectReader {
 

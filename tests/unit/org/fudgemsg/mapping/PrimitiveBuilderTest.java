@@ -44,7 +44,7 @@ public class PrimitiveBuilderTest {
   }
 
   private <T> void cycle(final Class<T> clazz, final T value) {
-    FudgeFieldContainer message = _scontext.addClassHeader(_scontext.objectToFudgeMsg(value), clazz, Object.class);
+    FudgeFieldContainer message = FudgeSerializationContext.addClassHeader(_scontext.objectToFudgeMsg(value), clazz, Object.class);
     System.out.println(clazz + ":" + value + " => " + message);
     message = cycle(message);
     System.out.println(clazz + ":" + value + " => " + message);

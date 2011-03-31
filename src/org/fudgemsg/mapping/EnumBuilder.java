@@ -28,7 +28,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * This builder is immutable and thread safe.
  * 
  * @param <E> the enumeration type
- * @author Andrew Griffin
  */
 /* package */final class EnumBuilder<E extends Enum<E>> implements FudgeBuilder<Enum<E>> {
 

@@ -22,7 +22,6 @@ package org.fudgemsg.mapping;
  * This interface must be implemented in a thread-safe manner.
  * 
  * @param <T> class that can be serialised or deserialised by this builder
- * @author Andrew Griffin
  */
 public interface FudgeBuilder<T> extends FudgeMessageBuilder<T>, FudgeObjectBuilder<T> {
 

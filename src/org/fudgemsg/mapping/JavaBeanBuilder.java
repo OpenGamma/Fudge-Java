@@ -39,7 +39,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * This builder is immutable and thread safe.
  * 
  * @param <T> the bean class that can be serialized or deserialized using this builder
- * @author Andrew Griffin
  */
 /* package */ final class JavaBeanBuilder<T> implements FudgeBuilder<T> {
 

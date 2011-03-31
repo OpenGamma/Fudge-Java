@@ -56,8 +56,6 @@ import org.fudgemsg.wire.FudgeStreamWriter;
  * of which reuses the same taxonomy ID to represent a different
  * {@link FudgeTaxonomy}, it would configure two different instances of
  * {@code FudgeContext}, one per feed.</p>
- *
- * @author Kirk Wylie
  */
 public class FudgeContext implements FudgeMessageFactory {
   

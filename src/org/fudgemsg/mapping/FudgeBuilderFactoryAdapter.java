@@ -25,8 +25,6 @@ package org.fudgemsg.mapping;
  * <p>
  * This class has no mutable state and is thread-safe.
  * Subclasses should also be thread-safe.
- * 
- * @author Andrew Griffin
  */
 public class FudgeBuilderFactoryAdapter implements FudgeBuilderFactory {
 

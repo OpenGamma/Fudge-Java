@@ -38,8 +38,6 @@ import org.scannotation.AnnotationDB;
 
 /**
  * A collection of utilities for automatically populating Fudge contexts based on classpath scanning.
- *
- * @author Kirk Wylie
  */
 public final class ClasspathUtilities {
 

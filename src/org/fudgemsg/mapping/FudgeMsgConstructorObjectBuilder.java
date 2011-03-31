@@ -36,7 +36,6 @@ import org.fudgemsg.FudgeRuntimeException;
  * This builder is immutable and thread safe.
  * 
  * @param <T> class supporting a Fudge-based constructor which can be deserialised by this builder
- * @author Andrew Griffin
  */
 /* package */ final class FudgeMsgConstructorObjectBuilder<T> implements FudgeObjectBuilder<T> {
 

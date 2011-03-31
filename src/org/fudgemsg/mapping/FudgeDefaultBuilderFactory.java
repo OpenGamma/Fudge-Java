@@ -55,8 +55,6 @@ import com.mongodb.DBObject;
  * {@link FudgeFieldContainer} and {@link DBObject}.
  * <p>
  * This class is mutable but thread-safe via concurrent collections.
- * 
- * @author Andrew Griffin
  */ 
 public class FudgeDefaultBuilderFactory implements FudgeBuilderFactory {
 

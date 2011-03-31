@@ -42,7 +42,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * This builder is immutable and thread safe.
  * 
  * @param <T> class that can be serialized using this builder
- * @author Andrew Griffin
  */
 /* package */ abstract class ToFudgeMsgMessageBuilder<T> implements FudgeMessageBuilder<T> {
 

@@ -31,8 +31,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * 
  * <p>This has been deprecated since 0.3, to be removed at the 1.0 release; a couple of utility methods have
  * gone into the {@link FudgeContext} to support this.</p>
- *
- * @author Kirk Wylie
  */
 @Deprecated
 public class FudgeObjectMessageFactory {

@@ -24,8 +24,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * <p>
  * This is required if a primitive was written out through serialization, such as with
  * a class name but is being deserialized to an Object target.
- * 
- * @author Andrew Griffin
  */
 /* package */class PrimitiveBuilder {
 

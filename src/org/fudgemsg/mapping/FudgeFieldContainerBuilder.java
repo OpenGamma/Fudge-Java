@@ -29,8 +29,6 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * decode the messages as messages and not as serialized objects.
  * <p>
  * This builder is immutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 /* package */class FudgeFieldContainerBuilder implements FudgeBuilder<FudgeFieldContainer> {
 

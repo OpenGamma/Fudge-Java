@@ -29,8 +29,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * Builder for {@code List} objects.
  * <p>
  * This builder is immutable and thread safe.
- * 
- * @author Andrew Griffin
  */
 /* package */final class ListBuilder implements FudgeBuilder<List<?>> {
   // a list is sent as a sub-message where each field is a list element

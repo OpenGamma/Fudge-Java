@@ -23,8 +23,6 @@ import org.fudgemsg.taxon.TaxonomyResolver;
  * <p>Immutable wrapper for a {@link FudgeContext} that will be used for the global
  * "default", or for use with {@link ImmutableFudgeMsg}. It cannot be configured
  * after construction.</p>
- * 
- * @author Andrew Griffin
  */
 public class ImmutableFudgeContext extends FudgeContext {
   

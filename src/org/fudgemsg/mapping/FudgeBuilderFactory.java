@@ -25,8 +25,6 @@ package org.fudgemsg.mapping;
  * The implementation should not attempt to cache results, as the dictionary will do that.
  * <p>
  * This interface must be implemented in a thread-safe manner.
- * 
- * @author Andrew Griffin
  */
 public interface FudgeBuilderFactory {
 

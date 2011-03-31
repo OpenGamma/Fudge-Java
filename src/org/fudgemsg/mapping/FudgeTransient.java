@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
  * This is a compatibility annotation for users do not have the equivalent Java
  * Persistence Framework available. This will be deprecated in a future release
  * when the JPF is more commonly available in Java implementations other than EE.
- * 
- * @author Andrew Griffin
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
  * Fudge Secondary Types.
  * You must put this annotation on a public static final field which holds the type converter
  * to be used. Conventionally, this will be called {@code INSTANCE}.
- *
- * @author Kirk Wylie
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

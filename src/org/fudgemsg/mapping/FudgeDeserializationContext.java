@@ -36,8 +36,6 @@ import org.fudgemsg.FudgeTypeDictionary;
  * sufficient information to process them directly.
  * <p>
  * This class is mutable but thread-safe via concurrent collections.
- * 
- * @author Andrew Griffin
  */
 public class FudgeDeserializationContext {
 
