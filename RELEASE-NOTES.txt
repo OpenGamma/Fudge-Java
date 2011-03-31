@@ -30,3 +30,4 @@ Changes:
 
 - Move API to using Integer rather than Short for ordinals
 
+- Unify all methods on name-ordinal-type-value argument ordering

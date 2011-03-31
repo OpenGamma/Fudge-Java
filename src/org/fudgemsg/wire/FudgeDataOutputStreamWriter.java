@@ -231,14 +231,14 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
     if (field == null) {
       throw new NullPointerException("Cannot write a null field to a Fudge stream");
     }
-    writeField(field.getOrdinal(), field.getName(), field.getType(), field.getValue());
+    writeField(field.getName(), field.getOrdinal(), field.getType(), field.getValue());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void writeField(Integer ordinal, String name, FudgeFieldType type, Object fieldValue) {
+  public void writeField(String name, Integer ordinal, FudgeFieldType type, Object fieldValue) {
     if (fieldValue == null) {
       throw new NullPointerException("Cannot write a null field value to a Fudge stream.");
     }
