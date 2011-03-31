@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fudgemsg.util;
+package org.fudgemsg.types;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

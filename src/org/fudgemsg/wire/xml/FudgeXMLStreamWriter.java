@@ -31,7 +31,6 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
-import org.fudgemsg.util.ArgumentChecker;
 import org.fudgemsg.wire.AlternativeFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamWriter;
@@ -64,12 +63,16 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
   
   public FudgeXMLStreamWriter(final FudgeXMLSettings settings, final FudgeContext fudgeContext, final XMLStreamWriter writer) {
     super(fudgeContext);
-    ArgumentChecker.notNull(settings, "settings");
-    ArgumentChecker.notNull(writer, "writer");
+    if (writer == null) {
+      throw new NullPointerException("XMLStreamWriter must not be null");
+    }
+    if (settings == null) {
+      throw new NullPointerException("FudgeXMLSettings must not be null");
+    }
     _settings = settings;
     _writer = writer;
   }
-  
+
   /**
    * Creates a new {@link FudgeXMLStreamWriter} for writing to the target XML device.
    * 

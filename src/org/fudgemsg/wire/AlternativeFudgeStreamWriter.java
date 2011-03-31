@@ -22,7 +22,6 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.util.ArgumentChecker;
 
 /**
  * Abstract implementation of a {@code FudgeStreamWriter} that detects major state changes and invokes
@@ -41,7 +40,9 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * @param fudgeContext the associated {@link FudgeContext}
    */
   protected AlternativeFudgeStreamWriter(final FudgeContext fudgeContext) {
-    ArgumentChecker.notNull(fudgeContext, "fudgeContext");
+    if (fudgeContext == null) {
+      throw new NullPointerException("FudgeContext must not be null");
+    }
     _fudgeContext = fudgeContext;
   }
 

@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fudgemsg.mapping.FudgeBuilderFor;
+import org.fudgemsg.types.ClasspathUtilities;
 import org.fudgemsg.types.FudgeSecondaryType;
 import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorFieldTypeConverter;
@@ -33,7 +34,6 @@ import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.types.StringFieldTypeConverter;
 import org.fudgemsg.types.secondary.SecondaryTypeLoader;
-import org.fudgemsg.util.ClasspathUtilities;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**

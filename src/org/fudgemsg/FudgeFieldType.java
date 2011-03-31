@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.util.ArgumentChecker;
 
 /**
  * The type of a field as defined by Fudge.
@@ -64,7 +63,9 @@ public class FudgeFieldType implements Serializable {
    * @param fixedSize  the size in bytes if fixed size, zero for variable width
    */
   public FudgeFieldType(int typeId, Class<?> javaType, boolean isVariableSize, int fixedSize) {
-    ArgumentChecker.notNull(javaType, "Java type must not be null");
+    if (javaType == null) {
+      throw new NullPointerException("Java type must not be null");
+    }
     if (typeId < 0 || typeId > 255) {
       throw new IllegalArgumentException("The type id must fit in an unsigned byte");
     }

@@ -34,7 +34,6 @@ import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.types.IndicatorType;
-import org.fudgemsg.util.ArgumentChecker;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamReader;
 
@@ -65,10 +64,15 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   }
   
   public FudgeXMLStreamReader(final FudgeContext fudgeContext, final Reader underlying, final FudgeXMLSettings settings) {
-    ArgumentChecker.notNull(fudgeContext, "fudgeContext");
-    ArgumentChecker.notNull(underlying, "underlying");
-    ArgumentChecker.notNull(settings, "settings");
-    
+    if (fudgeContext == null) {
+      throw new NullPointerException("FudgeContext must not be null");
+    }
+    if (underlying == null) {
+      throw new NullPointerException("Reader must not be null");
+    }
+    if (settings == null) {
+      throw new NullPointerException("FudgeXMLSettings must not be null");
+    }
     _fudgeContext = fudgeContext;
     _underlying = underlying;
     _settings = settings;

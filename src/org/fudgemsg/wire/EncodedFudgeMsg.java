@@ -29,7 +29,6 @@ import org.fudgemsg.FudgeMsgField;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.ImmutableFudgeFieldContainer;
 import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.util.ArgumentChecker;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
 import org.fudgemsg.wire.types.FudgeWireType;
 
@@ -174,10 +173,15 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
   public EncodedFudgeMsg(final byte[] encodedMessage, final int messageOffset, final int messageLength,
       final FudgeContext fudgeContext) {
     super(fudgeContext);
-    ArgumentChecker.notNull(encodedMessage, "encodedMessage");
-    ArgumentChecker.isTrue((messageOffset >= 0) && (messageOffset <= encodedMessage.length), "messageOffset");
-    ArgumentChecker.isTrue((messageLength >= 0) && (messageOffset + messageLength <= encodedMessage.length),
-        "messageLength");
+    if (fudgeContext == null) {
+      throw new NullPointerException("Encoded message must not be null");
+    }
+    if (messageOffset < 0 || messageOffset > encodedMessage.length) {
+      throw new IllegalArgumentException("Message offset is invalid");
+    }
+    if (messageLength < 0 || messageOffset + messageLength > encodedMessage.length) {
+      throw new IllegalArgumentException("Message length is invalid");
+    }
     _data = encodedMessage;
     _dataOffset = messageOffset;
     _dataLength = messageLength;
