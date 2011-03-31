@@ -18,38 +18,34 @@ package org.fudgemsg.types.secondary;
 import java.math.BigDecimal;
 
 import org.fudgemsg.types.SecondaryFieldType;
-import org.fudgemsg.types.StringFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for BigDecimal conversion to/from String.
- *
- * @author Andrew Griffin
  */
-public class JavaMathBigDecimalFieldType extends SecondaryFieldType<BigDecimal,String> {
-  
+public class JavaMathBigDecimalFieldType extends SecondaryFieldType<BigDecimal, String> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JavaMathBigDecimalFieldType INSTANCE = new JavaMathBigDecimalFieldType ();
-  
-  private JavaMathBigDecimalFieldType () {
-    super (StringFieldType.INSTANCE, BigDecimal.class);
-  }
-  
+  public static final JavaMathBigDecimalFieldType INSTANCE = new JavaMathBigDecimalFieldType();
+
   /**
-   * 
+   * Restricted constructor.
    */
-  @Override
-  public String secondaryToPrimary (final BigDecimal object) {
-    return object.toString ();
+  private JavaMathBigDecimalFieldType() {
+    super(FudgeWireType.STRING, BigDecimal.class);
   }
-  
-  /**
-   * 
-   */
+
+  //-------------------------------------------------------------------------
   @Override
-  public BigDecimal primaryToSecondary (final String data) {
-    return new BigDecimal (data);
+  public String secondaryToPrimary(final BigDecimal object) {
+    return object.toString();
+  }
+
+  @Override
+  public BigDecimal primaryToSecondary(final String data) {
+    return new BigDecimal(data);
   }
 
 }

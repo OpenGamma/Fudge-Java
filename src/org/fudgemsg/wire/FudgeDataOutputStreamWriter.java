@@ -255,7 +255,7 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
     int valueSize = 0;
     int varDataSize = 0;
     if (type.isVariableSize()) {
-      valueSize = type.getVariableSize(fieldValue, getCurrentTaxonomy());
+      valueSize = type.getSize(fieldValue, getCurrentTaxonomy());
       varDataSize = valueSize;
     } else {
       valueSize = type.getFixedSize();

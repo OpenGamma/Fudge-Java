@@ -20,8 +20,8 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeMsgEnvelope;
 import org.fudgemsg.MutableFudgeFieldContainer;
-import org.fudgemsg.types.FudgeMsgFieldType;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * A reader for returning whole Fudge messages ({@link FudgeFieldContainer} instances) from an underlying {@link FudgeStreamReader} instance.
@@ -195,7 +195,7 @@ public class FudgeMsgReader {
           if (isLazyReads()) {
             try {
               final EncodedFudgeMsg subMsg = new EncodedFudgeMsg(reader.skipMessageField());
-              msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeMsgFieldType.INSTANCE, subMsg);
+              msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeWireType.SUB_MESSAGE, subMsg);
               continue;
             } catch (UnsupportedOperationException e) {
               // The stream doesn't support lazy reads, so turn it off again
@@ -203,7 +203,7 @@ public class FudgeMsgReader {
             }
           }
           final MutableFudgeFieldContainer subMsg = getFudgeContext().newMessage();
-          msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeMsgFieldType.INSTANCE, subMsg);
+          msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeWireType.SUB_MESSAGE, subMsg);
           processFields(subMsg);
           break;
         case SUBMESSAGE_FIELD_END:

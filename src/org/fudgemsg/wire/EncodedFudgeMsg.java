@@ -29,9 +29,9 @@ import org.fudgemsg.FudgeMsgField;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.ImmutableFudgeFieldContainer;
 import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.types.FudgeMsgFieldType;
 import org.fudgemsg.util.ArgumentChecker;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * An immutable message backed directly by its encoded form. The fields within the
@@ -222,7 +222,7 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
       }
       case SUBMESSAGE_FIELD_START: {
         final Integer ordinalInt = reader.getFieldOrdinal();
-        field = FudgeMsgField.of(FudgeMsgFieldType.INSTANCE, new EncodedFudgeMsg(reader.skipMessageField()), reader
+        field = FudgeMsgField.of(FudgeWireType.SUB_MESSAGE, new EncodedFudgeMsg(reader.skipMessageField()), reader
             .getFieldName(), (ordinalInt != null) ? ordinalInt.shortValue() : null);
         break;
       }

@@ -13,56 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
- * The type definition for an array of double-precision floating point numbers.
+ * The type definition for an array of single-precision floating point numbers.
  */
-public class DoubleArrayFieldType extends FudgeFieldType {
+final class FloatArrayWireType extends FudgeWireType {
 
   /**
-   * Standard Fudge field type: arbitrary length 64-bit floating point array.
-   * See {@link FudgeTypeDictionary#DOUBLE_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: arbitrary length 32-bit floating point array.
+   * See {@link FudgeTypeDictionary#FLOAT_ARRAY_TYPE_ID}.
    */
-  public static final DoubleArrayFieldType INSTANCE = new DoubleArrayFieldType();
+  public static final FloatArrayWireType INSTANCE = new FloatArrayWireType();
 
   /**
    * Restricted constructor.
    */
-  private DoubleArrayFieldType() {
-    super(FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID, double[].class, true, 0);
+  private FloatArrayWireType() {
+    super(FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID, float[].class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    double[] data = (double[]) value;
-    return data.length * 8;
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
+    float[] data = (float[]) value;
+    return data.length * 4;
   }
 
   @Override
-  public double[] readValue(DataInput input, int dataSize) throws IOException {
-    int nDoubles = dataSize / 8;
-    double[] result = new double[nDoubles];
-    for (int i = 0; i < nDoubles; i++) {
-      result[i] = input.readDouble();
+  public float[] readValue(DataInput input, int dataSize) throws IOException {
+    int nFloats = dataSize / 4;
+    float[] result = new float[nFloats];
+    for (int i = 0; i < nFloats; i++) {
+      result[i] = input.readFloat();
     }
     return result;
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    double[] data = (double[]) value;
-    for (double d : data) {
-      output.writeDouble(d);
+    float[] data = (float[]) value;
+    for (float f : data) {
+      output.writeFloat(f);
     }
   }
 

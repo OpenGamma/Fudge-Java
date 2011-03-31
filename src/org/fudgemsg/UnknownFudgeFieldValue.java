@@ -15,16 +15,11 @@
  */
 package org.fudgemsg;
 
-import org.fudgemsg.types.UnknownFudgeFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * A container to store a variable-sized field with a type that the current
  * installation of Fudge cannot handle on decoding.
- * <p>
- * In general, while Fudge supports an infinite number of {@link UnknownFudgeFieldType}
- * instances with a particular type ID, it is optimal to use the factory method
- * {@link FudgeTypeDictionary#getUnknownType(int)} to obtain one for a particular
- * context, which is what the Fudge decoding routines will do.
  * <p>
  * This class holds a mutable byte array but is unmodifiable.
  */
@@ -37,7 +32,7 @@ public class UnknownFudgeFieldValue {
   /**
    * The field type.
    */
-  private final UnknownFudgeFieldType _type;
+  private final FudgeWireType _type;
 
   /**
    * Creates a new instance to represent a block of data in an unknown type.
@@ -45,12 +40,12 @@ public class UnknownFudgeFieldValue {
    * @param contents  the raw contents from the Fudge message stream, not null
    * @param type  the field type for the unknown type, not null
    */
-  public UnknownFudgeFieldValue(byte[] contents, UnknownFudgeFieldType type) {
+  public UnknownFudgeFieldValue(byte[] contents, FudgeWireType type) {
     if (contents == null) {
       throw new NullPointerException("Data content must not be null");
     }
     if (type == null) {
-      throw new NullPointerException("UnknownFudgeFieldType must not be null");
+      throw new NullPointerException("FudgeWireType must not be null");
     }
     _contents = contents;
     _type = type;
@@ -67,11 +62,11 @@ public class UnknownFudgeFieldValue {
   }
 
   /**
-   * Gets the {@link UnknownFudgeFieldType} definition.
+   * Gets the wire type.
    * 
-   * @return the field type, not null
+   * @return the wire type, not null
    */
-  public UnknownFudgeFieldType getType() {
+  public FudgeWireType getType() {
     return _type;
   }
 

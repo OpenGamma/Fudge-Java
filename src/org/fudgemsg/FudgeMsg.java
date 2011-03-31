@@ -18,11 +18,9 @@ package org.fudgemsg;
 import java.util.Iterator;
 
 import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.types.ByteArrayFieldType;
-import org.fudgemsg.types.IndicatorFieldType;
 import org.fudgemsg.types.IndicatorType;
-import org.fudgemsg.types.PrimitiveFieldTypes;
 import org.fudgemsg.types.SecondaryFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * A mutable message in the Fudge system.
@@ -96,8 +94,8 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     FudgeFieldType type = determineTypeFromValue(value);
     if (type == null) {
       throw new IllegalArgumentException("Cannot determine a Fudge type for value " + value + " of type " + value.getClass());
-    } else if (type == IndicatorFieldType.INSTANCE) {
-      add(name, ordinal, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
+    } else if (type == FudgeWireType.INDICATOR) {
+      add(name, ordinal, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
     } else {
       add(name, ordinal, type, value);
     }
@@ -128,13 +126,13 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
         long valueAsLong = ((Number) value).longValue();
         if (valueAsLong >= Byte.MIN_VALUE && valueAsLong <= Byte.MAX_VALUE) {
           value = new Byte((byte) valueAsLong);
-          type = PrimitiveFieldTypes.BYTE_TYPE;
+          type = FudgeWireType.BYTE;
         } else if (valueAsLong >= Short.MIN_VALUE && valueAsLong <= Short.MAX_VALUE) {
           value = new Short((short) valueAsLong);
-          type = PrimitiveFieldTypes.SHORT_TYPE;
+          type = FudgeWireType.SHORT;
         } else if (valueAsLong >= Integer.MIN_VALUE && valueAsLong <= Integer.MAX_VALUE) {
           value = new Integer((int) valueAsLong);
-          type = PrimitiveFieldTypes.INT_TYPE;
+          type = FudgeWireType.INT;
         }
         break;
     }
@@ -155,10 +153,10 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
    */
   protected FudgeFieldType determineTypeFromValue(Object value) {
     if (value == null) {
-      return IndicatorFieldType.INSTANCE;
+      return FudgeWireType.INDICATOR;
     }
     if (value instanceof byte[]) {
-      return ByteArrayFieldType.getBestMatch((byte[]) value);
+      return FudgeWireType.bestMatchByteArray((byte[]) value);
     }
     FudgeFieldType type = getFudgeContext().getTypeDictionary().getByJavaType(value.getClass());
     if (type == null && value instanceof UnknownFudgeFieldValue) {

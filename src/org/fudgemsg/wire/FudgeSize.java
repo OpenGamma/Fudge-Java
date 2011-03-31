@@ -64,7 +64,7 @@ public class FudgeSize {
       size += UTF8.getLengthBytes(name);
     }
     if (type.isVariableSize()) {
-      int valueSize = type.getVariableSize(value, taxonomy);
+      int valueSize = type.getSize(value, taxonomy);
       if (valueSize <= 255) {
         size += valueSize + 1;
       } else if (valueSize <= Short.MAX_VALUE) {

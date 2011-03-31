@@ -24,34 +24,35 @@ import org.fudgemsg.types.SecondaryFieldTypeBase;
 /**
  * Loads the secondary types from a resources file. The resources file must list entries
  * as <code><em>Java class</em> = <em>secondary type implementation</em></code>.
- * 
- * @author Andrew Griffin
  */
 public class SecondaryTypeLoader {
-  
-  private SecondaryTypeLoader () {
+
+  /**
+   * Restricted constructor.
+   */
+  private SecondaryTypeLoader() {
   }
-  
+
   /**
    * Loads the contents of {@code SecondaryTypeLoader.properties} and updates the supplied
    * type dictionary with the secondary type definitions found.
    * 
    * @param dictionary dictionary to update
    */
-  public static void addTypes (final FudgeTypeDictionary dictionary) {
-    final ResourceBundle genericBuilders = ResourceBundle.getBundle (SecondaryTypeLoader.class.getName ());
-    for (final String key : genericBuilders.keySet ()) {
-      final String secondaryFieldType = genericBuilders.getString (key);
+  public static void addTypes(final FudgeTypeDictionary dictionary) {
+    final ResourceBundle genericBuilders = ResourceBundle.getBundle(SecondaryTypeLoader.class.getName());
+    for (final String key : genericBuilders.keySet()) {
+      final String secondaryFieldType = genericBuilders.getString(key);
       try {
-        dictionary.addType ((SecondaryFieldTypeBase<?,?,?>)Class.forName (secondaryFieldType).getDeclaredField ("INSTANCE").get (null));
-      } catch (ClassNotFoundException e) {
-        throw new FudgeRuntimeException ("secondary type" + secondaryFieldType + " not found", e);
-      } catch (NoClassDefFoundError e) {
+        dictionary.addType((SecondaryFieldTypeBase<?, ?, ?>) Class.forName(secondaryFieldType).getDeclaredField("INSTANCE").get(null));
+      } catch (ClassNotFoundException ex) {
+        throw new FudgeRuntimeException("secondary type" + secondaryFieldType + " not found", ex);
+      } catch (NoClassDefFoundError ex) {
         // ignore; a referenced class wasn't available (e.g. JSR-310)
-      } catch (Exception e) {
-        throw new FudgeRuntimeException ("couldn't register secondary type" + secondaryFieldType, e);
+      } catch (Exception ex) {
+        throw new FudgeRuntimeException("couldn't register secondary type" + secondaryFieldType, ex);
       }
     }
   }
-  
+
 }

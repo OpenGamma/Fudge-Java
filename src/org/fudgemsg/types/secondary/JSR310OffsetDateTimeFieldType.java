@@ -17,14 +17,12 @@ package org.fudgemsg.types.secondary;
 
 import javax.time.calendar.OffsetDateTime;
 
-import org.fudgemsg.types.DateTimeFieldType;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for JSR-310 object conversion.
- *
- * @author Andrew Griffin
  */
 public class JSR310OffsetDateTimeFieldType extends SecondaryFieldType<OffsetDateTime,FudgeDateTime> {
   
@@ -33,21 +31,19 @@ public class JSR310OffsetDateTimeFieldType extends SecondaryFieldType<OffsetDate
    */
   public static final JSR310OffsetDateTimeFieldType INSTANCE = new JSR310OffsetDateTimeFieldType ();
   
+  /**
+   * Restricted constructor.
+   */
   private JSR310OffsetDateTimeFieldType () {
-    super (DateTimeFieldType.INSTANCE, OffsetDateTime.class);
+    super (FudgeWireType.DATETIME, OffsetDateTime.class);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
   public FudgeDateTime secondaryToPrimary(final OffsetDateTime object) {
     return new FudgeDateTime (object);
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public OffsetDateTime primaryToSecondary (final FudgeDateTime object) {
     return object.toOffsetDateTime ();

@@ -18,17 +18,15 @@ package org.fudgemsg.types.secondary;
 import java.util.Calendar;
 
 import org.fudgemsg.types.DateTimeAccuracy;
-import org.fudgemsg.types.DateTimeFieldType;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.FudgeTime;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for {@link Calendar} conversion to/from a {@link FudgeTime}, {@link FudgeDate} or {@link FudgeDateTime}
  * transport object.
- *
- * @author Andrew Griffin
  */
 public class JavaUtilCalendarFieldType extends SecondaryFieldTypeBase<Calendar, Object, FudgeDateTime> {
 
@@ -37,8 +35,11 @@ public class JavaUtilCalendarFieldType extends SecondaryFieldTypeBase<Calendar, 
    */
   public static final JavaUtilCalendarFieldType INSTANCE = new JavaUtilCalendarFieldType();
 
+  /**
+   * Restricted constructor.
+   */
   private JavaUtilCalendarFieldType() {
-    super(DateTimeFieldType.INSTANCE, Calendar.class);
+    super(FudgeWireType.DATETIME, Calendar.class);
   }
 
   /**

@@ -13,58 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
-
 
 /**
- * The type definition for arrays of 64-bit integers.
+ * The wire type definition for a float.
  */
-public class LongArrayFieldType extends FudgeFieldType {
-  
+final class FloatWireType extends FudgeWireType {
+
   /**
-   * Standard Fudge field type: arrays of 64-bit integers.
-   * See {@link FudgeTypeDictionary#LONG_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: float.
+   * See {@link FudgeTypeDictionary#FLOAT_TYPE_ID}.
    */
-  public static final LongArrayFieldType INSTANCE = new LongArrayFieldType();
+  public static final FloatWireType INSTANCE = new FloatWireType();
 
   /**
    * Restricted constructor.
    */
-  private LongArrayFieldType() {
-    super(FudgeTypeDictionary.LONG_ARRAY_TYPE_ID, long[].class, true, 0);
+  private FloatWireType() {
+    super(FudgeTypeDictionary.FLOAT_TYPE_ID, Float.TYPE, 4);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    long[] data = (long[]) value;
-    return data.length * 8;
-  }
-
-  @Override
-  public long[] readValue(DataInput input, int dataSize) throws IOException {
-    int nLongs = dataSize / 8;
-    long[] result = new long[nLongs];
-    for(int i = 0; i < nLongs; i++) {
-      result[i] = input.readLong();
-    }
-    return result;
+  public Float readValue(DataInput input, int dataSize) throws IOException {
+    return input.readFloat();
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    long[] data = (long[]) value;
-    for(long l : data) {
-      output.writeLong(l);
-    }
+    output.writeFloat((Float) value);
   }
 
 }

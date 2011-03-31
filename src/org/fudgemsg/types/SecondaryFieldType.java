@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * The type definition for a secondary field type that converts Java objects
@@ -40,7 +41,7 @@ public abstract class SecondaryFieldType<SecondaryType, PrimitiveType> extends
    * @param type existing Fudge primitive type
    * @param javaType Java type for conversion
    */
-  protected SecondaryFieldType(FudgeFieldType type, Class<SecondaryType> javaType) {
+  protected SecondaryFieldType(FudgeWireType type, Class<SecondaryType> javaType) {
     super(type, javaType);
   }
 

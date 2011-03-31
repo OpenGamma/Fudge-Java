@@ -16,11 +16,10 @@
 package org.fudgemsg.types;
 
 /**
- * Basic conversions between the types defined in {@link PrimitiveFieldTypes}. Conversion which will lose
- * data (i.e. out of range) are not permitted and will trigger exceptions. The main use of these is to
- * support field value conversion between the various width integral types.
+ * Basic conversions between the numeric and boolean types.
+ * Conversion which will lose data (i.e. out of range) are not permitted and will trigger exceptions.
+ * The main use of these is to support field value conversion between the various width integral types.
  * 
- * @author Andrew Griffin
  * @param <Target> primitive field type to convert to
  */
 public abstract class PrimitiveFieldTypesConverter<Target> implements FudgeTypeConverter<Object, Target> {

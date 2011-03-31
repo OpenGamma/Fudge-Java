@@ -16,7 +16,7 @@
 package org.fudgemsg.types;
 
 /**
- * Granularity options for {@link DateTimeFieldType} and {@link TimeFieldType}.
+ * Granularity options for date and time types.
  */
 public enum DateTimeAccuracy {
 

@@ -18,48 +18,41 @@ package org.fudgemsg.types.secondary;
 import javax.time.calendar.DateTimeProvider;
 import javax.time.calendar.LocalDateTime;
 
-import org.fudgemsg.types.DateTimeFieldType;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for JSR-310 object conversion.
- *
- * @author Andrew Griffin
  */
-public class JSR310LocalDateTimeFieldType extends SecondaryFieldTypeBase<LocalDateTime,DateTimeProvider,FudgeDateTime> {
-  
+public class JSR310LocalDateTimeFieldType extends SecondaryFieldTypeBase<LocalDateTime, DateTimeProvider, FudgeDateTime> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310LocalDateTimeFieldType INSTANCE = new JSR310LocalDateTimeFieldType ();
-  
-  private JSR310LocalDateTimeFieldType () {
-    super (DateTimeFieldType.INSTANCE, LocalDateTime.class);
-  }
+  public static final JSR310LocalDateTimeFieldType INSTANCE = new JSR310LocalDateTimeFieldType();
 
   /**
-   * {@inheritDoc}
+   * Restricted constructor.
    */
+  private JSR310LocalDateTimeFieldType() {
+    super(FudgeWireType.DATETIME, LocalDateTime.class);
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public FudgeDateTime secondaryToPrimary(final LocalDateTime object) {
-    return new FudgeDateTime (object);
+    return new FudgeDateTime(object);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public LocalDateTime primaryToSecondary (final DateTimeProvider object) {
-    return object.toLocalDateTime ();
+  public LocalDateTime primaryToSecondary(final DateTimeProvider object) {
+    return object.toLocalDateTime();
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public boolean canConvertPrimary (final Class<? extends DateTimeProvider> clazz) {
-    return DateTimeProvider.class.isAssignableFrom (clazz);
+  public boolean canConvertPrimary(final Class<? extends DateTimeProvider> clazz) {
+    return DateTimeProvider.class.isAssignableFrom(clazz);
   }
 
 }

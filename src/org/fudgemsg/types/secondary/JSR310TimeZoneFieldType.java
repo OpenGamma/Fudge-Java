@@ -18,39 +18,34 @@ package org.fudgemsg.types.secondary;
 import javax.time.calendar.TimeZone;
 
 import org.fudgemsg.types.SecondaryFieldType;
-import org.fudgemsg.types.StringFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for JSR310 {@link TimeZone} conversion to/from a {@link String} transport object. 
  */
-public class JSR310TimeZoneFieldType extends SecondaryFieldType<TimeZone,String> {
-  
+public class JSR310TimeZoneFieldType extends SecondaryFieldType<TimeZone, String> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310TimeZoneFieldType INSTANCE = new JSR310TimeZoneFieldType ();
-  
-  private JSR310TimeZoneFieldType () {
-    super (StringFieldType.INSTANCE, TimeZone.class);
-  }
+  public static final JSR310TimeZoneFieldType INSTANCE = new JSR310TimeZoneFieldType();
 
   /**
-   * {@inheritDoc}
+   * Restricted constructor.
    */
+  private JSR310TimeZoneFieldType() {
+    super(FudgeWireType.STRING, TimeZone.class);
+  }
+
+  //-------------------------------------------------------------------------
   @Override
-  public String secondaryToPrimary (TimeZone object) {
+  public String secondaryToPrimary(TimeZone object) {
     return object.getID();
   }
-    
-  /**
-   * Primary to secondary conversion, where the primary type is a {@link String}.
-   * 
-   * @param object primary object
-   * @return the converted {@link TimeZone} object
-   */
-  public TimeZone primaryToSecondary (String object) {
-    return TimeZone.of(object); 
+
+  @Override
+  public TimeZone primaryToSecondary(String object) {
+    return TimeZone.of(object);
   }
-  
-  
+
 }

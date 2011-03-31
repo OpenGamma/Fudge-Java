@@ -13,39 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types.secondary;
+package org.fudgemsg.wire.types;
 
-import java.util.TimeZone;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
-import org.fudgemsg.types.SecondaryFieldType;
-import org.fudgemsg.wire.types.FudgeWireType;
+import org.fudgemsg.FudgeTypeDictionary;
 
 /**
- * Secondary type for {@link TimeZone} conversion to/from a {@link String} transport object. 
+ * The wire type definition for a long.
  */
-public class JavaUtilTimeZoneFieldType extends SecondaryFieldType<TimeZone, String> {
+final class LongWireType extends FudgeWireType {
 
   /**
-   * Singleton instance of the type.
+   * Standard Fudge field type: long.
+   * See {@link FudgeTypeDictionary#LONG_TYPE_ID}.
    */
-  public static final JavaUtilTimeZoneFieldType INSTANCE = new JavaUtilTimeZoneFieldType();
+  public static final LongWireType INSTANCE = new LongWireType();
 
   /**
    * Restricted constructor.
    */
-  private JavaUtilTimeZoneFieldType() {
-    super(FudgeWireType.STRING, TimeZone.class);
+  private LongWireType() {
+    super(FudgeTypeDictionary.LONG_TYPE_ID, Long.TYPE, 8);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public String secondaryToPrimary(TimeZone object) {
-    return object.getID();
+  public Long readValue(DataInput input, int dataSize) throws IOException {
+    return input.readLong();
   }
 
   @Override
-  public TimeZone primaryToSecondary(String object) {
-    return TimeZone.getTimeZone(object);
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    output.writeLong((Long) value);
   }
 
 }

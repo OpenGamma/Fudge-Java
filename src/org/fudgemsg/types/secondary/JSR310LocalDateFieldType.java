@@ -18,48 +18,41 @@ package org.fudgemsg.types.secondary;
 import javax.time.calendar.DateProvider;
 import javax.time.calendar.LocalDate;
 
-import org.fudgemsg.types.DateFieldType;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for JSR-310 object conversion.
- *
- * @author Andrew Griffin
  */
-public class JSR310LocalDateFieldType extends SecondaryFieldTypeBase<LocalDate,DateProvider,FudgeDate> {
-  
+public class JSR310LocalDateFieldType extends SecondaryFieldTypeBase<LocalDate, DateProvider, FudgeDate> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310LocalDateFieldType INSTANCE = new JSR310LocalDateFieldType ();
-  
-  private JSR310LocalDateFieldType () {
-    super (DateFieldType.INSTANCE, LocalDate.class);
-  }
+  public static final JSR310LocalDateFieldType INSTANCE = new JSR310LocalDateFieldType();
 
   /**
-   * {@inheritDoc}
+   * Restricted constructor.
    */
+  private JSR310LocalDateFieldType() {
+    super(FudgeWireType.DATE, LocalDate.class);
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public FudgeDate secondaryToPrimary(final LocalDate object) {
-    return new FudgeDate (object);
+    return new FudgeDate(object);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public LocalDate primaryToSecondary (final DateProvider object) {
-    return object.toLocalDate ();
+  public LocalDate primaryToSecondary(final DateProvider object) {
+    return object.toLocalDate();
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public boolean canConvertPrimary (final Class<? extends DateProvider> clazz) {
-    return DateProvider.class.isAssignableFrom (clazz);
+  public boolean canConvertPrimary(final Class<? extends DateProvider> clazz) {
+    return DateProvider.class.isAssignableFrom(clazz);
   }
 
 }

@@ -13,39 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types.secondary;
+package org.fudgemsg.wire.types;
 
-import java.util.TimeZone;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
-import org.fudgemsg.types.SecondaryFieldType;
-import org.fudgemsg.wire.types.FudgeWireType;
+import org.fudgemsg.FudgeTypeDictionary;
 
 /**
- * Secondary type for {@link TimeZone} conversion to/from a {@link String} transport object. 
+ * The wire type definition for a double.
  */
-public class JavaUtilTimeZoneFieldType extends SecondaryFieldType<TimeZone, String> {
+final class DoubleWireType extends FudgeWireType {
 
   /**
-   * Singleton instance of the type.
+   * Standard Fudge field type: double.
+   * See {@link FudgeTypeDictionary#DOUBLE_TYPE_ID}.
    */
-  public static final JavaUtilTimeZoneFieldType INSTANCE = new JavaUtilTimeZoneFieldType();
+  public static final DoubleWireType INSTANCE = new DoubleWireType();
 
   /**
    * Restricted constructor.
    */
-  private JavaUtilTimeZoneFieldType() {
-    super(FudgeWireType.STRING, TimeZone.class);
+  private DoubleWireType() {
+    super(FudgeTypeDictionary.DOUBLE_TYPE_ID, Double.TYPE, 8);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public String secondaryToPrimary(TimeZone object) {
-    return object.getID();
+  public Double readValue(DataInput input, int dataSize) throws IOException {
+    return input.readDouble();
   }
 
   @Override
-  public TimeZone primaryToSecondary(String object) {
-    return TimeZone.getTimeZone(object);
+  public void writeValue(DataOutput output, Object value) throws IOException {
+    output.writeDouble((Double) value);
   }
 
 }

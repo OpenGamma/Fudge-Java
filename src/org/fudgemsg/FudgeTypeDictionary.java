@@ -24,30 +24,17 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fudgemsg.mapping.FudgeBuilderFor;
-import org.fudgemsg.types.ByteArrayFieldType;
-import org.fudgemsg.types.DateFieldType;
-import org.fudgemsg.types.DateTimeFieldType;
-import org.fudgemsg.types.DoubleArrayFieldType;
-import org.fudgemsg.types.FloatArrayFieldType;
-import org.fudgemsg.types.FudgeMsgFieldType;
 import org.fudgemsg.types.FudgeSecondaryType;
 import org.fudgemsg.types.FudgeTypeConverter;
-import org.fudgemsg.types.IndicatorFieldType;
 import org.fudgemsg.types.IndicatorFieldTypeConverter;
 import org.fudgemsg.types.IndicatorType;
-import org.fudgemsg.types.IntArrayFieldType;
-import org.fudgemsg.types.LongArrayFieldType;
-import org.fudgemsg.types.PrimitiveFieldTypes;
 import org.fudgemsg.types.PrimitiveFieldTypesConverter;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
-import org.fudgemsg.types.ShortArrayFieldType;
-import org.fudgemsg.types.StringFieldType;
 import org.fudgemsg.types.StringFieldTypeConverter;
-import org.fudgemsg.types.TimeFieldType;
-import org.fudgemsg.types.UnknownFudgeFieldType;
 import org.fudgemsg.types.secondary.SecondaryTypeLoader;
 import org.fudgemsg.util.ClasspathUtilities;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * The dictionary of all known Fudge types.
@@ -62,11 +49,11 @@ public class FudgeTypeDictionary {
   /**
    * The types indexed in an array.
    */
-  private volatile FudgeFieldType[] _typesById = new FudgeFieldType[0];
+  private volatile FudgeWireType[] _typesById = new FudgeWireType[0];
   /**
    * The unknown types indexed in an array.
    */
-  private volatile UnknownFudgeFieldType[] _unknownTypesById = new UnknownFudgeFieldType[0];
+  private volatile FudgeWireType[] _unknownTypesById = new FudgeWireType[0];
   /**
    * The types indexed by Java type.
    */
@@ -88,34 +75,34 @@ public class FudgeTypeDictionary {
     _typesByJavaType = new ConcurrentHashMap<Class<?>, FudgeFieldType>();
     _convertersByJavaType = new ConcurrentHashMap<Class<?>, FudgeTypeConverter<?, ?>>();
     // primary types
-    addType(ByteArrayFieldType.LENGTH_4_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_8_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_16_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_20_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_32_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_64_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_128_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_256_INSTANCE);
-    addType(ByteArrayFieldType.LENGTH_512_INSTANCE);
-    addType(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.class, Boolean.TYPE);
-    addType(PrimitiveFieldTypes.BYTE_TYPE, Byte.class, Byte.TYPE);
-    addType(PrimitiveFieldTypes.SHORT_TYPE, Short.class, Short.TYPE);
-    addType(PrimitiveFieldTypes.INT_TYPE, Integer.class, Integer.TYPE);
-    addType(PrimitiveFieldTypes.LONG_TYPE, Long.class, Long.TYPE);
-    addType(PrimitiveFieldTypes.FLOAT_TYPE, Float.class, Float.TYPE);
-    addType(ShortArrayFieldType.INSTANCE);
-    addType(IntArrayFieldType.INSTANCE);
-    addType(LongArrayFieldType.INSTANCE);
-    addType(IndicatorFieldType.INSTANCE);
-    addType(FloatArrayFieldType.INSTANCE);
-    addType(PrimitiveFieldTypes.DOUBLE_TYPE, Double.class, Double.TYPE);
-    addType(DoubleArrayFieldType.INSTANCE);
-    addType(ByteArrayFieldType.VARIABLE_SIZED_INSTANCE);
-    addType(StringFieldType.INSTANCE);
-    addType(FudgeMsgFieldType.INSTANCE);
-    addType(DateFieldType.INSTANCE);
-    addType(TimeFieldType.INSTANCE);
-    addType(DateTimeFieldType.INSTANCE);
+    addType(FudgeWireType.INDICATOR);
+    addType(FudgeWireType.BOOLEAN, Boolean.class, Boolean.TYPE);
+    addType(FudgeWireType.BYTE, Byte.class, Byte.TYPE);
+    addType(FudgeWireType.SHORT, Short.class, Short.TYPE);
+    addType(FudgeWireType.INT, Integer.class, Integer.TYPE);
+    addType(FudgeWireType.LONG, Long.class, Long.TYPE);
+    addType(FudgeWireType.BYTE_ARRAY);
+    addType(FudgeWireType.SHORT_ARRAY);
+    addType(FudgeWireType.INT_ARRAY);
+    addType(FudgeWireType.LONG_ARRAY);
+    addType(FudgeWireType.FLOAT, Float.class, Float.TYPE);
+    addType(FudgeWireType.DOUBLE, Double.class, Double.TYPE);
+    addType(FudgeWireType.FLOAT_ARRAY);
+    addType(FudgeWireType.DOUBLE_ARRAY);
+    addType(FudgeWireType.STRING);
+    addType(FudgeWireType.SUB_MESSAGE);
+    addType(FudgeWireType.BYTE_ARRAY_4);
+    addType(FudgeWireType.BYTE_ARRAY_8);
+    addType(FudgeWireType.BYTE_ARRAY_16);
+    addType(FudgeWireType.BYTE_ARRAY_20);
+    addType(FudgeWireType.BYTE_ARRAY_32);
+    addType(FudgeWireType.BYTE_ARRAY_64);
+    addType(FudgeWireType.BYTE_ARRAY_128);
+    addType(FudgeWireType.BYTE_ARRAY_256);
+    addType(FudgeWireType.BYTE_ARRAY_512);
+    addType(FudgeWireType.DATE);
+    addType(FudgeWireType.TIME);
+    addType(FudgeWireType.DATETIME);
     // default type conversions
     addTypeConverter(PrimitiveFieldTypesConverter.INT_CONVERTER, Integer.class, Integer.TYPE);
     addTypeConverter(PrimitiveFieldTypesConverter.BOOLEAN_CONVERTER, Boolean.class, Boolean.TYPE);
@@ -154,6 +141,9 @@ public class FudgeTypeDictionary {
    * @param types  the types to register against
    */
   public void addTypeConverter(FudgeTypeConverter<?, ?> converter, Class<?>... types) {
+    if (converter == null) {
+      throw new NullPointerException("FudgeTypeConverter must not be null");
+    }
     for (Class<?> type : types) {
       _convertersByJavaType.put(type, converter);
       type = type.getSuperclass();
@@ -177,21 +167,23 @@ public class FudgeTypeDictionary {
    */
   public void addType(FudgeFieldType type, Class<?>... alternativeTypes) {
     if (type == null) {
-      throw new NullPointerException("Must not provide a null FudgeFieldType to add.");
+      throw new NullPointerException("FudgeFieldType must not be null");
     }
     if (type instanceof SecondaryFieldTypeBase<?, ?, ?>) {
       addTypeConverter((SecondaryFieldTypeBase<?, ?, ?>) type, type.getJavaType());
-    } else {
+    } else if (type instanceof FudgeWireType) {
       synchronized (this) {
         int newLength = Math.max(type.getTypeId() + 1, _typesById.length);
-        FudgeFieldType[] newArray = Arrays.copyOf(_typesById, newLength);
-        newArray[type.getTypeId()] = type;
+        FudgeWireType[] newArray = Arrays.copyOf(_typesById, newLength);
+        newArray[type.getTypeId()] = (FudgeWireType) type;
         _typesById = newArray;
         /*for (int i = 0; i < newArray.length; i++) {
           System.out.println (i + "=" + newArray[i]);
         }
         System.out.println ("\n\n");*/
       }
+    } else {
+      throw new ClassCastException("Unknown type: " + type.getClass());
     }
     _typesByJavaType.put(type.getJavaType(), type);
     for (Class<?> alternativeType : alternativeTypes) {
@@ -264,13 +256,13 @@ public class FudgeTypeDictionary {
    * @param typeId the numeric type identifier
    * @return A type representing this identifier
    */
-  public UnknownFudgeFieldType getUnknownType(int typeId) {
+  public FudgeWireType getUnknownType(int typeId) {
     int newLength = Math.max(typeId + 1, _unknownTypesById.length);
     if (_unknownTypesById.length < newLength || _unknownTypesById[typeId] == null) {
       synchronized (this) {
         if (_unknownTypesById.length < newLength || _unknownTypesById[typeId] == null) {
-          UnknownFudgeFieldType[] newArray = Arrays.copyOf(_unknownTypesById, newLength);
-          newArray[typeId] = new UnknownFudgeFieldType(typeId);
+          FudgeWireType[] newArray = Arrays.copyOf(_unknownTypesById, newLength);
+          newArray[typeId] = FudgeWireType.unknown(typeId);
           _unknownTypesById = newArray;
         }
       }
@@ -321,7 +313,7 @@ public class FudgeTypeDictionary {
           }
         }
       }
-    } else if (type instanceof IndicatorFieldType) {
+    } else if (type == FudgeWireType.INDICATOR) {
       // indicators always get converted to NULL when cast to another type
       return null;
     } else {
@@ -385,7 +377,7 @@ public class FudgeTypeDictionary {
           return converter.canConvertPrimary(sourceType.getPrimaryType().getJavaType());
         }
       }
-    } else if (type instanceof IndicatorFieldType) {
+    } else if (type == FudgeWireType.INDICATOR) {
       // indicators can't be converted to instances
       return false;
     } else {

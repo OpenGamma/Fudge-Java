@@ -25,9 +25,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.List;
 
-import org.fudgemsg.types.ByteArrayFieldType;
 import org.fudgemsg.types.IndicatorType;
-import org.fudgemsg.types.PrimitiveFieldTypes;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.junit.Test;
 
 /**
@@ -48,14 +47,14 @@ public class FudgeMsgTest {
     
     field = msg.getByName("boolean");
     assertNotNull(field);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("boolean", field.getName());
     assertNull(field.getOrdinal());
     
     field = msg.getByName("Boolean");
     assertNotNull(field);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(new Boolean(false), field.getValue());
     assertEquals("Boolean", field.getName());
     assertNull(field.getOrdinal());
@@ -65,7 +64,7 @@ public class FudgeMsgTest {
     assertEquals(1, fields.size());
     field = fields.get(0);
     assertNotNull(field);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("boolean", field.getName());
     assertNull(field.getOrdinal());
@@ -88,7 +87,7 @@ public class FudgeMsgTest {
 
     field = msg.getByName("boolean");
     assertNotNull(field);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("boolean", field.getName());
     assertNull(field.getOrdinal());
@@ -98,14 +97,14 @@ public class FudgeMsgTest {
     assertEquals(2, fields.size());
     field = fields.get(0);
     assertNotNull(field);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("boolean", field.getName());
     assertNull(field.getOrdinal());
     
     field = fields.get(1);
     assertNotNull(field);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.FALSE, field.getValue());
     assertEquals("boolean", field.getName());
     assertNull(field.getOrdinal());
@@ -363,17 +362,17 @@ public class FudgeMsgTest {
   @Test
   public void fixedLengthByteArrays() {
     FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllByteArrayLengths(s_fudgeContext);
-    assertSame(ByteArrayFieldType.LENGTH_4_INSTANCE, msg.getByName("byte[4]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_8_INSTANCE, msg.getByName("byte[8]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_16_INSTANCE, msg.getByName("byte[16]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_20_INSTANCE, msg.getByName("byte[20]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_32_INSTANCE, msg.getByName("byte[32]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_64_INSTANCE, msg.getByName("byte[64]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_128_INSTANCE, msg.getByName("byte[128]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_256_INSTANCE, msg.getByName("byte[256]").getType());
-    assertSame(ByteArrayFieldType.LENGTH_512_INSTANCE, msg.getByName("byte[512]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_4, msg.getByName("byte[4]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_8, msg.getByName("byte[8]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_16, msg.getByName("byte[16]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_20, msg.getByName("byte[20]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_32, msg.getByName("byte[32]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_64, msg.getByName("byte[64]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_128, msg.getByName("byte[128]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_256, msg.getByName("byte[256]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY_512, msg.getByName("byte[512]").getType());
     
-    assertSame(ByteArrayFieldType.VARIABLE_SIZED_INSTANCE, msg.getByName("byte[28]").getType());
+    assertSame(FudgeWireType.BYTE_ARRAY, msg.getByName("byte[28]").getType());
   }
   
   /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.types.FudgeTime;
 
 /**
  * The type definition for a date.
@@ -33,30 +33,30 @@ import org.fudgemsg.FudgeTypeDictionary;
  * <p>
  * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.
  */
-public class TimeFieldType extends FudgeFieldType {
+final class TimeWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: date.
    * See {@link FudgeTypeDictionary#TIME_TYPE_ID}.
    */
-  public static final TimeFieldType INSTANCE = new TimeFieldType();
+  public static final TimeWireType INSTANCE = new TimeWireType();
 
   /**
    * Restricted constructor.
    */
-  private TimeFieldType() {
-    super(FudgeTypeDictionary.TIME_TYPE_ID, FudgeTime.class, false, 8);
+  private TimeWireType() {
+    super(FudgeTypeDictionary.TIME_TYPE_ID, FudgeTime.class, 8);
   }
 
   //-------------------------------------------------------------------------
   @Override
   public FudgeTime readValue(DataInput input, int dataSize) throws IOException {
-    return DateTimeFieldType.readFudgeTime(input);
+    return DateTimeWireType.readFudgeTime(input);
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
     FudgeTime data = (FudgeTime) value;
-    DateTimeFieldType.writeFudgeTime(output, data);
+    DateTimeWireType.writeFudgeTime(output, data);
   }
 }

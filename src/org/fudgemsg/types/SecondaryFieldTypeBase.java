@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * The base type definition for a secondary field type that converts Java objects
@@ -41,7 +42,7 @@ public abstract class SecondaryFieldTypeBase<SecondaryType, ConversionType, Prim
   /**
    * The wire type.
    */
-  private final FudgeFieldType _delegate;
+  private final FudgeWireType _wireType;
 
   /**
    * Creates a new secondary type on top of an existing Fudge type.
@@ -49,9 +50,9 @@ public abstract class SecondaryFieldTypeBase<SecondaryType, ConversionType, Prim
    * @param wireType  the existing Fudge primitive type
    * @param javaType  the Java type for conversion
    */
-  protected SecondaryFieldTypeBase(FudgeFieldType wireType, Class<SecondaryType> javaType) {
+  protected SecondaryFieldTypeBase(FudgeWireType wireType, Class<SecondaryType> javaType) {
     super(wireType.getTypeId(), javaType, wireType.isVariableSize(), wireType.getFixedSize());
-    _delegate = wireType;
+    _wireType = wireType;
   }
 
   //-------------------------------------------------------------------------
@@ -60,8 +61,8 @@ public abstract class SecondaryFieldTypeBase<SecondaryType, ConversionType, Prim
    * 
    * @return the primary wire type
    */
-  public FudgeFieldType getPrimaryType() {
-    return _delegate;
+  public FudgeWireType getPrimaryType() {
+    return _wireType;
   }
 
   //-------------------------------------------------------------------------
@@ -83,9 +84,9 @@ public abstract class SecondaryFieldTypeBase<SecondaryType, ConversionType, Prim
    */
   @SuppressWarnings("unchecked")
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
     SecondaryType data = (SecondaryType) value;
-    return getPrimaryType().getVariableSize(secondaryToPrimary(data), taxonomy);
+    return getPrimaryType().getSize(secondaryToPrimary(data), taxonomy);
   }
 
   @SuppressWarnings("unchecked")

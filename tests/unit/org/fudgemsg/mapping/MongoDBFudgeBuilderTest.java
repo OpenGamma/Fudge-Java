@@ -28,7 +28,7 @@ import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
 import org.fudgemsg.test.FudgeUtils;
 import org.fudgemsg.types.SecondaryFieldType;
-import org.fudgemsg.types.StringFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -60,7 +60,7 @@ public class MongoDBFudgeBuilderTest {
     public static final MockObjectSecondaryType INSTANCE = new MockObjectSecondaryType();
 
     private MockObjectSecondaryType() {
-      super(StringFieldType.INSTANCE, MockObject.class);
+      super(FudgeWireType.STRING, MockObject.class);
     }
 
     @Override

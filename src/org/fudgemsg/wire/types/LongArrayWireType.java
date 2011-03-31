@@ -13,56 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
- * The type definition for an array of single-precision floating point numbers.
+ * The type definition for arrays of 64-bit integers.
  */
-public class FloatArrayFieldType extends FudgeFieldType {
+final class LongArrayWireType extends FudgeWireType {
 
   /**
-   * Standard Fudge field type: arbitrary length 32-bit floating point array.
-   * See {@link FudgeTypeDictionary#FLOAT_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: arrays of 64-bit integers.
+   * See {@link FudgeTypeDictionary#LONG_ARRAY_TYPE_ID}.
    */
-  public static final FloatArrayFieldType INSTANCE = new FloatArrayFieldType();
+  public static final LongArrayWireType INSTANCE = new LongArrayWireType();
 
   /**
    * Restricted constructor.
    */
-  private FloatArrayFieldType() {
-    super(FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID, float[].class, true, 0);
+  private LongArrayWireType() {
+    super(FudgeTypeDictionary.LONG_ARRAY_TYPE_ID, long[].class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    float[] data = (float[]) value;
-    return data.length * 4;
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
+    long[] data = (long[]) value;
+    return data.length * 8;
   }
 
   @Override
-  public float[] readValue(DataInput input, int dataSize) throws IOException {
-    int nFloats = dataSize / 4;
-    float[] result = new float[nFloats];
-    for (int i = 0; i < nFloats; i++) {
-      result[i] = input.readFloat();
+  public long[] readValue(DataInput input, int dataSize) throws IOException {
+    int nLongs = dataSize / 8;
+    long[] result = new long[nLongs];
+    for (int i = 0; i < nLongs; i++) {
+      result[i] = input.readLong();
     }
     return result;
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    float[] data = (float[]) value;
-    for (float f : data) {
-      output.writeFloat(f);
+    long[] data = (long[]) value;
+    for (long l : data) {
+      output.writeLong(l);
     }
   }
 

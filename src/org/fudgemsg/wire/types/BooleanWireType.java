@@ -13,51 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.wire.UTF8;
 
 /**
- * The type definition for a UTF-8 encoded string.
+ * The wire type definition for a boolean.
  */
-public class StringFieldType extends FudgeFieldType {
+final class BooleanWireType extends FudgeWireType {
 
   /**
-   * Standard Fudge field type: string.
-   * See {@link FudgeTypeDictionary#STRING_TYPE_ID}.
+   * Standard Fudge field type: boolean.
+   * See {@link FudgeTypeDictionary#BOOLEAN_TYPE_ID}.
    */
-  public static final StringFieldType INSTANCE = new StringFieldType();
+  public static final BooleanWireType INSTANCE = new BooleanWireType();
 
   /**
    * Restricted constructor.
    */
-  private StringFieldType() {
-    super(FudgeTypeDictionary.STRING_TYPE_ID, String.class, true, 0);
+  private BooleanWireType() {
+    super(FudgeTypeDictionary.BOOLEAN_TYPE_ID, Boolean.TYPE, 1);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    String data = (String) value;
-    return UTF8.getLengthBytes(data);
-  }
-
-  @Override
-  public String readValue(DataInput input, int dataSize) throws IOException {
-    return UTF8.readString(input, dataSize);
+  public Boolean readValue(DataInput input, int dataSize) throws IOException {
+    return input.readBoolean();
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    String data = (String) value;
-    UTF8.writeString(output, data);
+    output.writeBoolean((Boolean) value);
   }
 
 }

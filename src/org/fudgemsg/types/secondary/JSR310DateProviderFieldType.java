@@ -17,32 +17,31 @@ package org.fudgemsg.types.secondary;
 
 import javax.time.calendar.DateProvider;
 
-import org.fudgemsg.types.DateFieldType;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.SecondaryFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for JSR-310 object conversion.
- *
- * @author Andrew Griffin
  */
-public class JSR310DateProviderFieldType extends SecondaryFieldType<DateProvider,FudgeDate> {
-  
+public class JSR310DateProviderFieldType extends SecondaryFieldType<DateProvider, FudgeDate> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310DateProviderFieldType INSTANCE = new JSR310DateProviderFieldType ();
-  
-  private JSR310DateProviderFieldType () {
-    super (DateFieldType.INSTANCE, DateProvider.class);
-  }
+  public static final JSR310DateProviderFieldType INSTANCE = new JSR310DateProviderFieldType();
 
   /**
-   * {@inheritDoc}
+   * Restricted constructor.
    */
+  private JSR310DateProviderFieldType() {
+    super(FudgeWireType.DATE, DateProvider.class);
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public FudgeDate secondaryToPrimary(final DateProvider object) {
-    return new FudgeDate (object);
+    return new FudgeDate(object);
   }
-  
+
 }

@@ -19,30 +19,29 @@ import javax.time.calendar.TimeProvider;
 
 import org.fudgemsg.types.FudgeTime;
 import org.fudgemsg.types.SecondaryFieldType;
-import org.fudgemsg.types.TimeFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for JSR-310 object conversion.
- *
- * @author Andrew Griffin
  */
-public class JSR310TimeProviderFieldType extends SecondaryFieldType<TimeProvider,FudgeTime> {
-  
+public class JSR310TimeProviderFieldType extends SecondaryFieldType<TimeProvider, FudgeTime> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310TimeProviderFieldType INSTANCE = new JSR310TimeProviderFieldType ();
-  
-  private JSR310TimeProviderFieldType () {
-    super (TimeFieldType.INSTANCE, TimeProvider.class);
-  }
+  public static final JSR310TimeProviderFieldType INSTANCE = new JSR310TimeProviderFieldType();
 
   /**
-   * {@inheritDoc}
+   * Restricted constructor.
    */
+  private JSR310TimeProviderFieldType() {
+    super(FudgeWireType.TIME, TimeProvider.class);
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public FudgeTime secondaryToPrimary(final TimeProvider object) {
-    return new FudgeTime (object);
+    return new FudgeTime(object);
   }
-  
+
 }

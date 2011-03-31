@@ -13,113 +13,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
  * The type definition for byte arrays.
  */
-public class ByteArrayFieldType extends FudgeFieldType {
+final class ByteArrayWireTypes extends FudgeWireType {
 
   /**
    * Standard Fudge field type: arbitrary length byte array.
    * See {@link FudgeTypeDictionary#BYTE_ARRAY_TYPE_ID}.
    */
-  public static final ByteArrayFieldType VARIABLE_SIZED_INSTANCE = new ByteArrayFieldType();
+  public static final ByteArrayWireTypes VARIABLE_SIZED_INSTANCE = new ByteArrayWireTypes();
   /**
    * Standard Fudge field type: byte array of length 4.
    * See {@link FudgeTypeDictionary#BYTE_ARR_4_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_4_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID, 4);
+  public static final ByteArrayWireTypes LENGTH_4_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID, 4);
   /**
    * Standard Fudge field type: byte array of length 8.
    * See {@link FudgeTypeDictionary#BYTE_ARR_8_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_8_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID, 8);
+  public static final ByteArrayWireTypes LENGTH_8_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID, 8);
   /**
    * Standard Fudge field type: byte array of length 16.
    * See {@link FudgeTypeDictionary#BYTE_ARR_16_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_16_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID, 16);
+  public static final ByteArrayWireTypes LENGTH_16_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID, 16);
   /**
    * Standard Fudge field type: byte array of length 20.
    * See {@link FudgeTypeDictionary#BYTE_ARR_20_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_20_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID, 20);
+  public static final ByteArrayWireTypes LENGTH_20_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID, 20);
   /**
    * Standard Fudge field type: byte array of length 32.
    * See {@link FudgeTypeDictionary#BYTE_ARR_32_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_32_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID, 32);
+  public static final ByteArrayWireTypes LENGTH_32_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID, 32);
   /**
    * Standard Fudge field type: byte array of length 64.
    * See {@link FudgeTypeDictionary#BYTE_ARR_64_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_64_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID, 64);
+  public static final ByteArrayWireTypes LENGTH_64_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID, 64);
   /**
    * Standard Fudge field type: byte array of length 128.
    * See {@link FudgeTypeDictionary#BYTE_ARR_128_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_128_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID, 128);
+  public static final ByteArrayWireTypes LENGTH_128_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID, 128);
   /**
    * Standard Fudge field type: byte array of length 256.
    * See {@link FudgeTypeDictionary#BYTE_ARR_256_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_256_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID, 256);
+  public static final ByteArrayWireTypes LENGTH_256_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID, 256);
   /**
    * Standard Fudge field type: byte array of length 512.
    * See {@link FudgeTypeDictionary#BYTE_ARR_512_TYPE_ID}.
    */
-  public static final ByteArrayFieldType LENGTH_512_INSTANCE = new ByteArrayFieldType(FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID, 512);
+  public static final ByteArrayWireTypes LENGTH_512_INSTANCE = new ByteArrayWireTypes(FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID, 512);
 
   /**
-   * Restricted constructor.
+   * Restricted constructor for variable width.
    */
-  private ByteArrayFieldType() {
-    super(FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID, byte[].class, true, 0);
+  private ByteArrayWireTypes() {
+    super(FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID, byte[].class);
   }
 
   /**
-   * Restricted constructor.
+   * Restricted constructor for fixed widths.
    */
-  private ByteArrayFieldType(byte typeId, int length) {
-    super(typeId, byte[].class, false, length);
+  private ByteArrayWireTypes(byte typeId, int length) {
+    super(typeId, byte[].class, length);
   }
 
   //-------------------------------------------------------------------------
-  /**
-   * Reduces an arbitrary byte array to the most efficient type from the standard Fudge types.
-   * 
-   * @param array the array
-   * @return the most efficient {@link ByteArrayFieldType} available
-   */
-  public static ByteArrayFieldType getBestMatch(byte[] array) {
-    if (array == null) {
-      return VARIABLE_SIZED_INSTANCE;
-    }
-    switch (array.length) {
-      case 4: return LENGTH_4_INSTANCE;
-      case 8: return LENGTH_8_INSTANCE;
-      case 16: return LENGTH_16_INSTANCE;
-      case 20: return LENGTH_20_INSTANCE;
-      case 32: return LENGTH_32_INSTANCE;
-      case 64: return LENGTH_64_INSTANCE;
-      case 128: return LENGTH_128_INSTANCE;
-      case 256: return LENGTH_256_INSTANCE;
-      case 512: return LENGTH_512_INSTANCE;
-      default: return VARIABLE_SIZED_INSTANCE;
-    }
-  }
-
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
     return ((byte[]) value).length;
   }
 

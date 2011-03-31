@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -21,8 +21,11 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.types.DateTimeAccuracy;
+import org.fudgemsg.types.FudgeDate;
+import org.fudgemsg.types.FudgeDateTime;
+import org.fudgemsg.types.FudgeTime;
 
 /**
  * The type definition for a date.
@@ -33,19 +36,19 @@ import org.fudgemsg.FudgeTypeDictionary;
  * <p>
  * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.
  */
-public class DateTimeFieldType extends FudgeFieldType {
+final class DateTimeWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: combined date and time.
    * See {@link FudgeTypeDictionary#DATETIME_TYPE_ID}.
    */
-  public static final DateTimeFieldType INSTANCE = new DateTimeFieldType();
+  public static final DateTimeWireType INSTANCE = new DateTimeWireType();
 
   /**
    * Restricted constructor.
    */
-  private DateTimeFieldType() {
-    super(FudgeTypeDictionary.DATETIME_TYPE_ID, FudgeDateTime.class, false, 12);
+  private DateTimeWireType() {
+    super(FudgeTypeDictionary.DATETIME_TYPE_ID, FudgeDateTime.class, 12);
   }
 
   /**
@@ -55,7 +58,7 @@ public class DateTimeFieldType extends FudgeFieldType {
    * @return the date
    * @throws IOException if there is an error from the input source
    */
-  /* package */static FudgeDate readFudgeDate(final DataInput input) throws IOException {
+  final static FudgeDate readFudgeDate(final DataInput input) throws IOException {
     final int n = input.readInt();
     final int dayOfMonth = (n & 31);
     final int monthOfYear = (n >> 5) & 15;
@@ -71,7 +74,7 @@ public class DateTimeFieldType extends FudgeFieldType {
    * @return the time
    * @throws IOException if there is an error from the input source
    */
-  /* package */static FudgeTime readFudgeTime(final DataInput input) throws IOException {
+  final static FudgeTime readFudgeTime(final DataInput input) throws IOException {
     final int hi = input.readInt();
     final int lo = input.readInt();
     final int timezoneOffset = (hi >> 24); // sign extend
@@ -89,7 +92,7 @@ public class DateTimeFieldType extends FudgeFieldType {
    * @param value Fudge date
    * @throws IOException if there is an error from the output target
    */
-  /* package */static void writeFudgeDate(final DataOutput output, final FudgeDate value) throws IOException {
+  final static void writeFudgeDate(final DataOutput output, final FudgeDate value) throws IOException {
     final int dayOfMonth = value.getDayOfMonth();
     final int monthOfYear = value.getMonthOfYear();
     final int year = value.getYear();
@@ -105,7 +108,7 @@ public class DateTimeFieldType extends FudgeFieldType {
    * @param value the Fudge time
    * @throws IOException if there is an error from the output target
    */
-  /* package */static void writeFudgeTime(final DataOutput output, final FudgeTime value) throws IOException {
+  final static void writeFudgeTime(final DataOutput output, final FudgeTime value) throws IOException {
     final int hi = (value.getSecondsSinceMidnight() & 0x1FFFF) | (value.getAccuracy().getEncodedValue() << 20)
         | (value.getEncodedTimezoneOffset() << 24);
     final int lo = value.getNanos() & 0x3FFFFFFF;

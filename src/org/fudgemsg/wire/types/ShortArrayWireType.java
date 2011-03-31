@@ -13,56 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
- * The type definition for arrays of 32-bit integers.
+ * Type definition for arrays of 16-bit integers.
  */
-public class IntArrayFieldType extends FudgeFieldType {
+final class ShortArrayWireType extends FudgeWireType {
 
   /**
-   * Standard Fudge field type: array of 32-bit integers.
-   * See {@link FudgeTypeDictionary#INT_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: array of 16-bit integers.
+   * See {@link FudgeTypeDictionary#SHORT_ARRAY_TYPE_ID}.
    */
-  public static final IntArrayFieldType INSTANCE = new IntArrayFieldType();
+  public static final ShortArrayWireType INSTANCE = new ShortArrayWireType();
 
   /**
    * Restricted constructor.
    */
-  private IntArrayFieldType() {
-    super(FudgeTypeDictionary.INT_ARRAY_TYPE_ID, int[].class, true, 0);
+  private ShortArrayWireType() {
+    super(FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID, short[].class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    int[] data = (int[]) value;
-    return data.length * 4;
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
+    short[] data = (short[]) value;
+    return data.length * 2;
   }
 
   @Override
-  public int[] readValue(DataInput input, int dataSize) throws IOException {
-    int nInts = dataSize / 4;
-    int[] result = new int[nInts];
-    for (int i = 0; i < nInts; i++) {
-      result[i] = input.readInt();
+  public short[] readValue(DataInput input, int dataSize) throws IOException {
+    int nShorts = dataSize / 2;
+    short[] result = new short[nShorts];
+    for (int i = 0; i < nShorts; i++) {
+      result[i] = input.readShort();
     }
     return result;
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    int[] data = (int[]) value;
-    for (int i : data) {
-      output.writeInt(i);
+    short[] data = (short[]) value;
+    for (short f : data) {
+      output.writeShort(f);
     }
   }
 

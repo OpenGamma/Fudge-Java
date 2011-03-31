@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 
 import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeEncoded;
@@ -28,24 +27,24 @@ import org.fudgemsg.wire.FudgeSize;
 /**
  * The type definition for a sub-message in a hierarchical message format.
  */
-public class FudgeMsgFieldType extends FudgeFieldType {
+class SubMessageWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: embedded sub-message.
    * See {@link FudgeTypeDictionary#FUDGE_MSG_TYPE_ID}.
    */
-  public static final FudgeMsgFieldType INSTANCE = new FudgeMsgFieldType();
+  public static final SubMessageWireType INSTANCE = new SubMessageWireType();
 
   /**
    * Restricted constructor.
    */
-  private FudgeMsgFieldType() {
-    super(FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, FudgeFieldContainer.class, true, 0);
+  private SubMessageWireType() {
+    super(FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, FudgeFieldContainer.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
     FudgeFieldContainer data = (FudgeFieldContainer) value;
     if (value instanceof FudgeEncoded) {
       final FudgeEncoded fudgeEncoded = (FudgeEncoded) value;

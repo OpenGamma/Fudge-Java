@@ -22,8 +22,8 @@ import java.util.List;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.MutableFudgeFieldContainer;
-import org.fudgemsg.types.IndicatorFieldType;
 import org.fudgemsg.types.IndicatorType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Builder for {@code List} objects.
@@ -52,7 +52,7 @@ import org.fudgemsg.types.IndicatorType;
     final MutableFudgeFieldContainer msg = context.newMessage();
     for (Object entry : list) {
       if (entry == null) {
-        msg.add(null, null, IndicatorFieldType.INSTANCE, IndicatorType.INSTANCE);
+        msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
         context.objectToFudgeMsgWithClassHeaders(msg, null, null, entry);
       }

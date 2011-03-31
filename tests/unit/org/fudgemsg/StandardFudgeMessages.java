@@ -16,11 +16,8 @@
 
 package org.fudgemsg;
 
-import org.fudgemsg.types.DoubleArrayFieldType;
-import org.fudgemsg.types.FloatArrayFieldType;
 import org.fudgemsg.types.IndicatorType;
-import org.fudgemsg.types.PrimitiveFieldTypes;
-import org.fudgemsg.types.StringFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * 
@@ -113,33 +110,33 @@ public final class StandardFudgeMessages {
   public static MutableFudgeFieldContainer createMessageNoNamesNoOrdinals(FudgeContext context) {
     MutableFudgeFieldContainer msg = context.newMessage();
     
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.TRUE));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, new Boolean(false)));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.BYTE_TYPE, (byte)5));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.BYTE_TYPE, new Byte((byte)5)));
+    msg.add(FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE));
+    msg.add(FudgeMsgField.of(FudgeWireType.BOOLEAN, new Boolean(false)));
+    msg.add(FudgeMsgField.of(FudgeWireType.BYTE, (byte)5));
+    msg.add(FudgeMsgField.of(FudgeWireType.BYTE, new Byte((byte)5)));
     
     short shortValue = ((short)Byte.MAX_VALUE) + 5;
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.SHORT_TYPE, shortValue));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.SHORT_TYPE, new Short(shortValue)));
+    msg.add(FudgeMsgField.of(FudgeWireType.SHORT, shortValue));
+    msg.add(FudgeMsgField.of(FudgeWireType.SHORT, new Short(shortValue)));
     
     int intValue = ((int)Short.MAX_VALUE) + 5;
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.INT_TYPE, intValue));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.INT_TYPE, new Integer(intValue)));
+    msg.add(FudgeMsgField.of(FudgeWireType.INT, intValue));
+    msg.add(FudgeMsgField.of(FudgeWireType.INT, new Integer(intValue)));
     
     long longValue = ((long)Integer.MAX_VALUE) + 5;
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.LONG_TYPE, longValue));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.LONG_TYPE, new Long(longValue)));
+    msg.add(FudgeMsgField.of(FudgeWireType.LONG, longValue));
+    msg.add(FudgeMsgField.of(FudgeWireType.LONG, new Long(longValue)));
     
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.FLOAT_TYPE, 0.5f));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.FLOAT_TYPE, new Float(0.5f)));
+    msg.add(FudgeMsgField.of(FudgeWireType.FLOAT, 0.5f));
+    msg.add(FudgeMsgField.of(FudgeWireType.FLOAT, new Float(0.5f)));
     
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.DOUBLE_TYPE, 0.27362));
-    msg.add(FudgeMsgField.of(PrimitiveFieldTypes.DOUBLE_TYPE, new Double(0.27362)));
+    msg.add(FudgeMsgField.of(FudgeWireType.DOUBLE, 0.27362));
+    msg.add(FudgeMsgField.of(FudgeWireType.DOUBLE, new Double(0.27362)));
     
-    msg.add(FudgeMsgField.of(StringFieldType.INSTANCE, "kirk Wylie"));
+    msg.add(FudgeMsgField.of(FudgeWireType.STRING, "kirk Wylie"));
     
-    msg.add(FudgeMsgField.of(FloatArrayFieldType.INSTANCE, new float[24]));
-    msg.add(FudgeMsgField.of(DoubleArrayFieldType.INSTANCE, new double[273]));
+    msg.add(FudgeMsgField.of(FudgeWireType.FLOAT_ARRAY, new float[24]));
+    msg.add(FudgeMsgField.of(FudgeWireType.DOUBLE_ARRAY, new double[273]));
     return msg;
   }
   

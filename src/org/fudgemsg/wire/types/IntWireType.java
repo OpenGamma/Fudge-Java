@@ -13,57 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
- * Type definition for arrays of 16-bit integers.
+ * The wire type definition for a int.
  */
-public class ShortArrayFieldType extends FudgeFieldType {
+final class IntWireType extends FudgeWireType {
 
   /**
-   * Standard Fudge field type: array of 16-bit integers.
-   * See {@link FudgeTypeDictionary#SHORT_ARRAY_TYPE_ID}.
+   * Standard Fudge field type: int.
+   * See {@link FudgeTypeDictionary#INT_TYPE_ID}.
    */
-  public static final ShortArrayFieldType INSTANCE = new ShortArrayFieldType();
+  public static final IntWireType INSTANCE = new IntWireType();
 
   /**
    * Restricted constructor.
    */
-  private ShortArrayFieldType() {
-    super(FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID, short[].class, true, 0);
+  private IntWireType() {
+    super(FudgeTypeDictionary.INT_TYPE_ID, Integer.TYPE, 4);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
-    short[] data = (short[]) value;
-    return data.length * 2;
-  }
-
-  @Override
-  public short[] readValue(DataInput input, int dataSize) throws IOException {
-    int nShorts = dataSize / 2;
-    short[] result = new short[nShorts];
-    for (int i = 0; i < nShorts; i++) {
-      result[i] = input.readShort();
-    }
-    return result;
+  public Integer readValue(DataInput input, int dataSize) throws IOException {
+    return input.readInt();
   }
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
-    short[] data = (short[]) value;
-    for (short f : data) {
-      output.writeShort(f);
-    }
+    output.writeInt((Integer) value);
   }
 
 }

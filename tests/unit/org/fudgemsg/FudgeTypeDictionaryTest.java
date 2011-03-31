@@ -25,9 +25,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.fudgemsg.types.ByteArrayFieldType;
-import org.fudgemsg.types.PrimitiveFieldTypes;
 import org.fudgemsg.types.SecondaryFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.junit.Test;
 
 /**
@@ -42,11 +41,11 @@ public class FudgeTypeDictionaryTest {
     
     type = dictionary.getByJavaType(Boolean.TYPE);
     assertNotNull(type);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE.getTypeId(), type.getTypeId());
+    assertEquals(FudgeWireType.BOOLEAN.getTypeId(), type.getTypeId());
 
     type = dictionary.getByJavaType(Boolean.class);
     assertNotNull(type);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE.getTypeId(), type.getTypeId());
+    assertEquals(FudgeWireType.BOOLEAN.getTypeId(), type.getTypeId());
   }
 
   @Test
@@ -116,7 +115,7 @@ public class FudgeTypeDictionaryTest {
     static final FooSecondaryType INSTANCE = new FooSecondaryType ();
     
     private FooSecondaryType () {
-      super (ByteArrayFieldType.LENGTH_16_INSTANCE, Foo.class);
+      super (FudgeWireType.BYTE_ARRAY_16, Foo.class);
     }
 
     @Override
@@ -136,7 +135,7 @@ public class FudgeTypeDictionaryTest {
     static final BarSecondaryType INSTANCE = new BarSecondaryType ();
     
     BarSecondaryType () {
-      super (PrimitiveFieldTypes.INT_TYPE, Bar.class);
+      super (FudgeWireType.INT, Bar.class);
     }
     
     @Override

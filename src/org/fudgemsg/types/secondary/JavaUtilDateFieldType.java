@@ -20,77 +20,73 @@ import java.util.Date;
 import javax.time.Instant;
 
 import org.fudgemsg.types.DateTimeAccuracy;
-import org.fudgemsg.types.DateTimeFieldType;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for {@link Date} conversion to/from a {@link FudgeDate} or {@link FudgeDateTime}
  * transport object. Note that once the Java Time Framework is part of the main JDK the {@code Date}
  * class will implement {@code InstantProvider} and this type can be deprecated.
- *
- * @author Andrew Griffin
  */
-public class JavaUtilDateFieldType extends SecondaryFieldTypeBase<Date,Object,FudgeDateTime> {
-  
+public class JavaUtilDateFieldType extends SecondaryFieldTypeBase<Date, Object, FudgeDateTime> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JavaUtilDateFieldType INSTANCE = new JavaUtilDateFieldType ();
-  
-  private JavaUtilDateFieldType () {
-    super (DateTimeFieldType.INSTANCE, Date.class);
-  }
+  public static final JavaUtilDateFieldType INSTANCE = new JavaUtilDateFieldType();
 
   /**
-   * {@inheritDoc}
+   * Restricted constructor.
    */
-  @Override
-  public FudgeDateTime secondaryToPrimary (Date object) {
-    return new FudgeDateTime (DateTimeAccuracy.MILLISECOND, Instant.ofEpochMillis (object.getTime ())); // Interim measure
+  private JavaUtilDateFieldType() {
+    super(FudgeWireType.DATETIME, Date.class);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
+  //-------------------------------------------------------------------------
   @Override
-  public Date primaryToSecondary (Object object) {
+  public FudgeDateTime secondaryToPrimary(Date object) {
+    return new FudgeDateTime(DateTimeAccuracy.MILLISECOND, Instant.ofEpochMillis(object.getTime())); // Interim measure
+  }
+
+  @Override
+  public Date primaryToSecondary(Object object) {
     if (object instanceof FudgeDateTime) {
-      return primaryToSecondary ((FudgeDateTime)object);
+      return primaryToSecondary((FudgeDateTime) object);
     } else if (object instanceof FudgeDate) {
-      return primaryToSecondary ((FudgeDate)object);
+      return primaryToSecondary((FudgeDate) object);
     } else {
-      throw new IllegalArgumentException ("cannot convert from type " + object.getClass ().getName ());
+      throw new IllegalArgumentException("cannot convert from type " + object.getClass().getName());
     }
   }
-  
+
   /**
    * Primary to secondary conversion, where the primary type is a {@link FudgeDateTime}.
    * 
    * @param object primary object
    * @return the converted {@link Date} object
    */
-  protected Date primaryToSecondary (FudgeDateTime object) {
-    return JavaUtilCalendarFieldType.fudgeDateTimeToCalendar (object.getDate (), object.getTime ()).getTime ();
+  protected Date primaryToSecondary(FudgeDateTime object) {
+    return JavaUtilCalendarFieldType.fudgeDateTimeToCalendar(object.getDate(), object.getTime()).getTime();
   }
-  
+
   /**
    * Primary secondary conversion, where the primary type is a {@link FudgeDate}.
    * 
    * @param object primary object
    * @return the converted {@link Date} object
    */
-  protected Date primaryToSecondary (FudgeDate object) {
-    return JavaUtilCalendarFieldType.fudgeDateTimeToCalendar (object, null).getTime ();
+  protected Date primaryToSecondary(FudgeDate object) {
+    return JavaUtilCalendarFieldType.fudgeDateTimeToCalendar(object, null).getTime();
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public boolean canConvertPrimary (Class<?> javaType) {
-    return FudgeDateTime.class.isAssignableFrom (javaType) || FudgeDate.class.isAssignableFrom (javaType);
+  public boolean canConvertPrimary(Class<?> javaType) {
+    return FudgeDateTime.class.isAssignableFrom(javaType) || FudgeDate.class.isAssignableFrom(javaType);
   }
-  
+
 }

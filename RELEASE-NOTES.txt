@@ -22,3 +22,5 @@ Changes:
 
 - Add EncodedFudgeMsg
 
+- Changed IndicatorType from singleton to enum singleton
+

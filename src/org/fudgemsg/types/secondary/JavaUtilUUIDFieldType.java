@@ -17,62 +17,57 @@ package org.fudgemsg.types.secondary;
 
 import java.util.UUID;
 
-import org.fudgemsg.types.ByteArrayFieldType;
 import org.fudgemsg.types.SecondaryFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Secondary type for UUID conversion to/from byte[]. The conversion is
  * most significant bits first.
- *
- * @author Andrew Griffin
  */
-public class JavaUtilUUIDFieldType extends SecondaryFieldType<UUID,byte[]> {
-  
+public class JavaUtilUUIDFieldType extends SecondaryFieldType<UUID, byte[]> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JavaUtilUUIDFieldType INSTANCE = new JavaUtilUUIDFieldType ();
-  
-  private JavaUtilUUIDFieldType () {
-    super (ByteArrayFieldType.LENGTH_16_INSTANCE, UUID.class);
-    
-  }
+  public static final JavaUtilUUIDFieldType INSTANCE = new JavaUtilUUIDFieldType();
 
   /**
-   *
+   * Restricted constructor.
    */
+  private JavaUtilUUIDFieldType() {
+    super(FudgeWireType.BYTE_ARRAY_16, UUID.class);
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public byte[] secondaryToPrimary(UUID object) {
     final byte[] data = new byte[16];
-    long l = object.getMostSignificantBits ();
+    long l = object.getMostSignificantBits();
     for (int i = 7; i >= 0; i--) {
-      data[i] = (byte)(l & 0xFFl);
+      data[i] = (byte) (l & 0xFFl);
       l >>= 8;
     }
-    l = object.getLeastSignificantBits ();
+    l = object.getLeastSignificantBits();
     for (int i = 15; i >= 8; i--) {
-      data[i] = (byte)(l & 0xFFl);
+      data[i] = (byte) (l & 0xFFl);
       l >>= 8;
     }
     return data;
   }
-  
-  /**
-   *
-   */
+
   @Override
-  public UUID primaryToSecondary (byte[] data) {
+  public UUID primaryToSecondary(byte[] data) {
     long lo = 0;
     long hi = 0;
     for (int i = 0; i < 8; i++) {
       hi <<= 8;
-      hi |= (long)data[i] & 0xFFl;
+      hi |= (long) data[i] & 0xFFl;
     }
     for (int i = 8; i < 16; i++) {
       lo <<= 8;
-      lo |= (long)data[i] & 0xFFl;
+      lo |= (long) data[i] & 0xFFl;
     }
-    return new UUID (hi, lo); 
+    return new UUID(hi, lo);
   }
-  
+
 }

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
-import org.fudgemsg.types.PrimitiveFieldTypes;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.junit.Test;
 
 /**
@@ -29,7 +29,7 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_of_checked() {
-    FudgeField field = FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.TRUE);
+    FudgeField field = FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE);
     FudgeMsgField test = FudgeMsgField.of(field);
     assertSame(test, field);
     assertEquals(true, test.equals(field));
@@ -38,11 +38,11 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_of_created() {
-    FudgeField expected = FudgeMsgField.of(PrimitiveFieldTypes.INT_TYPE, 9, "number", (short) 12);
+    FudgeField expected = FudgeMsgField.of(FudgeWireType.INT, 9, "number", (short) 12);
     FudgeField field = new FudgeField() {
       @Override
-      public FudgeFieldType getType() {
-        return PrimitiveFieldTypes.INT_TYPE;
+      public FudgeWireType getType() {
+        return FudgeWireType.INT;
       }
       @Override
       public Object getValue() {
@@ -65,8 +65,8 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_noNameNoOrdinal() {
-    FudgeMsgField field = FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.TRUE);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    FudgeMsgField field = FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE);
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals(null, field.getName());
     assertEquals(null, field.getOrdinal());
@@ -75,8 +75,8 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_ordinal() {
-    FudgeMsgField field = FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.TRUE, (short) 8);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    FudgeMsgField field = FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, (short) 8);
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals(null, field.getName());
     assertEquals(Short.valueOf((short) 8), field.getOrdinal());
@@ -85,8 +85,8 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_name() {
-    FudgeMsgField field = FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.TRUE, "flag");
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    FudgeMsgField field = FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, "flag");
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("flag", field.getName());
     assertEquals(null, field.getOrdinal());
@@ -95,8 +95,8 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_nameOrdinal() {
-    FudgeMsgField field = FudgeMsgField.of(PrimitiveFieldTypes.BOOLEAN_TYPE, Boolean.TRUE, "flag", (short) 8);
-    assertEquals(PrimitiveFieldTypes.BOOLEAN_TYPE, field.getType());
+    FudgeMsgField field = FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, "flag", (short) 8);
+    assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("flag", field.getName());
     assertEquals(Short.valueOf((short) 8), field.getOrdinal());

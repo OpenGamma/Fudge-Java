@@ -19,7 +19,7 @@ package org.fudgemsg.mapping;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.MutableFudgeFieldContainer;
-import org.fudgemsg.types.StringFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Builder for {@code Class} objects.
@@ -45,7 +45,7 @@ import org.fudgemsg.types.StringFieldType;
   public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Class<?> object) {
     final MutableFudgeFieldContainer msg = context.newMessage();
     FudgeSerializationContext.addClassHeader(msg, object.getClass());
-    msg.add("name", null, StringFieldType.INSTANCE, object.getName());
+    msg.add("name", null, FudgeWireType.STRING, object.getName());
     return msg;
   }
 

@@ -133,7 +133,7 @@ public class FudgeFieldType implements Serializable {
    * @param taxonomy  the taxonomy being used for the encoding, not used for fixed width types
    * @return the size in bytes
    */
-  public int getVariableSize(Object value, FudgeTaxonomy taxonomy) {
+  public int getSize(Object value, FudgeTaxonomy taxonomy) {
     if (isVariableSize()) {
       throw new UnsupportedOperationException("This method must be overridden for variable size types");
     }
@@ -146,7 +146,7 @@ public class FudgeFieldType implements Serializable {
    * <p>
    * This is intended for use by variable width types and must write the given value.
    * The implementation must write exactly the number of bytes returned by the
-   * {@link #getVariableSize(Object,FudgeTaxonomy) size calculation}.
+   * {@link #getSize(Object,FudgeTaxonomy) size calculation}.
    * 
    * @param output  the output target to write the value to, not null
    * @param value  the value to write

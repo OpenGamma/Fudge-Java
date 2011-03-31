@@ -22,8 +22,7 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMessageFactory;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.MutableFudgeFieldContainer;
-import org.fudgemsg.types.FudgeMsgFieldType;
-import org.fudgemsg.types.StringFieldType;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Context used during conversion of an object structure to a Fudge message.
@@ -121,12 +120,12 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
       return;
     }
     final FudgeFieldType fieldType = getFudgeContext().getTypeDictionary().getByJavaType(object.getClass());
-    if ((fieldType != null) && !FudgeMsgFieldType.INSTANCE.equals(fieldType)) {
+    if (fieldType != null && FudgeWireType.SUB_MESSAGE.equals(fieldType) == false) {
       // goes natively into a message
       message.add(name, ordinal, fieldType, object);
     } else {
       // look up a custom or default builder and embed as sub-message
-      message.add(name, ordinal, FudgeMsgFieldType.INSTANCE, objectToFudgeMsg(object));
+      message.add(name, ordinal, FudgeWireType.SUB_MESSAGE, objectToFudgeMsg(object));
     }
   }
 
@@ -172,7 +171,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
     }
     final Class<?> clazz = object.getClass();
     final FudgeFieldType fieldType = getFudgeContext().getTypeDictionary().getByJavaType(clazz);
-    if ((fieldType != null) && !FudgeMsgFieldType.INSTANCE.equals(fieldType)) {
+    if (fieldType != null && FudgeWireType.SUB_MESSAGE.equals(fieldType) == false) {
       // goes natively into a message
       message.add(name, ordinal, fieldType, object);
     } else {
@@ -183,7 +182,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
           addClassHeader(submsg, clazz, receiverTarget);
         }
       }
-      message.add(name, ordinal, FudgeMsgFieldType.INSTANCE, submsg);
+      message.add(name, ordinal, FudgeWireType.SUB_MESSAGE, submsg);
     }
   }
 
@@ -225,7 +224,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
    */
   public static MutableFudgeFieldContainer addClassHeader(final MutableFudgeFieldContainer message, Class<?> clazz) {
     while ((clazz != null) && (clazz != Object.class)) {
-      message.add(null, TYPES_HEADER_ORDINAL, StringFieldType.INSTANCE, clazz.getName());
+      message.add(null, TYPES_HEADER_ORDINAL, FudgeWireType.STRING, clazz.getName());
       clazz = clazz.getSuperclass();
     }
     return message;
@@ -247,7 +246,7 @@ public class FudgeSerializationContext implements FudgeMessageFactory {
   public static MutableFudgeFieldContainer addClassHeader(
       final MutableFudgeFieldContainer message, Class<?> clazz, Class<?> receiverTarget) {
     while ((clazz != null) && receiverTarget.isAssignableFrom(clazz) && (receiverTarget != clazz)) {
-      message.add(null, TYPES_HEADER_ORDINAL, StringFieldType.INSTANCE, clazz.getName());
+      message.add(null, TYPES_HEADER_ORDINAL, FudgeWireType.STRING, clazz.getName());
       clazz = clazz.getSuperclass();
     }
     return message;

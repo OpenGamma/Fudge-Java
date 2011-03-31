@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.types;
+package org.fudgemsg.wire.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.types.IndicatorType;
 
 /**
- * The type handler for the singleton {@link IndicatorType} value.
+ * The type definition for a message-level indicator flag.
  */
-public class IndicatorFieldType extends FudgeFieldType {
+final class IndicatorWireType extends FudgeWireType {
 
   /**
-   * Standard Fudge field type: zero length indicator. See {@link FudgeTypeDictionary#INDICATOR_TYPE_ID}.
+   * Standard Fudge field type: zero length indicator.
+   * See {@link FudgeTypeDictionary#INDICATOR_TYPE_ID}.
    */
-  public static final IndicatorFieldType INSTANCE = new IndicatorFieldType();
+  public static final IndicatorWireType INSTANCE = new IndicatorWireType();
 
   /**
    * Restricted constructor.
    */
-  private IndicatorFieldType() {
-    super(FudgeTypeDictionary.INDICATOR_TYPE_ID, IndicatorType.class, false, 0);
+  private IndicatorWireType() {
+    super(FudgeTypeDictionary.INDICATOR_TYPE_ID, IndicatorType.class, 0);
   }
 
   @Override
@@ -45,7 +46,7 @@ public class IndicatorFieldType extends FudgeFieldType {
 
   @Override
   public void writeValue(DataOutput output, Object value) {
-    // Intentional no-op.
+    // all data written in header, nothing to write here
   }
 
 }
