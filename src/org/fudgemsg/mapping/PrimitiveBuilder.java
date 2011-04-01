@@ -101,12 +101,12 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Double objectVal) {
+    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Double object) {
       final MutableFudgeFieldContainer message = context.newMessage();
-      message.add(VALUE_KEY, objectVal);
+      message.add(VALUE_KEY, object);
 
-      if (Double.isNaN(objectVal) || Double.isInfinite(objectVal)) {
-          throw new ArithmeticException("Illegal double value: " + objectVal);
+      if (Double.isNaN(object) || Double.isInfinite(object)) {
+          throw new ArithmeticException("Illegal double value: " + object);
       }
 
       return message;
@@ -161,12 +161,12 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Float objectVal) {
+    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Float object) {
       final MutableFudgeFieldContainer message = context.newMessage();
-      message.add(VALUE_KEY, objectVal);
+      message.add(VALUE_KEY, object);
 
-      if (Float.isNaN(objectVal) || Float.isInfinite(objectVal)) {
-          throw new ArithmeticException("Illegal float value: " + objectVal);
+      if (Float.isNaN(object) || Float.isInfinite(object)) {
+          throw new ArithmeticException("Illegal float value: " + object);
       }
 
       return message;
