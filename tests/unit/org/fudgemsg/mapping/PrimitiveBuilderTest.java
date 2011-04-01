@@ -70,7 +70,9 @@ public class PrimitiveBuilderTest {
   public void testDouble () {
     cycle(Double.class, (Double) 0d);
     cycle(Double.class, (Double) 42d);
-    // TODO NaN + infinite
+    cycle(Double.class, (Double) Double.NaN);
+    cycle(Double.class, (Double) Double.NEGATIVE_INFINITY);
+    cycle(Double.class, (Double) Double.POSITIVE_INFINITY);
   }
 
   @Test
@@ -82,7 +84,9 @@ public class PrimitiveBuilderTest {
   public void testFloat() {
     cycle(Float.class, (Float) (float) 0.0);
     cycle(Float.class, (Float) (float) 42.0);
-    // TODO NaN + infinite
+    cycle(Float.class, (Float) Float.NaN);
+    cycle(Float.class, (Float) Float.NEGATIVE_INFINITY);
+    cycle(Float.class, (Float) Float.POSITIVE_INFINITY);
   }
 
   @Test
