@@ -21,7 +21,7 @@ package org.fudgemsg;
  * This offers the minimal API necessary to create new Fudge messages.
  * Use of this interface avoids exposing additional methods and knowledge to other APIs.
  */
-public interface FudgeMessageFactory {
+public interface FudgeMsgFactory {
 
   /**
    * Creates an initially empty message.

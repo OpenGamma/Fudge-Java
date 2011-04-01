@@ -19,7 +19,7 @@ package org.fudgemsg.mapping;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldContainer;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeMessageFactory;
+import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.MutableFudgeFieldContainer;
 import org.fudgemsg.wire.types.FudgeWireType;
@@ -34,7 +34,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * <p>
  * This class is mutable but thread-safe via concurrent collections.
  */
-public class FudgeSerializationContext implements FudgeMessageFactory {
+public class FudgeSerializationContext implements FudgeMsgFactory {
 
   /**
    * The field ordinal used to send type information.

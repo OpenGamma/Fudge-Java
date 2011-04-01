@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.FudgeMessageFactory;
+import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
 /**
@@ -130,7 +130,7 @@ public class MapFudgeTaxonomy implements FudgeTaxonomy {
    * @param context  the message context, not null
    * @return the created message, not null
    */
-  public MutableFudgeFieldContainer toFudgeMsg(final FudgeMessageFactory context) {
+  public MutableFudgeFieldContainer toFudgeMsg(final FudgeMsgFactory context) {
     final MutableFudgeFieldContainer msg = context.newMessage();
     for (Map.Entry<Integer, String> entry : _ordinalToNameMap.entrySet()) {
       msg.add(entry.getKey(), entry.getValue());

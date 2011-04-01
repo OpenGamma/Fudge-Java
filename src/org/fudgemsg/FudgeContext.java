@@ -57,7 +57,7 @@ import org.fudgemsg.wire.FudgeStreamWriter;
  * {@link FudgeTaxonomy}, it would configure two different instances of
  * {@code FudgeContext}, one per feed.</p>
  */
-public class FudgeContext implements FudgeMessageFactory {
+public class FudgeContext implements FudgeMsgFactory {
   
   /**
    * A default global {@link FudgeContext} for getting code up and running quickly. The context cannot be modified

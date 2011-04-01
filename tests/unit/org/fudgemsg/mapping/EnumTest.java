@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.FudgeMessageFactory;
+import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.FudgeMsgFormatter;
 import org.fudgemsg.MutableFudgeFieldContainer;
 import org.junit.Test;
@@ -72,7 +72,7 @@ public class EnumTest {
      * @param messageFactory [documentation not available]
      * @return [documentation not available]
      */
-    public MutableFudgeFieldContainer toFudgeMsg (final FudgeMessageFactory messageFactory) {
+    public MutableFudgeFieldContainer toFudgeMsg (final FudgeMsgFactory messageFactory) {
       s_toFudgeMessage = true;
       final MutableFudgeFieldContainer msg = messageFactory.newMessage ();
       msg.add (null, 0, EnumWithMethods.class.getName ());

@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeMessageFactory;
+import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
@@ -63,7 +63,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
     try {
       return new AddFields<T>(
-          clazz.getMethod("toFudgeMsg", FudgeMessageFactory.class, MutableFudgeFieldContainer.class), false);
+          clazz.getMethod("toFudgeMsg", FudgeMsgFactory.class, MutableFudgeFieldContainer.class), false);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
@@ -77,7 +77,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       // ignore
     }
     try {
-      return new CreateMessage<T>(clazz.getMethod("toFudgeMsg", FudgeMessageFactory.class), false);
+      return new CreateMessage<T>(clazz.getMethod("toFudgeMsg", FudgeMsgFactory.class), false);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
