@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * <p>Attempt to create an Fudge message containing values from Java-bean style getX
@@ -70,9 +70,9 @@ import org.fudgemsg.MutableFudgeFieldContainer;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage(final FudgeSerializationContext context, final T object) {
+  public MutableFudgeMsg buildMessage(final FudgeSerializationContext context, final T object) {
     //System.out.println ("ReflectionMessageBuilder::buildMessage (" + context + ", " + object + ")");
-    final MutableFudgeFieldContainer message;
+    final MutableFudgeMsg message;
     if (_baseBuilder != null) {
       message = _baseBuilder.buildMessage(context, object);
     } else {

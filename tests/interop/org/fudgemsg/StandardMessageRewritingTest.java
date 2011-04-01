@@ -93,7 +93,7 @@ public class StandardMessageRewritingTest {
    * @param msgToWrite [documentation not available]
    * @param fileName [documentation not available]
    */
-  protected static void testFile(FudgeFieldContainer msgToWrite, String fileName) {
+  protected static void testFile(FudgeMsg msgToWrite, String fileName) {
     byte[] actualBytes = s_fudgeContext.toByteArray(msgToWrite);
     ByteArrayInputStream actualStream = new ByteArrayInputStream(actualBytes);
     InputStream expectedStream = StandardMessageRewritingTest.class.getResourceAsStream(fileName);

@@ -46,9 +46,9 @@ public class DuplicateFieldNameTest {
   private static final Short CONST_SHORT = 0x100;
   private static final Byte CONST_BYTE = 0x01;
   private static final String CONST_STRING = "Hello world";
-  private static final FudgeFieldContainer CONST_MESSAGE = FudgeContext.GLOBAL_DEFAULT.newMessage ();
+  private static final FudgeMsg CONST_MESSAGE = FudgeContext.GLOBAL_DEFAULT.newMessage ();
   
-  private static void populateMutableFudgeFieldContainer (final MutableFudgeFieldContainer msg) {
+  private static void populateMutableFudgeFieldContainer (final MutableFudgeMsg msg) {
     msg.add (FIELD_NAME, IndicatorType.INSTANCE);
     msg.add (FIELD_ORDINAL, IndicatorType.INSTANCE);
     msg.add (FIELD_NAME, CONST_BOOLEAN);
@@ -81,21 +81,21 @@ public class DuplicateFieldNameTest {
     return new ImmutableFudgeMsg (createFudgeMsg ());
   }
   
-  private final FudgeFieldContainer _message;
+  private final FudgeMsg _message;
   
   /**
    * [Documentation not available]
    * 
    * @param message [Documentation not available]
    */
-  public DuplicateFieldNameTest (final FudgeFieldContainer message) {
+  public DuplicateFieldNameTest (final FudgeMsg message) {
     _message = message;
   }
   
   /**
-   * Returns an array of instances of each of the {@link FudgeFieldContainer} implementations for testing.
+   * Returns an array of instances of each of the {@link FudgeMsg} implementations for testing.
    * 
-   * @return collection of single element arrays of {@code FudgeFieldContainer} implementations
+   * @return collection of single element Fudge message arrays
    */
   @Parameters
   public static Collection<Object[]> getParameters () {
@@ -110,7 +110,7 @@ public class DuplicateFieldNameTest {
    * 
    * @return [Documentation not available]
    */
-  protected FudgeFieldContainer getMessage () {
+  protected FudgeMsg getMessage () {
     return _message;
   }
   

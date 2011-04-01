@@ -20,8 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
@@ -49,8 +49,8 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Set<?> set) {
-    final MutableFudgeFieldContainer msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Set<?> set) {
+    final MutableFudgeMsg msg = context.newMessage();
     for (Object entry : set) {
       if (entry == null) {
         msg.add(null, 1, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
@@ -62,7 +62,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
   }
 
   @Override
-  public Set<?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+  public Set<?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
     final Set<Object> set = new HashSet<Object>();
     for (FudgeField field : message) {
       if ((field.getOrdinal() == null) && (field.getOrdinal() != ORDINAL)) {

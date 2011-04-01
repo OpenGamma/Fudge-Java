@@ -16,22 +16,23 @@
 package org.fudgemsg;
 
 /**
- * A container of Fudge fields that can be mutated.
+ * A mutable Fudge message formed from a collection of fields.
  * <p>
  * The Fudge specification is built around messages containing a list of fields.
- * This interface provides the high-level representation of the list of fields.
+ * This interface is the high-level representation of the list of fields,
+ * with convenient accessors and mutators.
  * <p>
  * Each field may be referenced by a name or by an ordinal.
  * All four combinations are possible - from both present to both absent.
  * Methods provide the ability to lookup a field by both name or ordinal.
  * <p>
  * Applications working with messages should use this interface or
- * {@link FudgeFieldContainer} rather than a concrete class like
+ * {@link FudgeMsg} rather than a concrete class like
  * {@link StandardFudgeMsg} for flexibility.
  * <p>
  * This interface intends implementations to be mutable and not thread-safe.
  */
-public interface MutableFudgeFieldContainer extends FudgeFieldContainer {
+public interface MutableFudgeMsg extends FudgeMsg {
 
   /**
    * Adds a field to this container.

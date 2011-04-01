@@ -19,7 +19,7 @@ package org.fudgemsg.mapping;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 
 /**
@@ -49,14 +49,14 @@ import org.fudgemsg.FudgeRuntimeException;
   /* package */static <T> FromFudgeMsgObjectBuilder<T> create(final Class<T> clazz) {
     try {
       return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeDeserializationContext.class,
-          FudgeFieldContainer.class), true);
+          FudgeMsg.class), true);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
       // ignore
     }
     try {
-      return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeFieldContainer.class), false);
+      return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeMsg.class), false);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
@@ -83,7 +83,7 @@ import org.fudgemsg.FudgeRuntimeException;
   //-------------------------------------------------------------------------
   @SuppressWarnings("unchecked")
   @Override
-  public T buildObject(final FudgeDeserializationContext context, final FudgeFieldContainer message) {
+  public T buildObject(final FudgeDeserializationContext context, final FudgeMsg message) {
     try {
       return (T) (_passContext ? _fromFudgeMsg.invoke(null, context, message) : _fromFudgeMsg.invoke(null, message));
     } catch (IllegalArgumentException ex) {

@@ -16,8 +16,8 @@
 
 package org.fudgemsg.mapping;
 
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * Builder for enums, stored as a sub-message.
@@ -44,8 +44,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
   }
 
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Enum<E> enumeration) {
-    final MutableFudgeFieldContainer msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Enum<E> enumeration) {
+    final MutableFudgeMsg msg = context.newMessage();
     // REVIEW: jim 2-Jun-2010 -- changed to getDeclaringClass() to fix problem with enums with methods that appear as anon inner classes.
     msg.add(null, 0, enumeration.getDeclaringClass().getName());
     msg.add(null, 1, enumeration.name());
@@ -53,7 +53,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
   }
 
   @Override
-  public Enum<E> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+  public Enum<E> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
     return Enum.valueOf(_clazz, message.getString(1));
   }
 

@@ -26,9 +26,9 @@ import java.util.ArrayList;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * Builder that uses {@code BeanUtils} to reflect over a class.
@@ -189,8 +189,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, T object) {
-    final MutableFudgeFieldContainer message = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object) {
+    final MutableFudgeMsg message = context.newMessage();
     try {
       for (JBProperty prop : getProperties()) {
         if (prop.getRead() == null) {
@@ -210,7 +210,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
   }
 
   @Override
-  public T buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+  public T buildObject(FudgeDeserializationContext context, FudgeMsg message) {
     final T object;
     try {
       object = newBeanObject();

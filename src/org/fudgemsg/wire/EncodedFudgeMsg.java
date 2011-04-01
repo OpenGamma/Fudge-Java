@@ -21,13 +21,12 @@ import java.io.DataInputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fudgemsg.AbstractFudgeMsg;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.AbstractFudgeMsg;
 import org.fudgemsg.FudgeMsgField;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.ImmutableFudgeFieldContainer;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
 import org.fudgemsg.wire.types.FudgeWireType;
@@ -41,10 +40,12 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * <p>
  * This is intended to be immutable, but not thread-safe.
  */
-public class EncodedFudgeMsg extends AbstractFudgeMsg implements ImmutableFudgeFieldContainer, FudgeEncoded {
+public class EncodedFudgeMsg extends AbstractFudgeMsg implements FudgeEncoded {
 
-  /* package */static class Reader implements FudgeStreamReader, FudgeEncoded {
-    
+  /**
+   * Specialized Fudge stream reader.
+   */
+  static class Reader implements FudgeStreamReader, FudgeEncoded {
     private final FudgeContext _fudgeContext;
     private final byte[] _data;
     private FudgeStreamReader _streamReader;

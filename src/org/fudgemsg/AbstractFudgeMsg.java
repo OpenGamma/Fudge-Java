@@ -26,16 +26,16 @@ import java.util.TreeSet;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
 /**
- * Abstract implementation of {@code FudgeFieldContainer}.
+ * Abstract implementation of {@code FudgeMsg}.
  * <p>
- * Most methods in the {@code FudgeFieldContainer} interface are convenience methods
+ * Most methods in the {@code FudgeMsg} interface are convenience methods
  * which can be implemented based on a few key methods.
  * This abstract class provides the convenience method implementations, allowing subclasses
  * to supply the data.
  * <p>
  * This class is mutable and not thread-safe.
  */
-public class AbstractFudgeMsg implements Serializable, FudgeFieldContainer, Iterable<FudgeField> {
+public class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>, Serializable {
 
   /**
    * The Fudge context.
@@ -66,7 +66,7 @@ public class AbstractFudgeMsg implements Serializable, FudgeFieldContainer, Iter
    * @param fields  the initial set of fields, not null
    * @param fudgeContext  the context to use for type resolution and other services, not null
    */
-  protected AbstractFudgeMsg(final FudgeFieldContainer fields, final FudgeContext fudgeContext) {
+  protected AbstractFudgeMsg(final FudgeMsg fields, final FudgeContext fudgeContext) {
     if (fields == null) {
       throw new NullPointerException("Cannot initialize from a null FudgeFieldContainer");
     }
@@ -224,8 +224,8 @@ public class AbstractFudgeMsg implements Serializable, FudgeFieldContainer, Iter
       if (field.getValue() instanceof StandardFudgeMsg) {
         StandardFudgeMsg subMsg = (StandardFudgeMsg) field.getValue();
         subMsg.setNamesFromTaxonomy(taxonomy);
-      } else if (field.getValue() instanceof FudgeFieldContainer) {
-        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeFieldContainer) field.getValue(), getFudgeContext());
+      } else if (field.getValue() instanceof FudgeMsg) {
+        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeMsg) field.getValue(), getFudgeContext());
         subMsg.setNamesFromTaxonomy(taxonomy);
         field = FudgeMsgField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
         getFields().set(i, field);
@@ -423,13 +423,13 @@ public class AbstractFudgeMsg implements Serializable, FudgeFieldContainer, Iter
   }
 
   @Override
-  public FudgeFieldContainer getMessage(int ordinal) {
-    return getFirstTypedValue(FudgeFieldContainer.class, ordinal, FudgeTypeDictionary.FUDGE_MSG_TYPE_ID);
+  public FudgeMsg getMessage(int ordinal) {
+    return getFirstTypedValue(FudgeMsg.class, ordinal, FudgeTypeDictionary.FUDGE_MSG_TYPE_ID);
   }
 
   @Override
-  public FudgeFieldContainer getMessage(String name) {
-    return getFirstTypedValue(FudgeFieldContainer.class, name, FudgeTypeDictionary.FUDGE_MSG_TYPE_ID);
+  public FudgeMsg getMessage(String name) {
+    return getFirstTypedValue(FudgeMsg.class, name, FudgeTypeDictionary.FUDGE_MSG_TYPE_ID);
   }
 
   //-------------------------------------------------------------------------

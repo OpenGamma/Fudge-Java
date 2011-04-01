@@ -91,11 +91,11 @@ public class StandardMessageLoadingTest {
    * @param expected [documentation not available]
    * @param fileName [documentation not available]
    */
-  protected static void testFile(FudgeFieldContainer expected, String fileName) {
+  protected static void testFile(FudgeMsg expected, String fileName) {
     FudgeMsgEnvelope envelope = loadMessage(s_fudgeContext, fileName);
     assertNotNull(envelope);
     assertNotNull(envelope.getMessage ());
-    FudgeFieldContainer actual = envelope.getMessage ();
+    FudgeMsg actual = envelope.getMessage ();
     FudgeUtils.assertAllFieldsMatch(expected, actual);
   }
   

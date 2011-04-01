@@ -24,8 +24,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.types.ClasspathUtilities;
 
 /**
@@ -73,7 +73,7 @@ public class FudgeObjectDictionary {
    */
   private static final FudgeMessageBuilder<?> NULL_MESSAGEBUILDER = new FudgeMessageBuilder<Object> () {
     @Override
-    public MutableFudgeFieldContainer buildMessage (FudgeSerializationContext context, Object object) {
+    public MutableFudgeMsg buildMessage (FudgeSerializationContext context, Object object) {
       return null;
     }
   };
@@ -82,7 +82,7 @@ public class FudgeObjectDictionary {
    */
   private static final FudgeObjectBuilder<?> NULL_OBJECTBUILDER = new FudgeObjectBuilder<Object> () {
     @Override
-    public Object buildObject (FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Object buildObject (FudgeDeserializationContext context, FudgeMsg message) {
       return null;
     }
   };

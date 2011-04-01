@@ -31,8 +31,8 @@ import java.util.Set;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.wire.EncodedFudgeMsg;
 import org.fudgemsg.wire.FudgeMsgReader;
@@ -45,31 +45,31 @@ import org.junit.Test;
  */
 public class EncodedFudgeMsgTest {
 
-  private static FudgeFieldContainer createTestMessage2() {
-    final MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+  private static FudgeMsg createTestMessage2() {
+    final MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     msg.add("foo", StandardFudgeMessages.createMessageAllNames(FudgeContext.GLOBAL_DEFAULT));
     msg.add(42, StandardFudgeMessages.createMessageAllNames(FudgeContext.GLOBAL_DEFAULT));
     msg.add(null, null, StandardFudgeMessages.createMessageAllNames(FudgeContext.GLOBAL_DEFAULT));
     return msg;
   }
 
-  private static FudgeFieldContainer createTestMessage1() {
-    final MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+  private static FudgeMsg createTestMessage1() {
+    final MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     msg.add("foo", createTestMessage2());
     msg.add(42, createTestMessage2());
     msg.add(null, null, createTestMessage2());
     return msg;
   }
 
-  private static FudgeFieldContainer createTestMessage0() {
-    final MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+  private static FudgeMsg createTestMessage0() {
+    final MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     msg.add("foo", createTestMessage1());
     msg.add(42, createTestMessage1());
     msg.add(null, null, createTestMessage1());
     return msg;
   }
 
-  private FudgeFieldContainer _testMessage;
+  private FudgeMsg _testMessage;
   private byte[] _testMessageEnvelope;
   private EncodedFudgeMsg _testMessageEnc;
 
@@ -105,14 +105,14 @@ public class EncodedFudgeMsgTest {
   public void testGetAllFields() {
     List<FudgeField> fields = _testMessageEnc.getAllFields();
     assertEquals(3, fields.size());
-    assertTrue(fields.get(0).getValue() instanceof FudgeFieldContainer);
-    fields = ((FudgeFieldContainer) fields.get(0).getValue()).getAllFields();
+    assertTrue(fields.get(0).getValue() instanceof FudgeMsg);
+    fields = ((FudgeMsg) fields.get(0).getValue()).getAllFields();
     assertEquals(3, fields.size());
-    assertTrue(fields.get(0).getValue() instanceof FudgeFieldContainer);
-    fields = ((FudgeFieldContainer) fields.get(0).getValue()).getAllFields();
+    assertTrue(fields.get(0).getValue() instanceof FudgeMsg);
+    fields = ((FudgeMsg) fields.get(0).getValue()).getAllFields();
     assertEquals(3, fields.size());
-    assertTrue(fields.get(0).getValue() instanceof FudgeFieldContainer);
-    fields = ((FudgeFieldContainer) fields.get(0).getValue()).getAllFields();
+    assertTrue(fields.get(0).getValue() instanceof FudgeMsg);
+    fields = ((FudgeMsg) fields.get(0).getValue()).getAllFields();
     assertEquals(21, fields.size());
   }
 
@@ -179,28 +179,28 @@ public class EncodedFudgeMsgTest {
 
   @Test
   public void testGetFieldValue() {
-    final FudgeFieldContainer field = _testMessageEnc.getFieldValue(FudgeFieldContainer.class, _testMessageEnc
+    final FudgeMsg field = _testMessageEnc.getFieldValue(FudgeMsg.class, _testMessageEnc
         .getByIndex(1));
     assertNotNull(field);
   }
 
   @Test
   public void testGetValue() {
-    FudgeFieldContainer field = _testMessageEnc.getValue(FudgeFieldContainer.class, 42);
+    FudgeMsg field = _testMessageEnc.getValue(FudgeMsg.class, 42);
     assertNotNull(field);
     assertTrue(field instanceof EncodedFudgeMsg);
-    field = _testMessageEnc.getValue(FudgeFieldContainer.class, "foo");
+    field = _testMessageEnc.getValue(FudgeMsg.class, "foo");
     assertNotNull(field);
     assertTrue(field instanceof EncodedFudgeMsg);
-    field = _testMessageEnc.getValue(FudgeFieldContainer.class, 99);
+    field = _testMessageEnc.getValue(FudgeMsg.class, 99);
     assertNull(field);
-    field = _testMessageEnc.getValue(FudgeFieldContainer.class, "bar");
+    field = _testMessageEnc.getValue(FudgeMsg.class, "bar");
     assertNull(field);
   }
 
-  private FudgeFieldContainer getInnerMessage() {
-    return _testMessageEnc.getValue(FudgeFieldContainer.class, 42).getValue(FudgeFieldContainer.class, 42).getValue(
-        FudgeFieldContainer.class, 42);
+  private FudgeMsg getInnerMessage() {
+    return _testMessageEnc.getValue(FudgeMsg.class, 42).getValue(FudgeMsg.class, 42).getValue(
+        FudgeMsg.class, 42);
   }
 
   @Test
@@ -253,7 +253,7 @@ public class EncodedFudgeMsgTest {
 
   @Test
   public void testGetMessage() {
-    final FudgeFieldContainer value = _testMessageEnc.getMessage("foo");
+    final FudgeMsg value = _testMessageEnc.getMessage("foo");
     assertNotNull(value);
   }
 
@@ -288,10 +288,10 @@ public class EncodedFudgeMsgTest {
     long readTime = 0, procTime = 0, writeTime = 0, t;
     for (int i = 0; i < count; i++) {
       readTime -= System.nanoTime();
-      final FudgeFieldContainer outer = reader.nextMessage();
+      final FudgeMsg outer = reader.nextMessage();
       readTime += (t = System.nanoTime());
       procTime -= t;
-      final FudgeFieldContainer inner = outer.getMessage(42).getMessage(42).getMessage(42);
+      final FudgeMsg inner = outer.getMessage(42).getMessage(42).getMessage(42);
       procTime += (t = System.nanoTime());
       writeTime -= t;
       writer.writeMessage(inner);

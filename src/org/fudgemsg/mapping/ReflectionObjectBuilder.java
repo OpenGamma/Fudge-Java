@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 
 /**
@@ -67,7 +67,7 @@ import org.fudgemsg.FudgeRuntimeException;
 
   //-------------------------------------------------------------------------
   @Override
-  public T buildObject(final FudgeDeserializationContext context, final FudgeFieldContainer message) {
+  public T buildObject(final FudgeDeserializationContext context, final FudgeMsg message) {
     try {
       final T base = _constructor.newInstance();
       for (FudgeField field : message.getAllFields()) {

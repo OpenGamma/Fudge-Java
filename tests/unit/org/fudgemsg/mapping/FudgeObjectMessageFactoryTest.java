@@ -20,9 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgEnvelope;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.MappedNameBean;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.SimpleBean;
 import org.fudgemsg.mapping.ObjectMappingTestUtil.StaticTransientBean;
@@ -43,7 +43,7 @@ public class FudgeObjectMessageFactoryTest {
   @Deprecated
   public void simpleBeanOld() {
     SimpleBean simpleBean = ObjectMappingTestUtil.constructSimpleBean();
-    MutableFudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(simpleBean, FudgeContext.GLOBAL_DEFAULT);
+    MutableFudgeMsg msg = FudgeObjectMessageFactory.serializeToMessage(simpleBean, FudgeContext.GLOBAL_DEFAULT);
     assertNotNull(msg);
     msg.remove(0);
     FudgeUtils.assertAllFieldsMatch(ObjectMappingTestUtil.constructSimpleMessage(FudgeContext.GLOBAL_DEFAULT), msg, false);
@@ -56,7 +56,7 @@ public class FudgeObjectMessageFactoryTest {
   @Deprecated
   public void staticAndTransientOld() {
     StaticTransientBean bean = new StaticTransientBean();
-    FudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(bean, FudgeContext.GLOBAL_DEFAULT);
+    FudgeMsg msg = FudgeObjectMessageFactory.serializeToMessage(bean, FudgeContext.GLOBAL_DEFAULT);
     assertNotNull(msg);
     assertEquals(1, msg.getNumFields()); // the class identifier only
   }
@@ -72,7 +72,7 @@ public class FudgeObjectMessageFactoryTest {
     bean.setFieldTwo ("field 2");
     bean.setFieldThree ("field 3");
     bean.setFieldFour ("field 4");
-    FudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage(bean, FudgeContext.GLOBAL_DEFAULT);
+    FudgeMsg msg = FudgeObjectMessageFactory.serializeToMessage(bean, FudgeContext.GLOBAL_DEFAULT);
     bean = null;
     assertNotNull (msg);
     assertEquals (5, msg.getNumFields ()); // our 4 + the class identifier
@@ -100,7 +100,7 @@ public class FudgeObjectMessageFactoryTest {
   public void objectGraphOld () {
     SimpleBean recursiveBean = ObjectMappingTestUtil.constructSimpleBean ();
     recursiveBean.getFieldTwo ().setFieldTwo (recursiveBean);
-    FudgeFieldContainer msg = FudgeObjectMessageFactory.serializeToMessage (recursiveBean, FudgeContext.GLOBAL_DEFAULT);
+    FudgeMsg msg = FudgeObjectMessageFactory.serializeToMessage (recursiveBean, FudgeContext.GLOBAL_DEFAULT);
     System.out.println (msg);
   }
   
@@ -110,7 +110,7 @@ public class FudgeObjectMessageFactoryTest {
   @Test
   public void simpleBean() {
     SimpleBean simpleBean = ObjectMappingTestUtil.constructSimpleBean();
-    MutableFudgeFieldContainer msg = (MutableFudgeFieldContainer)FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (simpleBean).getMessage ();
+    MutableFudgeMsg msg = (MutableFudgeMsg)FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (simpleBean).getMessage ();
     assertNotNull(msg);
     msg.remove(0);
     FudgeUtils.assertAllFieldsMatch(ObjectMappingTestUtil.constructSimpleMessage(FudgeContext.GLOBAL_DEFAULT), msg, false);
@@ -122,7 +122,7 @@ public class FudgeObjectMessageFactoryTest {
   @Test
   public void staticAndTransient() {
     StaticTransientBean bean = new StaticTransientBean();
-    FudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (bean).getMessage ();
+    FudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (bean).getMessage ();
     assertNotNull(msg);
     assertEquals(1, msg.getNumFields()); // the class identifier only
   }
@@ -137,7 +137,7 @@ public class FudgeObjectMessageFactoryTest {
     bean.setFieldTwo ("field 2");
     bean.setFieldThree ("field 3");
     bean.setFieldFour ("field 4");
-    FudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (bean).getMessage ();
+    FudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (bean).getMessage ();
     bean = null;
     assertNotNull (msg);
     assertEquals (5, msg.getNumFields ()); // our 4 + the class identifier

@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.wire.FudgeDataOutputStreamWriter;
 import org.fudgemsg.wire.FudgeMsgReader;
 import org.fudgemsg.wire.FudgeMsgWriter;
@@ -46,8 +46,8 @@ import org.junit.Test;
  */
 public class FudgeStreamTest {
   
-  private FudgeFieldContainer simpleMessage (int n) {
-    final MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage ();
+  private FudgeMsg simpleMessage (int n) {
+    final MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage ();
     msg.add ("n", (Integer)n);
     msg.add ("foo", (Integer)42);
     msg.add ("bar", "forty-two");
@@ -72,7 +72,7 @@ public class FudgeStreamTest {
     final FudgeMsgReader reader = FudgeContext.GLOBAL_DEFAULT.createMessageReader (prepareThreeMessageStream ());
     for (int i = 1; i <= 3; i++) {
       assertTrue (reader.hasNext ());
-      final FudgeFieldContainer msg = reader.nextMessage ();
+      final FudgeMsg msg = reader.nextMessage ();
       assertEquals (i, (int)msg.getInt ("n"));
     }
     assertFalse (reader.hasNext ());

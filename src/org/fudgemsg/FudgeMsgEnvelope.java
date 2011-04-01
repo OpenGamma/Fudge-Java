@@ -32,7 +32,7 @@ public class FudgeMsgEnvelope implements Serializable {
   /**
    * The message this envelope wraps.
    */
-  private final FudgeFieldContainer _message;
+  private final FudgeMsg _message;
   /**
    * The processing direcives.
    */
@@ -48,7 +48,7 @@ public class FudgeMsgEnvelope implements Serializable {
    * 
    * @param message  the message to wrap, not null
    */
-  public FudgeMsgEnvelope(FudgeFieldContainer message) {
+  public FudgeMsgEnvelope(FudgeMsg message) {
     this(message, 0);
   }
 
@@ -59,7 +59,7 @@ public class FudgeMsgEnvelope implements Serializable {
    * @param message  the message to wrap, not null
    * @param version  the version, from 0 to 255
    */
-  public FudgeMsgEnvelope(FudgeFieldContainer message, int version) {
+  public FudgeMsgEnvelope(FudgeMsg message, int version) {
     this(message, version, 0);
   }
 
@@ -70,7 +70,7 @@ public class FudgeMsgEnvelope implements Serializable {
    * @param version  the version, from 0 to 255
    * @param processingDirectives  the processing directive flags, from 0 to 255
    */
-  public FudgeMsgEnvelope(FudgeFieldContainer message, final int version, final int processingDirectives) {
+  public FudgeMsgEnvelope(FudgeMsg message, final int version, final int processingDirectives) {
     if (message == null) {
       throw new NullPointerException("Message must not be null");
     }
@@ -91,7 +91,7 @@ public class FudgeMsgEnvelope implements Serializable {
    * 
    * @return the message, not null
    */
-  public FudgeFieldContainer getMessage() {
+  public FudgeMsg getMessage() {
     return _message;
   }
 

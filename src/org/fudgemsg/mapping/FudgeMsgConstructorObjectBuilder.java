@@ -19,7 +19,7 @@ package org.fudgemsg.mapping;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 
 /**
@@ -48,14 +48,14 @@ import org.fudgemsg.FudgeRuntimeException;
    */
   /* package */ static <T> FudgeMsgConstructorObjectBuilder<T> create (final Class<T> clazz) {
     try {
-      return new FudgeMsgConstructorObjectBuilder<T> (clazz.getConstructor (FudgeDeserializationContext.class, FudgeFieldContainer.class), true);
+      return new FudgeMsgConstructorObjectBuilder<T> (clazz.getConstructor (FudgeDeserializationContext.class, FudgeMsg.class), true);
     } catch (SecurityException e) {
       // ignore
     } catch (NoSuchMethodException e) {
       // ignore
     }
     try {
-      return new FudgeMsgConstructorObjectBuilder<T> (clazz.getConstructor (FudgeFieldContainer.class), false);
+      return new FudgeMsgConstructorObjectBuilder<T> (clazz.getConstructor (FudgeMsg.class), false);
     } catch (SecurityException e) {
       // ignore
     } catch (NoSuchMethodException e) {
@@ -81,7 +81,7 @@ import org.fudgemsg.FudgeRuntimeException;
 
   //-------------------------------------------------------------------------
   @Override
-  public T buildObject(final FudgeDeserializationContext context, final FudgeFieldContainer message) {
+  public T buildObject(final FudgeDeserializationContext context, final FudgeMsg message) {
     try {
       return _passContext ? _constructor.newInstance(context, message) : _constructor.newInstance(message);
     } catch (IllegalArgumentException ex) {

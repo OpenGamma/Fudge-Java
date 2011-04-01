@@ -48,7 +48,7 @@ public class FudgeMsgFormatter {
    * 
    * @param msg  the message to write, not null
    */
-  public static void outputToSystemOut(FudgeFieldContainer msg) {
+  public static void outputToSystemOut(FudgeMsg msg) {
     new FudgeMsgFormatter(new PrintWriter(System.out)).format(msg);
   }
 
@@ -140,7 +140,7 @@ public class FudgeMsgFormatter {
    * 
    * @param msg  the message to write, null ignored
    */
-  public void format(FudgeFieldContainer msg) {
+  public void format(FudgeMsg msg) {
     format(msg, 0);
   }
 
@@ -152,7 +152,7 @@ public class FudgeMsgFormatter {
    * @param msg  the message to write, null ignored
    * @param depth indentation level
    */
-  protected void format(FudgeFieldContainer msg, int depth) {
+  protected void format(FudgeMsg msg, int depth) {
     if (msg == null) {
       return;
     }
@@ -215,9 +215,9 @@ public class FudgeMsgFormatter {
       getWriter().print(' ');
       nWritten++;
     }
-    if (field.getValue() instanceof FudgeFieldContainer) {
+    if (field.getValue() instanceof FudgeMsg) {
       getWriter().println();
-      FudgeFieldContainer msgValue = (FudgeFieldContainer) field.getValue();
+      FudgeMsg msgValue = (FudgeMsg) field.getValue();
       format(msgValue, depth + 1);
     } else {
       getWriter().print(field.getValue());

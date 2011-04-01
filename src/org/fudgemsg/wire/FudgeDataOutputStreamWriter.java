@@ -25,7 +25,7 @@ import java.io.OutputStream;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
@@ -205,7 +205,7 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
    * {@inheritDoc}
    */
   @Override
-  public void writeFields(FudgeFieldContainer msg) {
+  public void writeFields(FudgeMsg msg) {
     if (msg instanceof FudgeEncoded) {
       try {
         getDataOutput().write(((FudgeEncoded) msg).getFudgeEncoded());
@@ -217,7 +217,7 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
     }
   }
 
-  private void writeFieldsImpl(final FudgeFieldContainer msg) {
+  private void writeFieldsImpl(final FudgeMsg msg) {
     for (FudgeField field : msg.getAllFields()) {
       writeField(field);
     }
@@ -334,8 +334,8 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
           }
           if (value instanceof FudgeEncoded) {
             getDataOutput().write(((FudgeEncoded) value).getFudgeEncoded());
-          } else if (value instanceof FudgeFieldContainer) {
-            FudgeFieldContainer subMsg = (FudgeFieldContainer) value;
+          } else if (value instanceof FudgeMsg) {
+            FudgeMsg subMsg = (FudgeMsg) value;
             writeFieldsImpl(subMsg);
           } else {
             type.writeValue(getDataOutput(), value);

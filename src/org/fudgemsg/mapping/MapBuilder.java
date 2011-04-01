@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
@@ -57,8 +57,8 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Map<?, ?> map) {
-    final MutableFudgeFieldContainer msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Map<?, ?> map) {
+    final MutableFudgeMsg msg = context.newMessage();
     for (Map.Entry<?, ?> entry : map.entrySet()) {
       if (entry.getKey() == null) {
         msg.add(null, KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
@@ -75,7 +75,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
   }
 
   @Override
-  public Map<?, ?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+  public Map<?, ?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
     final Map<Object, Object> map = new HashMap<Object, Object>();
     final Queue<Object> keys = new LinkedList<Object>();
     final Queue<Object> values = new LinkedList<Object>();

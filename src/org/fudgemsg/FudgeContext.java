@@ -67,9 +67,9 @@ public class FudgeContext implements FudgeMsgFactory {
   public static final FudgeContext GLOBAL_DEFAULT = new ImmutableFudgeContext (new FudgeContext ());
   
   /**
-   * A global empty {@link FudgeFieldContainer}.
+   * A global empty {@link FudgeMsg}.
    */
-  public static final FudgeFieldContainer EMPTY_MESSAGE = new ImmutableFudgeMsg (GLOBAL_DEFAULT); 
+  public static final FudgeMsg EMPTY_MESSAGE = new ImmutableFudgeMsg (GLOBAL_DEFAULT); 
   
   /**
    * A global empty {@link FudgeMsgEnvelope}.
@@ -168,7 +168,7 @@ public class FudgeContext implements FudgeMsgFactory {
    * {@inheritDoc}
    */ 
   @Override
-  public MutableFudgeFieldContainer newMessage() {
+  public MutableFudgeMsg newMessage() {
     return new StandardFudgeMsg(this);
   }
   
@@ -176,7 +176,7 @@ public class FudgeContext implements FudgeMsgFactory {
    * {@inheritDoc}
    */
   @Override
-  public MutableFudgeFieldContainer newMessage (final FudgeFieldContainer fromMessage) {
+  public MutableFudgeMsg newMessage (final FudgeMsg fromMessage) {
     return new StandardFudgeMsg (fromMessage, this);
   }
   
@@ -186,7 +186,7 @@ public class FudgeContext implements FudgeMsgFactory {
    * @param msg  the message to write
    * @param os  the output stream to write to, not null
    */
-  public void serialize(FudgeFieldContainer msg, OutputStream os) {
+  public void serialize(FudgeMsg msg, OutputStream os) {
     serialize(msg, null, os);
   }
 
@@ -199,7 +199,7 @@ public class FudgeContext implements FudgeMsgFactory {
    * @param taxonomyId  the identifier of the taxonomy to use, may be null
    * @param os  the output stream to write to, not null
    */
-  public void serialize(FudgeFieldContainer msg, Short taxonomyId, OutputStream os) {
+  public void serialize(FudgeMsg msg, Short taxonomyId, OutputStream os) {
     int realTaxonomyId = (taxonomyId == null) ? 0 : taxonomyId.intValue();
     FudgeMsgWriter writer = createMessageWriter (os);
     FudgeMsgEnvelope envelope = new FudgeMsgEnvelope(msg);
@@ -207,27 +207,27 @@ public class FudgeContext implements FudgeMsgFactory {
   }
 
   /**
-   * Returns the Fudge encoded form of a {@link FudgeFieldContainer} as a {@code byte} array
+   * Returns the Fudge encoded form of a {@link FudgeMsg} as a {@code byte} array
    * with a taxonomy reference. The encoding includes an envelope header.
    * 
-   * @param msg the {@code FudgeFieldContainer} to encode
-   * @param taxonomyId the identifier of the taxonomy to use. Specify {@code null} or {@code 0} for no taxonomy
+   * @param msg  the Fudge message to encode
+   * @param taxonomyId  the identifier of the taxonomy to use. Specify {@code null} or {@code 0} for no taxonomy
    * @return an array containing the encoded message
    */
-  public byte[] toByteArray(FudgeFieldContainer msg, Short taxonomyId) {
+  public byte[] toByteArray(FudgeMsg msg, Short taxonomyId) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     serialize(msg, taxonomyId, baos);
     return baos.toByteArray();
   }
   
   /**
-   * Returns the Fudge encoded form of a {@link FudgeFieldContainer} as a {@code byte} array without a taxonomy reference.
-   * The encoding includes an envelope header.
+   * Returns the Fudge encoded form of a {@link FudgeMsg} as a {@code byte} array
+   * without a taxonomy reference. The encoding includes an envelope header.
    * 
-   * @param msg the {@code FudgeFieldContainer} to encode
+   * @param msg  the Fudge message to encode
    * @return an array containing the encoded message
    */
-  public byte[] toByteArray (FudgeFieldContainer msg) {
+  public byte[] toByteArray (FudgeMsg msg) {
     return toByteArray (msg, null);
   }
   
@@ -422,7 +422,7 @@ public class FudgeContext implements FudgeMsgFactory {
    */
   public <T> FudgeMsgEnvelope toFudgeMsg (T obj) {
     final FudgeSerializationContext fsc = new FudgeSerializationContext (this);
-    final MutableFudgeFieldContainer message = fsc.objectToFudgeMsg(obj);
+    final MutableFudgeMsg message = fsc.objectToFudgeMsg(obj);
     final Class<?> clazz = obj.getClass();
     if (!getObjectDictionary().isDefaultObject(clazz)) {
       FudgeSerializationContext.addClassHeader(message, clazz);
@@ -431,20 +431,20 @@ public class FudgeContext implements FudgeMsgFactory {
   }
   
   /**
-   * Deserializes a {@link FudgeFieldContainer} message to a Java object, trying to determine the 
+   * Deserializes a {@link FudgeMsg} message to a Java object, trying to determine the 
    * type of the object automatically. Note that for repeated operations, it would be more efficient to maintain
    * a {@link FudgeDeserializationContext} instance and use that.
    * 
    * @param message the Fudge message to deserialize
    * @return the deserialized object
    */
-  public Object fromFudgeMsg (FudgeFieldContainer message) {
+  public Object fromFudgeMsg (FudgeMsg message) {
     final FudgeDeserializationContext fdc = new FudgeDeserializationContext (this);
     return fdc.fudgeMsgToObject (message);
   }
   
   /**
-   * Deserializes a {@link FudgeFieldContainer} message to a Java object of type {@code clazz}. Note that for
+   * Deserializes a {@link FudgeMsg} message to a Java object of type {@code clazz}. Note that for
    * repeated operations, it would be more efficient to maintain a {@link FudgeDeserializationContext}
    * instance and use that.
    * 
@@ -453,7 +453,7 @@ public class FudgeContext implements FudgeMsgFactory {
    * @param message the message to process
    * @return the deserialized object
    */
-  public <T> T fromFudgeMsg (Class<T> clazz, FudgeFieldContainer message) {
+  public <T> T fromFudgeMsg (Class<T> clazz, FudgeMsg message) {
     final FudgeDeserializationContext fdc = new FudgeDeserializationContext (this);
     return fdc.fudgeMsgToObject (clazz, message);
   }

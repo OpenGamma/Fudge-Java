@@ -19,8 +19,8 @@ package org.fudgemsg.mapping;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.junit.Test;
 
 /**
@@ -36,7 +36,7 @@ public class FudgeDefaultBuilderFactoryTest {
      * 
      */
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, SimpleBean object) {
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, SimpleBean object) {
       // TODO Auto-generated method stub
       return null;
     }
@@ -45,7 +45,7 @@ public class FudgeDefaultBuilderFactoryTest {
      * 
      */
     @Override
-    public SimpleBean buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public SimpleBean buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       // TODO Auto-generated method stub
       return null;
     }

@@ -24,8 +24,8 @@ import java.util.Date;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.test.FudgeUtils;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
@@ -84,13 +84,13 @@ public class MongoDBFudgeBuilderTest {
     
     MockObject mo = new MockObject("FRJ-83");
     
-    MutableFudgeFieldContainer inputMsg = context.newMessage();
+    MutableFudgeMsg inputMsg = context.newMessage();
     inputMsg.add("field1", mo);
     DBObject dbObject = context.fromFudgeMsg(DBObject.class, inputMsg);
     // We have to actually do something to the object to make sure it's supported
     // in the MongoDB type system.
     dbObject.toString();
-    FudgeFieldContainer outputMsg = context.toFudgeMsg(dbObject).getMessage();
+    FudgeMsg outputMsg = context.toFudgeMsg(dbObject).getMessage();
 
     assertTrue(outputMsg.hasField("field1"));
     FudgeField moField = outputMsg.getByName("field1");
@@ -109,13 +109,13 @@ public class MongoDBFudgeBuilderTest {
   @Ignore("Until FRJ-84 is done")
   public void fudgeDateTime() {
     Date d = new Date();
-    MutableFudgeFieldContainer inputMsg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+    MutableFudgeMsg inputMsg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     inputMsg.add("field1", d);
     DBObject dbObject = FudgeContext.GLOBAL_DEFAULT.fromFudgeMsg(DBObject.class, inputMsg);
     // We have to actually do something to the object to make sure it's supported
     // in the MongoDB type system.
     dbObject.toString();
-    FudgeFieldContainer outputMsg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg(dbObject).getMessage();
+    FudgeMsg outputMsg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg(dbObject).getMessage();
 
     assertTrue(outputMsg.hasField("field1"));
     FudgeField dateField = outputMsg.getByName("field1");

@@ -62,8 +62,8 @@ public class FudgeInteropTest {
    */
   @Test
   public void allNames() throws IOException {
-    FudgeFieldContainer inputMsg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
-    FudgeFieldContainer outputMsg = cycleMessage(inputMsg, "allNames.dat");
+    FudgeMsg inputMsg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg outputMsg = cycleMessage(inputMsg, "allNames.dat");
     
     assertNotNull(outputMsg);
     
@@ -76,8 +76,8 @@ public class FudgeInteropTest {
    */
   @Test
   public void allOrdinals() throws IOException {
-    FudgeFieldContainer inputMsg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
-    FudgeFieldContainer outputMsg = cycleMessage(inputMsg, "allOrdinals.dat");
+    FudgeMsg inputMsg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    FudgeMsg outputMsg = cycleMessage(inputMsg, "allOrdinals.dat");
     
     assertNotNull(outputMsg);
     
@@ -89,8 +89,8 @@ public class FudgeInteropTest {
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer createVariableWidthColumnSizes(FudgeContext fudgeContext) {
-    MutableFudgeFieldContainer inputMsg = fudgeContext.newMessage();
+  public static FudgeMsg createVariableWidthColumnSizes(FudgeContext fudgeContext) {
+    MutableFudgeMsg inputMsg = fudgeContext.newMessage();
     inputMsg.add("100", new byte[100]);
     inputMsg.add("1000", new byte[1000]);
     inputMsg.add("10000", new byte[100000]);
@@ -102,9 +102,9 @@ public class FudgeInteropTest {
    */
   @Test
   public void variableWidthColumnSizes() throws IOException {
-    FudgeFieldContainer inputMsg = createVariableWidthColumnSizes(s_fudgeContext);
+    FudgeMsg inputMsg = createVariableWidthColumnSizes(s_fudgeContext);
 
-    FudgeFieldContainer outputMsg = cycleMessage(inputMsg, "variableWidthColumnSizes.dat");
+    FudgeMsg outputMsg = cycleMessage(inputMsg, "variableWidthColumnSizes.dat");
     
     assertNotNull(outputMsg);
     
@@ -116,9 +116,9 @@ public class FudgeInteropTest {
    */
   @Test
   public void subMsg() throws IOException {
-    FudgeFieldContainer inputMsg = StandardFudgeMessages.createMessageWithSubMsgs(s_fudgeContext);
+    FudgeMsg inputMsg = StandardFudgeMessages.createMessageWithSubMsgs(s_fudgeContext);
 
-    FudgeFieldContainer outputMsg = cycleMessage(inputMsg, "subMsg.dat");
+    FudgeMsg outputMsg = cycleMessage(inputMsg, "subMsg.dat");
     
     assertNotNull(outputMsg);
     
@@ -129,8 +129,8 @@ public class FudgeInteropTest {
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer createUnknown(FudgeContext fudgeContext) {
-    MutableFudgeFieldContainer inputMsg = fudgeContext.newMessage();
+  public static FudgeMsg createUnknown(FudgeContext fudgeContext) {
+    MutableFudgeMsg inputMsg = fudgeContext.newMessage();
     inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], fudgeContext.getTypeDictionary ().getUnknownType(200)));
     return inputMsg;
   }
@@ -140,9 +140,9 @@ public class FudgeInteropTest {
    */
   @Test
   public void unknown() throws IOException {
-    MutableFudgeFieldContainer inputMsg = s_fudgeContext.newMessage();
+    MutableFudgeMsg inputMsg = s_fudgeContext.newMessage();
     inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], s_fudgeContext.getTypeDictionary ().getUnknownType(200)));
-    FudgeFieldContainer outputMsg = cycleMessage(inputMsg, "unknown.dat");
+    FudgeMsg outputMsg = cycleMessage(inputMsg, "unknown.dat");
     FudgeUtils.assertAllFieldsMatch(inputMsg, outputMsg);
   }
   
@@ -162,8 +162,8 @@ public class FudgeInteropTest {
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer createFixedWidthByteArrayMsg(FudgeContext fudgeContext) {
-    MutableFudgeFieldContainer inputMsg = fudgeContext.newMessage();
+  public static FudgeMsg createFixedWidthByteArrayMsg(FudgeContext fudgeContext) {
+    MutableFudgeMsg inputMsg = fudgeContext.newMessage();
     inputMsg.add("byte[4]", createPopulatedArray(4));
     inputMsg.add("byte[8]", createPopulatedArray(8));
     inputMsg.add("byte[16]", createPopulatedArray(16));
@@ -183,14 +183,14 @@ public class FudgeInteropTest {
    */
   @Test
   public void fixedWidthByteArrays() throws IOException {
-    FudgeFieldContainer inputMsg = createFixedWidthByteArrayMsg(s_fudgeContext);
+    FudgeMsg inputMsg = createFixedWidthByteArrayMsg(s_fudgeContext);
     
-    FudgeFieldContainer outputMsg = cycleMessage(inputMsg, "fixedWidthByteArrays.dat");
+    FudgeMsg outputMsg = cycleMessage(inputMsg, "fixedWidthByteArrays.dat");
     FudgeUtils.assertAllFieldsMatch(inputMsg, outputMsg);
   }
   
-  public static FudgeFieldContainer createDateTimes (final FudgeContext fudgeContext) {
-    MutableFudgeFieldContainer inputMsg = fudgeContext.newMessage ();
+  public static FudgeMsg createDateTimes (final FudgeContext fudgeContext) {
+    MutableFudgeMsg inputMsg = fudgeContext.newMessage ();
     inputMsg.add ("date-Year", new FudgeDate (2010));
     inputMsg.add ("date-Month", new FudgeDate (2010, 3));
     inputMsg.add ("date-Day", new FudgeDate (2010, 3, 4));
@@ -212,8 +212,8 @@ public class FudgeInteropTest {
   
   @Test
   public void dateTypeMessage () throws IOException {
-    FudgeFieldContainer inputMsg = createDateTimes (s_fudgeContext);
-    FudgeFieldContainer outputMsg = cycleMessage (inputMsg, "dateTimes.dat");
+    FudgeMsg inputMsg = createDateTimes (s_fudgeContext);
+    FudgeMsg outputMsg = cycleMessage (inputMsg, "dateTimes.dat");
     FudgeUtils.assertAllFieldsMatch (inputMsg, outputMsg);
   }
   
@@ -223,7 +223,7 @@ public class FudgeInteropTest {
    * @return [documentation not available]
    * @throws IOException [documentation not available]
    */
-  protected static FudgeFieldContainer cycleMessage(FudgeFieldContainer msg, String filename) throws IOException {
+  protected static FudgeMsg cycleMessage(FudgeMsg msg, String filename) throws IOException {
     saveMessage(msg, filename);
     return loadMessage(filename);
   }
@@ -233,7 +233,7 @@ public class FudgeInteropTest {
    * @param filename [documentation not available]
    * @throws IOException [documentation not available]
    */
-  protected static void saveMessage(FudgeFieldContainer msg, String filename) throws IOException {
+  protected static void saveMessage(FudgeMsg msg, String filename) throws IOException {
     String interopDir = System.getProperty("InteropDir");
     String fullPath;
     if (interopDir != null) {
@@ -253,7 +253,7 @@ public class FudgeInteropTest {
    * @return [documentation not available]
    * @throws IOException [documentation not available]
    */
-  protected static FudgeFieldContainer loadMessage(String filename) throws IOException {
+  protected static FudgeMsg loadMessage(String filename) throws IOException {
     String interopDir = System.getProperty("InteropDir");
     String fullPath;
     if (interopDir != null) {

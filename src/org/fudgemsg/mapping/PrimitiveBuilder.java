@@ -16,8 +16,8 @@
 
 package org.fudgemsg.mapping;
 
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * Builder for primitive Java objects.
@@ -47,14 +47,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Boolean object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Boolean object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, ((boolean) object) ? 1 : 0);
       return message;
     }
 
     @Override
-    public Boolean buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Boolean buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Integer.class, VALUE_KEY) != 0;
     }
   }
@@ -74,14 +74,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Byte object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Byte object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Byte buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Byte buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Byte.class, VALUE_KEY);
     }
   }
@@ -101,8 +101,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Double object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Double object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
 
       if (Double.isNaN(object) || Double.isInfinite(object)) {
@@ -113,7 +113,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public Double buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Double buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Double.class, VALUE_KEY);
     }
   }
@@ -134,14 +134,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Character object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Character object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object.toString());
       return message;
     }
 
     @Override
-    public Character buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Character buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(String.class, VALUE_KEY).charAt(0);
     }
   }
@@ -161,8 +161,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Float object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Float object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
 
       if (Float.isNaN(object) || Float.isInfinite(object)) {
@@ -173,7 +173,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public Float buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Float buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Float.class, VALUE_KEY);
     }
   }
@@ -193,14 +193,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Integer object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Integer object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Integer buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Integer buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Integer.class, VALUE_KEY);
     }
   }
@@ -220,14 +220,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Long object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Long object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Long buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Long buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Long.class, VALUE_KEY);
     }
   }
@@ -247,14 +247,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Short object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Short object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Short buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public Short buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(Short.class, VALUE_KEY);
     }
   }
@@ -274,14 +274,14 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, String object) {
-      final MutableFudgeFieldContainer message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, String object) {
+      final MutableFudgeMsg message = context.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public String buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+    public String buildObject(FudgeDeserializationContext context, FudgeMsg message) {
       return message.getValue(String.class, VALUE_KEY);
     }
   }

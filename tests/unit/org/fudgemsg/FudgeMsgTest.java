@@ -41,7 +41,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void lookupByNameSingleValue() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     FudgeField field = null;
     List<FudgeField> fields = null;
     
@@ -78,7 +78,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void lookupByNameMultipleValues() {
-    MutableFudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    MutableFudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     FudgeField field = null;
     List<FudgeField> fields = null;
     
@@ -115,7 +115,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void primitiveExactQueriesNamesMatch() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     
     assertEquals(new Byte((byte)5), msg.getByte("byte"));
     assertEquals(new Byte((byte)5), msg.getByte("Byte"));
@@ -145,7 +145,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void primitiveExactQueriesNamesNoMatch() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     assertNotNull(msg.getShort("byte"));
     assertNotNull(msg.getInt("short"));
     assertNotNull(msg.getLong("int"));
@@ -158,7 +158,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void primitiveExactQueriesNoNames() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     
     assertNull(msg.getByte("foobar"));
     assertNull(msg.getShort("foobar"));
@@ -174,7 +174,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void asQueriesToLongNames() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     
     assertEquals(new Long((byte)5), msg.getLong("byte"));
     assertEquals(new Long((byte)5), msg.getLong("Byte"));
@@ -202,7 +202,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void asQueriesToLongNoNames() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     
     assertNull(msg.getByte("foobar"));
     assertNull(msg.getShort("foobar"));
@@ -219,7 +219,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void primitiveExactQueriesOrdinalsMatch() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
     
     assertEquals(new Byte((byte)5), msg.getByte((short)3));
     assertEquals(new Byte((byte)5), msg.getByte((short)4));
@@ -243,29 +243,26 @@ public class FudgeMsgTest {
     
     assertEquals("Kirk Wylie", msg.getString((short)15));
   }
-  
-  /**
-   * 
-   */
+
   @Test
   public void immutableFudgeMsgTest() {
-    MutableFudgeFieldContainer mutableMsg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
-    ImmutableFudgeFieldContainer msg = new ImmutableFudgeMsg (mutableMsg, s_fudgeContext);
-
-    assertEquals (null, mutableMsg.getString ("field not there"));
-    assertEquals (null, msg.getString ("field not there"));
+    MutableFudgeMsg mutableMsg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    ImmutableFudgeMsg msg = new ImmutableFudgeMsg(mutableMsg, s_fudgeContext);
     
-    mutableMsg.add ("field not there", "is now");
-    assertEquals ("is now", mutableMsg.getString ("field not there"));
-    assertEquals (null, msg.getString ("field not there"));
+    assertEquals(null, mutableMsg.getString("field not there"));
+    assertEquals(null, msg.getString("field not there"));
+    
+    mutableMsg.add("field not there", "is now");
+    assertEquals("is now", mutableMsg.getString("field not there"));
+    assertEquals(null, msg.getString("field not there"));
   }
-  
+
   /**
    * 
    */
   @Test
   public void mutableFudgeMsgTest () {
-    MutableFudgeFieldContainer msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    MutableFudgeMsg msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
     assertEquals (null, msg.getString ("foo"));
     assertEquals (null, msg.getString (999));
     msg.add ("foo", "bar1");
@@ -293,7 +290,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void primitiveExactQueriesOrdinalsNoMatch() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
     assertNotNull(msg.getShort((short)3));
     assertNotNull(msg.getInt((short)5));
     assertNotNull(msg.getLong((short)7));
@@ -306,7 +303,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void primitiveExactOrdinalsNoOrdinals() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
   
     assertNull(msg.getByte((short)100));
     assertNull(msg.getShort((short)100));
@@ -322,7 +319,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void asQueriesToLongOrdinals() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
     
     assertEquals(new Long((byte)5), msg.getLong((short)3));
     assertEquals(new Long((byte)5), msg.getLong((short)4));
@@ -350,7 +347,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void toByteArray() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     byte[] bytes = s_fudgeContext.toByteArray(msg);
     assertNotNull(bytes);
     assertTrue(bytes.length > 10);
@@ -361,7 +358,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void fixedLengthByteArrays() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllByteArrayLengths(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllByteArrayLengths(s_fudgeContext);
     assertSame(FudgeWireType.BYTE_ARRAY_4, msg.getByName("byte[4]").getType());
     assertSame(FudgeWireType.BYTE_ARRAY_8, msg.getByName("byte[8]").getType());
     assertSame(FudgeWireType.BYTE_ARRAY_16, msg.getByName("byte[16]").getType());
@@ -380,7 +377,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void iterable() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     int fieldCount = 0;
     for(@SuppressWarnings("unused") FudgeField field : msg) {
       fieldCount++;
@@ -393,7 +390,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void iterableContainer() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     int fieldCount = 0;
     for(@SuppressWarnings("unused") FudgeField field : msg) {
       fieldCount++;
@@ -406,10 +403,10 @@ public class FudgeMsgTest {
    */
   @Test
   public void getMessageMethodsFRJ11() {
-    FudgeFieldContainer msg = StandardFudgeMessages.createMessageWithSubMsgs(s_fudgeContext);
+    FudgeMsg msg = StandardFudgeMessages.createMessageWithSubMsgs(s_fudgeContext);
     assertNull(msg.getMessage(42));
     assertNull(msg.getMessage("No Such Field"));
-    assertTrue(msg.getMessage("sub1") instanceof FudgeFieldContainer);
+    assertTrue(msg.getMessage("sub1") instanceof FudgeMsg);
   }
   
   /**
@@ -417,7 +414,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void testIsEmpty () {
-    MutableFudgeFieldContainer msg = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg = s_fudgeContext.newMessage ();
     assertTrue (msg.isEmpty ());
     msg.add (null, null, "foo");
     assertFalse (msg.isEmpty ());
@@ -428,10 +425,10 @@ public class FudgeMsgTest {
    */
   @Test
   public void testEquals () {
-    MutableFudgeFieldContainer msg1 = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg1 = s_fudgeContext.newMessage ();
     msg1.add ("foo", 1, "hello world");
     msg1.add ("bar", 2, 42);
-    MutableFudgeFieldContainer msg2 = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg2 = s_fudgeContext.newMessage ();
     assertFalse (msg1.equals (msg2));
     assertFalse (msg2.equals (msg1));
     msg2.add ("foo", 1, "hello world");
@@ -440,8 +437,8 @@ public class FudgeMsgTest {
     msg2.add ("bar", 2, 42);
     assertTrue (msg1.equals (msg2));
     assertTrue (msg2.equals (msg1));
-    FudgeFieldContainer msg3 = new ImmutableFudgeMsg (msg2, s_fudgeContext);
-    FudgeFieldContainer msg4 = new ImmutableFudgeMsg (msg1, s_fudgeContext);
+    FudgeMsg msg3 = new ImmutableFudgeMsg (msg2, s_fudgeContext);
+    FudgeMsg msg4 = new ImmutableFudgeMsg (msg1, s_fudgeContext);
     assertTrue (msg3.equals (msg4));
     assertTrue (msg4.equals (msg3));
     assertFalse (msg1.equals (msg3));
@@ -455,7 +452,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void hasFieldByName() {
-    MutableFudgeFieldContainer msg1 = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg1 = s_fudgeContext.newMessage ();
     msg1.add("foo", 1, "hello world 1");
     msg1.add("bar", 2, 42);
     msg1.add("foo", 1, "hello world 2");
@@ -471,7 +468,7 @@ public class FudgeMsgTest {
    */
   @Test
   public void hasFieldByOrdinal() {
-    MutableFudgeFieldContainer msg1 = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg1 = s_fudgeContext.newMessage ();
     msg1.add("foo", 1, "hello world 1");
     msg1.add("bar", 2, 42);
     msg1.add("foo", 1, "hello world 2");

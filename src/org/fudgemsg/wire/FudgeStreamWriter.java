@@ -21,7 +21,7 @@ import java.io.Flushable;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
@@ -99,7 +99,7 @@ public interface FudgeStreamWriter extends Flushable, Closeable {
    * 
    * @param fields the fields to write.
    */
-  public void writeFields(FudgeFieldContainer fields);
+  public void writeFields(FudgeMsg fields);
 
   /**
    * Flushes any data from the internal buffers to the target stream and attempts to flush the underlying stream if appropriate.

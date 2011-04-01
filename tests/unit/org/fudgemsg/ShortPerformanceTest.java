@@ -188,7 +188,7 @@ public class ShortPerformanceTest {
   
   private static int fudgeCycle(final boolean useNames, final boolean useOrdinals) throws Exception {
     SmallFinancialTick tick = new SmallFinancialTick();
-    MutableFudgeFieldContainer msgIn = s_fudgeContext.newMessage();
+    MutableFudgeMsg msgIn = s_fudgeContext.newMessage();
     if(useNames && useOrdinals) {
       msgIn.add("ask", 1, tick.getAsk());
       msgIn.add("askVolume", 2, tick.getAskVolume());
@@ -210,7 +210,7 @@ public class ShortPerformanceTest {
     }
     byte[] data = s_fudgeContext.toByteArray(msgIn);
 
-    FudgeFieldContainer msg = s_fudgeContext.deserialize(data).getMessage ();
+    FudgeMsg msg = s_fudgeContext.deserialize(data).getMessage ();
     
     tick = new SmallFinancialTick();
     if(useOrdinals) {

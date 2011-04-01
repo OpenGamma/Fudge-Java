@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.taxon.ImmutableMapTaxonomyResolver;
@@ -65,7 +65,7 @@ public class FudgeXMLTest {
   @Test
   public void cycleXMLMessages() {
     System.out.println("cycleXMLMessages:");
-    final FudgeFieldContainer[] messages = createMessages();
+    final FudgeMsg[] messages = createMessages();
     for (int i = 0; i < messages.length; i++) {
       final CharArrayWriter caw = new CharArrayWriter();
       final FudgeMsgWriter fmw = new FudgeMsgWriter(new FudgeXMLStreamWriter(_fudgeContext, caw));
@@ -73,11 +73,11 @@ public class FudgeXMLTest {
       final CharArrayReader car = new CharArrayReader(caw.toCharArray());
       final FudgeMsgReader fmr = new FudgeMsgReader(new FudgeXMLStreamReader(_fudgeContext, car));
       // first is the no-taxonomy version
-      FudgeFieldContainer message = fmr.nextMessage();
+      FudgeMsg message = fmr.nextMessage();
       assertNotNull(message);
       assertAllFieldsMatch(messages[i], message, false);
       
-      FudgeFieldContainer nextMessage = fmr.nextMessage();
+      FudgeMsg nextMessage = fmr.nextMessage();
       assertNull(nextMessage);
     }
     
@@ -88,17 +88,17 @@ public class FudgeXMLTest {
       final CharArrayReader car = new CharArrayReader(caw.toCharArray());
       final FudgeMsgReader fmr = new FudgeMsgReader(new FudgeXMLStreamReader(_fudgeContext, car));
       // second is the taxonomy version
-      FudgeFieldContainer message = fmr.nextMessage ();
+      FudgeMsg message = fmr.nextMessage ();
       assertNotNull(message);
       assertAllFieldsMatch (messages[i], message, false);
       
-      FudgeFieldContainer nextMessage = fmr.nextMessage();
+      FudgeMsg nextMessage = fmr.nextMessage();
       assertNull(nextMessage);
     }
   }
  
-  private FudgeFieldContainer[] createMessages () {
-    return new FudgeFieldContainer[] {
+  private FudgeMsg[] createMessages () {
+    return new FudgeMsg[] {
         StandardFudgeMessages.createMessageAllNames(_fudgeContext),
         StandardFudgeMessages.createMessageAllOrdinals(_fudgeContext),
         StandardFudgeMessages.createMessageWithSubMsgs(_fudgeContext),

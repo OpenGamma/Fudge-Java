@@ -34,8 +34,8 @@ public final class StandardFudgeMessages {
    * @param context [documentation not available]
    * @return [documentation not available]
    */
-  public static MutableFudgeFieldContainer createMessageAllNames(FudgeContext context) {
-    MutableFudgeFieldContainer msg = context.newMessage();
+  public static MutableFudgeMsg createMessageAllNames(FudgeContext context) {
+    MutableFudgeMsg msg = context.newMessage();
     
     msg.add("boolean", Boolean.TRUE);
     msg.add("Boolean", new Boolean(false));
@@ -73,8 +73,8 @@ public final class StandardFudgeMessages {
    * @param context [documentation not available]
    * @return [documentation not available]
    */
-  public static MutableFudgeFieldContainer createMessageAllOrdinals(FudgeContext context) {
-    MutableFudgeFieldContainer msg = context.newMessage();
+  public static MutableFudgeMsg createMessageAllOrdinals(FudgeContext context) {
+    MutableFudgeMsg msg = context.newMessage();
     
     msg.add(1, Boolean.TRUE);
     msg.add(2, new Boolean(false));
@@ -107,8 +107,8 @@ public final class StandardFudgeMessages {
    * @param context [documentation not available]
    * @return [documentation not available]
    */
-  public static MutableFudgeFieldContainer createMessageNoNamesNoOrdinals(FudgeContext context) {
-    MutableFudgeFieldContainer msg = context.newMessage();
+  public static MutableFudgeMsg createMessageNoNamesNoOrdinals(FudgeContext context) {
+    MutableFudgeMsg msg = context.newMessage();
     
     msg.add(FudgeMsgField.of(FudgeWireType.BOOLEAN, Boolean.TRUE));
     msg.add(FudgeMsgField.of(FudgeWireType.BOOLEAN, new Boolean(false)));
@@ -146,8 +146,8 @@ public final class StandardFudgeMessages {
    * @param context [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer createMessageAllByteArrayLengths(FudgeContext context) {
-    MutableFudgeFieldContainer msg = context.newMessage();
+  public static FudgeMsg createMessageAllByteArrayLengths(FudgeContext context) {
+    MutableFudgeMsg msg = context.newMessage();
     msg.add("byte[4]", new byte[4]);
     msg.add("byte[8]", new byte[8]);
     msg.add("byte[16]", new byte[16]);
@@ -168,12 +168,12 @@ public final class StandardFudgeMessages {
    * @param context [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer createMessageWithSubMsgs(FudgeContext context) {
-    MutableFudgeFieldContainer msg = context.newMessage();
-    MutableFudgeFieldContainer sub1 = context.newMessage();
+  public static FudgeMsg createMessageWithSubMsgs(FudgeContext context) {
+    MutableFudgeMsg msg = context.newMessage();
+    MutableFudgeMsg sub1 = context.newMessage();
     sub1.add("bibble", "fibble");
     sub1.add(827, "Blibble");
-    MutableFudgeFieldContainer sub2 = context.newMessage();
+    MutableFudgeMsg sub2 = context.newMessage();
     sub2.add("bibble9", 9837438);
     sub2.add(828, 82.77f);
     msg.add("sub1", sub1);

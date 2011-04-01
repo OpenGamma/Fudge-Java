@@ -21,10 +21,11 @@ package org.fudgemsg;
  * The message consists of a list of {@link FudgeField Fudge fields}.
  * This class holds the entire message in memory.
  * <p>
- * Applications are recommended to store and manipulate a {@link ImmutableFudgeFieldContainer}
- * instance rather than this class for future flexibility.
+ * Applications are recommended to store and manipulate a {@link FudgeMsg}
+ * instance or a {@link MutableFudgeMsg} rather than this class
+ * for future flexibility.
  * <p>
- * This class can be created as a copy of an existing {@link FudgeFieldContainer}.
+ * This class can be created as a copy of an existing {@link FudgeMsg}.
  * For efficiency, the reference to a {@link FudgeContext} is kept and the context is not copied.
  * In that scenario, changes made to the context will be made visible through this class, for
  * example the behavior of {@link #getFieldValue}. If this is not desired, create a
@@ -34,10 +35,10 @@ package org.fudgemsg;
  * <p>
  * This class is intended to be immutable but not all contents will necessarily be immutable.
  */
-public class ImmutableFudgeMsg extends AbstractFudgeMsg implements ImmutableFudgeFieldContainer {
+public class ImmutableFudgeMsg extends AbstractFudgeMsg {
 
   /**
-   * Creates a new instance by copying another message.
+   * Creates a new instance by copying fields from another message.
    * <p>
    * The new instance will share the same Fudge context which may be undesirable as
    * that context may be mutable.
@@ -49,13 +50,13 @@ public class ImmutableFudgeMsg extends AbstractFudgeMsg implements ImmutableFudg
   }
 
   /**
-   * Creates a new {@link ImmutableFudgeMsg} by copying fields from another {@link FudgeFieldContainer} using
-   * the specified {@link FudgeContext} for type resolution. 
+   * Creates a new message by copying fields from another message using
+   * the specified context for type resolution. 
    * 
    * @param fields  the message to copy, not null
    * @param fudgeContext  the context to use for type resolution and other services, not null
    */
-  public ImmutableFudgeMsg(final FudgeFieldContainer fields, final FudgeContext fudgeContext) {
+  public ImmutableFudgeMsg(final FudgeMsg fields, final FudgeContext fudgeContext) {
     super(fields, fudgeContext);
   }
 

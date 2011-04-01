@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 
 import com.mongodb.DBObject;
@@ -45,14 +45,14 @@ import com.mongodb.DBObject;
  * <ul>
  *   <li>If the object has a suitable {@code HasFudgeBuilder} annotation, that will be used
  *   <li>If the object has a public {@code fromFudgeMsg} method, that will be used
- *   <li>If the object has a public constructor that takes a {@link FudgeFieldContainer}, that will be used
+ *   <li>If the object has a public constructor that takes a {@link FudgeMsg}, that will be used
  *   <li>If the object is an array or enum, that will be used
  *   <li>Any registered dynamic builders are used
  *   <li>Otherwise the {@link JavaBeanBuilder} will be used
  * </ul>
  * <p>
  * Dynamic builders are pre-registered for {@link Map}, {@link List}, {@link Set},
- * {@link FudgeFieldContainer} and {@link DBObject}.
+ * {@link FudgeMsg} and {@link DBObject}.
  * <p>
  * This class is mutable but thread-safe via concurrent collections.
  */ 

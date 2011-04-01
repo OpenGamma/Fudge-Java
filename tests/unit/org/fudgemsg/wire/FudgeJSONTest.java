@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.taxon.ImmutableMapTaxonomyResolver;
@@ -57,8 +57,8 @@ public class FudgeJSONTest {
     _fudgeContext.setTaxonomyResolver (new ImmutableMapTaxonomyResolver (tr));
   }
   
-  private FudgeFieldContainer[] createMessages () {
-    return new FudgeFieldContainer[] {
+  private FudgeMsg[] createMessages () {
+    return new FudgeMsg[] {
         StandardFudgeMessages.createMessageAllNames (_fudgeContext),
         StandardFudgeMessages.createMessageAllOrdinals (_fudgeContext),
         StandardFudgeMessages.createMessageWithSubMsgs (_fudgeContext),
@@ -72,7 +72,7 @@ public class FudgeJSONTest {
   public void writeJSONMessages () {
     System.out.println ("writeJSONMessages:");
     final FudgeMsgWriter fmw = new FudgeMsgWriter (new FudgeJSONStreamWriter (_fudgeContext, new PrintWriter (System.out)));
-    final FudgeFieldContainer[] messages = createMessages ();
+    final FudgeMsg[] messages = createMessages ();
     for (int i = 0; i < messages.length; i++) {
       fmw.writeMessage (messages[i], 0); // no taxonomy
       System.out.println ();
@@ -89,7 +89,7 @@ public class FudgeJSONTest {
     System.out.println ("cycleJSONMessages:");
     final CharArrayWriter caw = new CharArrayWriter ();
     final FudgeMsgWriter fmw = new FudgeMsgWriter (new FudgeJSONStreamWriter (_fudgeContext, caw));
-    final FudgeFieldContainer[] messages = createMessages ();
+    final FudgeMsg[] messages = createMessages ();
     for (int i = 0; i < messages.length; i++) {
       fmw.writeMessage (messages[i], 0);
       fmw.writeMessage (messages[i], 1);
@@ -98,7 +98,7 @@ public class FudgeJSONTest {
     final FudgeMsgReader fmr = new FudgeMsgReader (new FudgeJSONStreamReader (_fudgeContext, car));
     for (int i = 0; i < messages.length; i++) {
       // first is the no-taxonomy version
-      FudgeFieldContainer message = fmr.nextMessage ();
+      FudgeMsg message = fmr.nextMessage ();
       assertNotNull (message);
       System.out.println (message);
 //      assertAllFieldsMatch (messages[i], message, false);

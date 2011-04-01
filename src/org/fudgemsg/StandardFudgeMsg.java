@@ -28,13 +28,13 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * The message consists of a list of {@link FudgeField Fudge fields}.
  * This class holds the entire message in memory.
  * <p>
- * Applications are recommended to store and manipulate a {@link FudgeFieldContainer}
- * instance or a {@link MutableFudgeFieldContainer} rather than this class
+ * Applications are recommended to store and manipulate a {@link FudgeMsg}
+ * instance or a {@link MutableFudgeMsg} rather than this class
  * for future flexibility.
  * <p>
  * This class is mutable and not thread-safe.
  */
-public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeFieldContainer {
+public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMsg {
 
   /**
    * Constructor taking a Fudge context.
@@ -54,7 +54,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeFi
    * @param fields  the initial set of fields, not null
    * @param fudgeContext  the context to use for type resolution and other services, not null
    */
-  protected StandardFudgeMsg(final FudgeFieldContainer fields, final FudgeContext fudgeContext) {
+  protected StandardFudgeMsg(final FudgeMsg fields, final FudgeContext fudgeContext) {
     super(fields, fudgeContext);
   }
 
@@ -183,8 +183,8 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeFi
       if (field.getValue() instanceof StandardFudgeMsg) {
         StandardFudgeMsg subMsg = (StandardFudgeMsg) field.getValue();
         subMsg.setNamesFromTaxonomy(taxonomy);
-      } else if (field.getValue() instanceof FudgeFieldContainer) {
-        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeFieldContainer) field.getValue(), getFudgeContext());
+      } else if (field.getValue() instanceof FudgeMsg) {
+        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeMsg) field.getValue(), getFudgeContext());
         subMsg.setNamesFromTaxonomy(taxonomy);
         field = FudgeMsgField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
         getFields().set(i, field);

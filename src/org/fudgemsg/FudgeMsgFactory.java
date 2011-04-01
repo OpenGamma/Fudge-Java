@@ -28,7 +28,7 @@ public interface FudgeMsgFactory {
    * 
    * @return the empty message container, not null
    */
-  public MutableFudgeFieldContainer newMessage();
+  public MutableFudgeMsg newMessage();
 
   /**
    * Creates a new message initially populated with the supplied message.
@@ -36,6 +36,6 @@ public interface FudgeMsgFactory {
    * @param fromMessage  the source message to copy fields from, not null
    * @return the new message container, not null
    */
-  public MutableFudgeFieldContainer newMessage(FudgeFieldContainer fromMessage);
+  public MutableFudgeMsg newMessage(FudgeMsg fromMessage);
 
 }

@@ -16,7 +16,7 @@
 
 package org.fudgemsg.mapping;
 
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 
 /**
  * Defines how to convert a Fudge message to an object.
@@ -40,6 +40,6 @@ public interface FudgeObjectBuilder<T> {
    * @param message  the Fudge message to convert, not null
    * @return the created object, not null
    */
-  T buildObject(FudgeDeserializationContext context, FudgeFieldContainer message);
+  T buildObject(FudgeDeserializationContext context, FudgeMsg message);
 
 }

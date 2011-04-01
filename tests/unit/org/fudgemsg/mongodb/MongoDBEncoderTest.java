@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.junit.Test;
 
 import com.mongodb.DBObject;
@@ -38,10 +38,10 @@ public class MongoDBEncoderTest {
    */
   @Test
   public void subMsgEncoding() {
-    MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+    MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     msg.add("val1", 293836);
     msg.add("val2", "Kirk Wylie");
-    MutableFudgeFieldContainer subMsg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+    MutableFudgeMsg subMsg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     subMsg.add("val1", "MongoDB");
     msg.add("val3", subMsg);
     
@@ -61,7 +61,7 @@ public class MongoDBEncoderTest {
   @SuppressWarnings("rawtypes")
   @Test
   public void repeatedValueEncoding() {
-    MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
+    MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage();
     msg.add("val1", 293836);
     msg.add("val1", "Kirk Wylie");
     

@@ -19,8 +19,8 @@ package org.fudgemsg.mapping;
 import java.util.Iterator;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * Builder wrapper for objects that are already Fudge messages.
@@ -30,27 +30,27 @@ import org.fudgemsg.MutableFudgeFieldContainer;
  * <p>
  * This builder is immutable and thread safe.
  */
-/* package */class FudgeFieldContainerBuilder implements FudgeBuilder<FudgeFieldContainer> {
+/* package */class FudgeFieldContainerBuilder implements FudgeBuilder<FudgeMsg> {
 
   /**
    * Singleton instance.
    */
-  /* package */static final FudgeBuilder<FudgeFieldContainer> INSTANCE = new FudgeFieldContainerBuilder();
+  /* package */static final FudgeBuilder<FudgeMsg> INSTANCE = new FudgeFieldContainerBuilder();
 
   private FudgeFieldContainerBuilder() {
   }
 
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, FudgeFieldContainer fields) {
-    final MutableFudgeFieldContainer msg = context.newMessage(fields);
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, FudgeMsg fields) {
+    final MutableFudgeMsg msg = context.newMessage(fields);
     // add the interface name
-    msg.add(null, FudgeSerializationContext.TYPES_HEADER_ORDINAL, FudgeFieldContainer.class.getName());
+    msg.add(null, FudgeSerializationContext.TYPES_HEADER_ORDINAL, FudgeMsg.class.getName());
     return msg;
   }
 
   @Override
-  public FudgeFieldContainer buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
-    final MutableFudgeFieldContainer msg = context.getFudgeContext().newMessage(message);
+  public FudgeMsg buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    final MutableFudgeMsg msg = context.getFudgeContext().newMessage(message);
     // remove the class name(s) if added
     final Integer ordinal = FudgeSerializationContext.TYPES_HEADER_ORDINAL;
     final Iterator<FudgeField> fields = msg.iterator();

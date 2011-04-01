@@ -18,7 +18,7 @@ package org.fudgemsg.wire.types;
 import java.io.DataInput;
 import java.io.DataOutput;
 
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeEncoded;
@@ -39,13 +39,13 @@ class SubMessageWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private SubMessageWireType() {
-    super(FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, FudgeFieldContainer.class);
+    super(FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, FudgeMsg.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
   public int getSize(Object value, FudgeTaxonomy taxonomy) {
-    FudgeFieldContainer data = (FudgeFieldContainer) value;
+    FudgeMsg data = (FudgeMsg) value;
     if (value instanceof FudgeEncoded) {
       final FudgeEncoded fudgeEncoded = (FudgeEncoded) value;
       final byte[] encoded = fudgeEncoded.getFudgeEncoded();
@@ -57,7 +57,7 @@ class SubMessageWireType extends FudgeWireType {
   }
 
   @Override
-  public FudgeFieldContainer readValue(DataInput input, int dataSize) {
+  public FudgeMsg readValue(DataInput input, int dataSize) {
     throw new UnsupportedOperationException("Sub-messages can only be decoded from FudgeStreamReader");
   }
 

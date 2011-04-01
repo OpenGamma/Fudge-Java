@@ -16,7 +16,7 @@
 package org.fudgemsg.wire;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsgEnvelope;
 import org.fudgemsg.taxon.FudgeTaxonomy;
@@ -167,7 +167,7 @@ public class FudgeSize {
    * @param fields  the fields to calculate a size for, not null
    * @return the number of bytes
    */
-  public static int calculateMessageSize(final FudgeTaxonomy taxonomy, final FudgeFieldContainer fields) {
+  public static int calculateMessageSize(final FudgeTaxonomy taxonomy, final FudgeMsg fields) {
     if (fields instanceof FudgeEncoded) {
       final FudgeEncoded fudgeEncoded = (FudgeEncoded) fields;
       final byte[] encoded = fudgeEncoded.getFudgeEncoded();
@@ -188,7 +188,7 @@ public class FudgeSize {
    * @param fields  the fields to calculate a size for, not null
    * @return the number of bytes
    */
-  public static int calculateMessageSize(final FudgeFieldContainer fields) {
+  public static int calculateMessageSize(final FudgeMsg fields) {
     return calculateMessageSize(null, fields);
   }
 
@@ -200,7 +200,7 @@ public class FudgeSize {
    * @param fields  the fields to calculate a size for, not null
    * @return the number of bytes
    */
-  public static int calculateMessageEnvelopeSize(final FudgeTaxonomy taxonomy, final FudgeFieldContainer fields) {
+  public static int calculateMessageEnvelopeSize(final FudgeTaxonomy taxonomy, final FudgeMsg fields) {
     return 8 + calculateMessageSize(taxonomy, fields);
   }
 
@@ -210,7 +210,7 @@ public class FudgeSize {
    * @param fields  the fields to calculate a size for, not null
    * @return the number of bytes
    */
-  public static int calculateMessageEnvelopeSize(final FudgeFieldContainer fields) {
+  public static int calculateMessageEnvelopeSize(final FudgeMsg fields) {
     return 8 + calculateMessageSize(null, fields);
   }
 

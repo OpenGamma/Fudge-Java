@@ -19,8 +19,8 @@ package org.fudgemsg.mapping;
 import java.lang.reflect.Array;
 import java.util.List;
 
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * Builder for Java arrays, stored as a sub-message.
@@ -44,8 +44,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
   }
 
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Object[] array) {
-    final MutableFudgeFieldContainer msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Object[] array) {
+    final MutableFudgeMsg msg = context.newMessage();
     for (Object entry : array) {
       context.objectToFudgeMsg(msg, null, null, entry);
     }
@@ -54,7 +54,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
 
   @SuppressWarnings("unchecked")
   @Override
-  public E[] buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+  public E[] buildObject(FudgeDeserializationContext context, FudgeMsg message) {
     final List<?> list = ListBuilder.INSTANCE.buildObject(context, message);
     return list.toArray((E[]) Array.newInstance(_clazz, list.size()));
   }

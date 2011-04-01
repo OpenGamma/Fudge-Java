@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * Builder for any object that contains a {@code toFudgeMsg} method.
@@ -55,7 +55,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
   /* package */static <T> ToFudgeMsgMessageBuilder<T> create(final Class<T> clazz) {
     try {
       return new AddFields<T>(clazz.getMethod("toFudgeMsg", FudgeSerializationContext.class,
-          MutableFudgeFieldContainer.class), false);
+          MutableFudgeMsg.class), false);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
@@ -63,7 +63,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
     try {
       return new AddFields<T>(
-          clazz.getMethod("toFudgeMsg", FudgeMsgFactory.class, MutableFudgeFieldContainer.class), false);
+          clazz.getMethod("toFudgeMsg", FudgeMsgFactory.class, MutableFudgeMsg.class), false);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
@@ -84,7 +84,7 @@ import org.fudgemsg.MutableFudgeFieldContainer;
       // ignore
     }
     try {
-      return new AddFields<T>(clazz.getMethod("toFudgeMsg", FudgeContext.class, MutableFudgeFieldContainer.class), true);
+      return new AddFields<T>(clazz.getMethod("toFudgeMsg", FudgeContext.class, MutableFudgeMsg.class), true);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
@@ -140,8 +140,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, T object) {
-      return (MutableFudgeFieldContainer) invoke(object, _passContext ? context.getFudgeContext() : context);
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object) {
+      return (MutableFudgeMsg) invoke(object, _passContext ? context.getFudgeContext() : context);
     }
   }
 
@@ -158,8 +158,8 @@ import org.fudgemsg.MutableFudgeFieldContainer;
     }
 
     @Override
-    public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, T object) {
-      final MutableFudgeFieldContainer msg = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object) {
+      final MutableFudgeMsg msg = context.newMessage();
       invoke(object, _passContext ? context.getFudgeContext() : context, msg);
       return msg;
     }

@@ -17,7 +17,7 @@
 package org.fudgemsg.mapping;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.wire.FudgeMsgReader;
 
 /**
@@ -101,7 +101,7 @@ public class FudgeObjectReader {
    * @return the converted Java object
    */
   public Object read() {
-    FudgeFieldContainer message = getMessageReader().nextMessage();
+    FudgeMsg message = getMessageReader().nextMessage();
     getDeserialisationContext().reset();
     return getDeserialisationContext().fudgeMsgToObject(message);
   }
@@ -116,7 +116,7 @@ public class FudgeObjectReader {
    * @return the converted Java object
    */
   public <T> T read(final Class<T> clazz) {
-    FudgeFieldContainer message = getMessageReader().nextMessage();
+    FudgeMsg message = getMessageReader().nextMessage();
     getDeserialisationContext().reset();
     return getDeserialisationContext().fudgeMsgToObject(clazz, message);
   }

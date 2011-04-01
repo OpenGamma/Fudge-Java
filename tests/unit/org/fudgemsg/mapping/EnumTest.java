@@ -22,10 +22,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.FudgeMsgFormatter;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.junit.Test;
 
 /**
@@ -34,12 +34,12 @@ import org.junit.Test;
 public class EnumTest {
   
   private Object cycleObject (final Object o) {
-    final FudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (o).getMessage ();
+    final FudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (o).getMessage ();
     FudgeMsgFormatter.outputToSystemOut (msg);
     return FudgeContext.GLOBAL_DEFAULT.fromFudgeMsg (msg);
   }
   
-  private FudgeFieldContainer cycleMessage (final FudgeFieldContainer msg) {
+  private FudgeMsg cycleMessage (final FudgeMsg msg) {
     return FudgeContext.GLOBAL_DEFAULT.deserialize (FudgeContext.GLOBAL_DEFAULT.toByteArray (msg)).getMessage ();
   }
   
@@ -63,7 +63,7 @@ public class EnumTest {
      * @param msg [documentation not available] 
      * @return [documentation not available]
      */
-    public static EnumWithMethods fromFudgeMsg (final FudgeFieldContainer msg) {
+    public static EnumWithMethods fromFudgeMsg (final FudgeMsg msg) {
       s_fromFudgeMessage = true;
       return valueOf (EnumWithMethods.class, msg.getString (1));
     }
@@ -72,9 +72,9 @@ public class EnumTest {
      * @param messageFactory [documentation not available]
      * @return [documentation not available]
      */
-    public MutableFudgeFieldContainer toFudgeMsg (final FudgeMsgFactory messageFactory) {
+    public MutableFudgeMsg toFudgeMsg (final FudgeMsgFactory messageFactory) {
       s_toFudgeMessage = true;
-      final MutableFudgeFieldContainer msg = messageFactory.newMessage ();
+      final MutableFudgeMsg msg = messageFactory.newMessage ();
       msg.add (null, 0, EnumWithMethods.class.getName ());
       msg.add (null, 1, name ());
       return msg;
@@ -125,9 +125,9 @@ public class EnumTest {
    */
   @Test
   public void testEnumViaDictionary () {
-    final MutableFudgeFieldContainer msg = FudgeContext.GLOBAL_DEFAULT.newMessage ();
+    final MutableFudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.newMessage ();
     msg.add (null, 1, EnumWithoutMethods.PUT.name ());
-    final FudgeFieldContainer msg2 = cycleMessage (msg);
+    final FudgeMsg msg2 = cycleMessage (msg);
     final FudgeField field = msg2.getByOrdinal (1);
     assertNotNull (field);
     assertEquals (EnumWithoutMethods.PUT.name (), field.getValue ());

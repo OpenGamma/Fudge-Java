@@ -30,14 +30,14 @@ public class FudgeMsgFormatterTest {
   
   private static final FudgeContext s_fudgeContext = new FudgeContext();
   
-  private static FudgeFieldContainer allNames () {
-    MutableFudgeFieldContainer msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
+  private static FudgeMsg allNames () {
+    MutableFudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     msg.add("Sub Message", 9999, StandardFudgeMessages.createMessageAllNames(s_fudgeContext));
     return msg;
   }
   
-  private static FudgeFieldContainer allOrdinals () {
-    MutableFudgeFieldContainer msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
+  private static FudgeMsg allOrdinals () {
+    MutableFudgeMsg msg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
     msg.add("Sub Message", 9999, StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext));
     return msg;
   }

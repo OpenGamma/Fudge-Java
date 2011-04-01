@@ -8,7 +8,7 @@
  * The core API for working with Fudge encoded data.
  * <p>
  * In general, most applications will start with an instance of {@link org.fudgemsg.FudgeContext},
- * and use that to read, write, and persist instances of {@link org.fudgemsg.FudgeFieldContainer}
+ * and use that to read, write, and persist instances of {@link org.fudgemsg.FudgeMsg}
  * using the reader and writer classes.
  * <p>
  * Applications requiring serialization of more complex Java objects and automated support for

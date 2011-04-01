@@ -17,14 +17,14 @@
 package org.fudgemsg.wire;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgEnvelope;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
- * A reader for returning whole Fudge messages ({@link FudgeFieldContainer} instances) from an underlying {@link FudgeStreamReader} instance.
+ * A reader for returning whole Fudge messages ({@link FudgeMsg} instances) from an underlying {@link FudgeStreamReader} instance.
  * This implementation constructs the whole Fudge message in memory before returning to the caller. This is provided for convenience - greater
  * runtime efficiency may be possible by working directly with the {@link FudgeStreamReader} to process stream elements as they are decoded.
  */
@@ -37,7 +37,7 @@ public class FudgeMsgReader {
 
   /**
    * An envelope buffer for reading in the current message. {@link #hasNext} will read the envelope header, and create this object
-   * with a {@link MutableFudgeFieldContainer} attached to it. The full call to {@link nextMessage} or {@link #nextMessageEnvelope} will
+   * with a {@link MutableFudgeMsg} attached to it. The full call to {@link nextMessage} or {@link #nextMessageEnvelope} will
    * process the message fields.
    */
   private FudgeMsgEnvelope _currentEnvelope = null;
@@ -128,7 +128,7 @@ public class FudgeMsgReader {
    * 
    * @return the message read without the envelope
    */
-  public FudgeFieldContainer nextMessage() {
+  public FudgeMsg nextMessage() {
     final FudgeMsgEnvelope msgEnv = nextMessageEnvelope();
     if (msgEnv == null)
       return null;
@@ -150,7 +150,7 @@ public class FudgeMsgReader {
       msgEnv = _currentEnvelope;
       _currentEnvelope = null;
     }
-    processFields((MutableFudgeFieldContainer) msgEnv.getMessage());
+    processFields((MutableFudgeMsg) msgEnv.getMessage());
     return msgEnv;
   }
 
@@ -170,7 +170,7 @@ public class FudgeMsgReader {
     if (element != FudgeStreamElement.MESSAGE_ENVELOPE) {
       throw new IllegalArgumentException("First element in encoding stream wasn't a message element.");
     }
-    MutableFudgeFieldContainer msg = getFudgeContext().newMessage();
+    MutableFudgeMsg msg = getFudgeContext().newMessage();
     FudgeMsgEnvelope envelope = new FudgeMsgEnvelope(msg, getStreamReader().getSchemaVersion(), getStreamReader()
         .getProcessingDirectives());
     return envelope;
@@ -181,7 +181,7 @@ public class FudgeMsgReader {
    * 
    * @param msg container to add fields read to
    */
-  protected void processFields(MutableFudgeFieldContainer msg) {
+  protected void processFields(MutableFudgeMsg msg) {
     final FudgeStreamReader reader = getStreamReader();
     while (reader.hasNext()) {
       FudgeStreamElement element = reader.next();
@@ -200,7 +200,7 @@ public class FudgeMsgReader {
               setLazyReads(false);
             }
           }
-          final MutableFudgeFieldContainer subMsg = getFudgeContext().newMessage();
+          final MutableFudgeMsg subMsg = getFudgeContext().newMessage();
           msg.add(reader.getFieldName(), reader.getFieldOrdinal(), FudgeWireType.SUB_MESSAGE, subMsg);
           processFields(subMsg);
           break;

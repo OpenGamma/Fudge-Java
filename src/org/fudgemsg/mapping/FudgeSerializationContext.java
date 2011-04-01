@@ -17,11 +17,11 @@
 package org.fudgemsg.mapping;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsgFactory;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
@@ -92,12 +92,12 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer newMessage() {
+  public MutableFudgeMsg newMessage() {
     return _fudgeContext.newMessage();
   }
 
   @Override
-  public MutableFudgeFieldContainer newMessage(final FudgeFieldContainer fromMessage) {
+  public MutableFudgeMsg newMessage(final FudgeMsg fromMessage) {
     return _fudgeContext.newMessage(fromMessage);
   }
 
@@ -113,7 +113,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param object  the value to add, null ignored
    */
   public void objectToFudgeMsg(
-      final MutableFudgeFieldContainer message, final String name, final Integer ordinal, final Object object) {
+      final MutableFudgeMsg message, final String name, final Integer ordinal, final Object object) {
     if (object == null) {
       return;
     }
@@ -141,7 +141,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param object  the value to add, null ignored
    */
   public void objectToFudgeMsgWithClassHeaders(
-      final MutableFudgeFieldContainer message, final String name, final Integer ordinal, final Object object) {
+      final MutableFudgeMsg message, final String name, final Integer ordinal, final Object object) {
     objectToFudgeMsgWithClassHeaders(message, name, ordinal, object, Object.class);
   }
 
@@ -162,7 +162,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param receiverTarget  the Java class the receiver will expect, not null
    */
   public void objectToFudgeMsgWithClassHeaders(
-      final MutableFudgeFieldContainer message, final String name,
+      final MutableFudgeMsg message, final String name,
       final Integer ordinal, final Object object, final Class<?> receiverTarget) {
     if (object == null) {
       return;
@@ -174,7 +174,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
       message.add(name, ordinal, fieldType, object);
     } else {
       // look up a custom or default builder and embed as sub-message
-      final MutableFudgeFieldContainer submsg = objectToFudgeMsg(object);
+      final MutableFudgeMsg submsg = objectToFudgeMsg(object);
       if (!getFudgeContext().getObjectDictionary().isDefaultObject(clazz)) {
         if (submsg.getByOrdinal(TYPES_HEADER_ORDINAL) == null) {
           addClassHeader(submsg, clazz, receiverTarget);
@@ -195,7 +195,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @return the Fudge message created, not null
    */
   @SuppressWarnings("unchecked")
-  public MutableFudgeFieldContainer objectToFudgeMsg(final Object object) {
+  public MutableFudgeMsg objectToFudgeMsg(final Object object) {
     if (object == null) {
       throw new NullPointerException("Object cannot be null");
     }
@@ -220,7 +220,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param clazz  the Java class to add type data for, not null
    * @return the modified message, for method chaining, not null
    */
-  public static MutableFudgeFieldContainer addClassHeader(final MutableFudgeFieldContainer message, Class<?> clazz) {
+  public static MutableFudgeMsg addClassHeader(final MutableFudgeMsg message, Class<?> clazz) {
     while ((clazz != null) && (clazz != Object.class)) {
       message.add(null, TYPES_HEADER_ORDINAL, FudgeWireType.STRING, clazz.getName());
       clazz = clazz.getSuperclass();
@@ -234,15 +234,15 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * The preferred class name is written first, followed by subsequent super-classes
    * that may be acceptable. It is assumed that the deserializer will already know the
    * target class by other means, so the message payload ends up being smaller
-   * than with {@link #addClassHeader(MutableFudgeFieldContainer,Class)}.
+   * than with {@link #addClassHeader(MutableFudgeMsg,Class)}.
    * 
    * @param message  the message to add the fields to, not null
    * @param clazz  the Java class to add type data for, not null
    * @param receiverTarget  the Java class the receiver will expect, not null
    * @return the modified message, for method chaining, not null
    */
-  public static MutableFudgeFieldContainer addClassHeader(
-      final MutableFudgeFieldContainer message, Class<?> clazz, Class<?> receiverTarget) {
+  public static MutableFudgeMsg addClassHeader(
+      final MutableFudgeMsg message, Class<?> clazz, Class<?> receiverTarget) {
     while ((clazz != null) && receiverTarget.isAssignableFrom(clazz) && (receiverTarget != clazz)) {
       message.add(null, TYPES_HEADER_ORDINAL, FudgeWireType.STRING, clazz.getName());
       clazz = clazz.getSuperclass();

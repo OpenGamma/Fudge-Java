@@ -17,7 +17,7 @@
 package org.fudgemsg.mapping;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.wire.FudgeMsgWriter;
 
 /**
@@ -92,7 +92,7 @@ public class FudgeObjectWriter {
    */
   public <T> void write(final T obj) {
     getSerialisationContext().reset();
-    FudgeFieldContainer message;
+    FudgeMsg message;
     if (obj == null) {
       // write an empty message
       message = getSerialisationContext().newMessage();

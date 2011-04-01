@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.UnknownFudgeFieldValue;
 
 /**
@@ -38,7 +38,7 @@ public class FudgeUtils {
    * @param expectedMsg [documentation not available]
    * @param actualMsg [documentation not available]
    */
-  public static void assertAllFieldsMatch(FudgeFieldContainer expectedMsg, FudgeFieldContainer actualMsg) {
+  public static void assertAllFieldsMatch(FudgeMsg expectedMsg, FudgeMsg actualMsg) {
     assertAllFieldsMatch(expectedMsg, actualMsg, true);
   }
 
@@ -47,7 +47,7 @@ public class FudgeUtils {
    * @param actualMsg [documentation not available]
    * @param fieldOrderMatters [documentation not available]
    */
-  public static void assertAllFieldsMatch(FudgeFieldContainer expectedMsg, FudgeFieldContainer actualMsg,
+  public static void assertAllFieldsMatch(FudgeMsg expectedMsg, FudgeMsg actualMsg,
       boolean fieldOrderMatters) {
     List<FudgeField> expectedFields = expectedMsg.getAllFields();
     List<FudgeField> actualFields = actualMsg.getAllFields();
@@ -79,9 +79,9 @@ public class FudgeUtils {
         } else if (expectedField.getValue() instanceof double[]) {
           FudgeUtils.assertArraysMatch((double[]) expectedField.getValue(), (double[]) actualField.getValue());
         }
-      } else if (expectedField.getValue() instanceof FudgeFieldContainer) {
-        assertTrue(actualField.getValue() instanceof FudgeFieldContainer);
-        assertAllFieldsMatch((FudgeFieldContainer) expectedField.getValue(), (FudgeFieldContainer) actualField.getValue());
+      } else if (expectedField.getValue() instanceof FudgeMsg) {
+        assertTrue(actualField.getValue() instanceof FudgeMsg);
+        assertAllFieldsMatch((FudgeMsg) expectedField.getValue(), (FudgeMsg) actualField.getValue());
       } else if (expectedField.getValue() instanceof UnknownFudgeFieldValue) {
         assertTrue(actualField.getValue() instanceof UnknownFudgeFieldValue);
         UnknownFudgeFieldValue expectedValue = (UnknownFudgeFieldValue) expectedField.getValue();

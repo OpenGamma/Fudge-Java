@@ -19,11 +19,11 @@ package org.fudgemsg.wire;
 import java.io.Flushable;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgEnvelope;
 
 /**
- * A writer for passing Fudge messages ({@link FudgeFieldContainer} instances) to an underlying {@link FudgeStreamWriter} instance. This implementation
+ * A writer for passing Fudge messages ({@link FudgeMsg} instances) to an underlying {@link FudgeStreamWriter} instance. This implementation
  * assumes that the whole message (or envelope) is available to the caller before writing starts. This is provided for convenience - greater runtime
  * efficiency may be possible by working directly with a {@link FudgeStreamWriter} to emit Fudge stream elements as they are generated.
  */
@@ -175,7 +175,7 @@ public class FudgeMsgWriter implements Flushable {
    * @param version schema version
    * @param processingDirectives processing directive flags
    */
-  public void writeMessage (final FudgeFieldContainer message, final int taxonomyId, final int version, final int processingDirectives) {
+  public void writeMessage (final FudgeMsg message, final int taxonomyId, final int version, final int processingDirectives) {
     writeMessageEnvelope (new FudgeMsgEnvelope (message, version, processingDirectives), taxonomyId);
   }
   
@@ -185,7 +185,7 @@ public class FudgeMsgWriter implements Flushable {
    * @param message message to write
    * @param taxonomyId identifier of the taxonomy to use. If the taxonomy is recognized by the {@link FudgeContext} it will be used to reduce field names to ordinals where possible.
    */ 
-  public void writeMessage (final FudgeFieldContainer message, final int taxonomyId) {
+  public void writeMessage (final FudgeMsg message, final int taxonomyId) {
     writeMessage (message, taxonomyId, getDefaultMessageVersion (), getDefaultMessageProcessingDirectives ());
   }
   
@@ -195,7 +195,7 @@ public class FudgeMsgWriter implements Flushable {
    * @param message message to write
    * @throws NullPointerException if the default taxonomy has not been specified
    */
-  public void writeMessage (final FudgeFieldContainer message) {
+  public void writeMessage (final FudgeMsg message) {
     writeMessage (message, getDefaultTaxonomyId ());
   }
   

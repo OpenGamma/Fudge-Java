@@ -20,22 +20,22 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A container of Fudge fields providing simple access to principal types.
+ * A Fudge message formed from a collection of fields.
  * <p>
  * The Fudge specification is built around messages containing a list of {@link FudgeField fields}.
- * This interface is the high-level representation of the list of fields.
+ * This interface is the high-level representation of the list of fields, with convenient accessors.
  * <p>
  * Each field may be referenced by a name or by an ordinal.
  * All four combinations are possible - from both present to both absent.
  * Methods provide the ability to lookup a field by both name or ordinal.
  * <p>
  * Applications working with messages should use this interface or
- * {@link MutableFudgeFieldContainer} rather than a concrete class like
+ * {@link MutableFudgeMsg} rather than a concrete class like
  * {@link StandardFudgeMsg} for flexibility.
  * <p>
  * This interface makes no guarantees about the mutability or thread-safety of implementations.
  */
-public interface FudgeFieldContainer extends Iterable<FudgeField> {
+public interface FudgeMsg extends Iterable<FudgeField> {
 
   /**
    * Gets the size of the container.
@@ -415,7 +415,7 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
   Boolean getBoolean(int ordinal);
 
   /**
-   * Gets the value of the first field with the given name as a {@code FudgeFieldContainer}.
+   * Gets the value of the first field with the given name as a {@code FudgeMsg}.
    * <p>
    * A container is ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
@@ -424,10 +424,10 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
    * @param name  the field name, null matches fields without a name
    * @return the first matching field, null if not found
    */
-  FudgeFieldContainer getMessage(String name);
+  FudgeMsg getMessage(String name);
 
   /**
-   * Gets the value of the first field with the given ordinal as a {@code FudgeFieldContainer}.
+   * Gets the value of the first field with the given ordinal as a {@code FudgeMsg}.
    * <p>
    * A container is ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
@@ -436,6 +436,6 @@ public interface FudgeFieldContainer extends Iterable<FudgeField> {
    * @param ordinal  the field ordinal
    * @return the first matching field, null if not found
    */
-  FudgeFieldContainer getMessage(int ordinal);
+  FudgeMsg getMessage(int ordinal);
 
 }

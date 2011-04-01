@@ -18,7 +18,7 @@ package org.fudgemsg.wire;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
@@ -120,7 +120,7 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
    * {@inheritDoc}
    */
   @Override
-  public void writeFields(FudgeFieldContainer msg) {
+  public void writeFields(FudgeMsg msg) {
     for (FudgeField field : msg.getAllFields()) {
       writeField(field);
     }
@@ -145,7 +145,7 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
     if (fudgeFieldStart(ordinal, name, type)) {
       if (type.getTypeId() == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
         fudgeSubMessageStart();
-        writeFields((FudgeFieldContainer) fieldValue);
+        writeFields((FudgeMsg) fieldValue);
         fudgeSubMessageEnd();
       } else {
         fudgeFieldValue(type, fieldValue);

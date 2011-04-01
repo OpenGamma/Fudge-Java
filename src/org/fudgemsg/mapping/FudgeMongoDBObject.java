@@ -27,14 +27,14 @@ import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 
 import com.mongodb.DBObject;
 
 /**
- * Wraps a {@link FudgeFieldContainer} and implements the {@link DBObject} interface,
+ * Wraps a {@link FudgeMsg} and implements the {@link DBObject} interface,
  * without going through an object conversion stage (as the {@link MongoDBFudgeBuilder} will do).
  * This class is very much a work in progress. For details on why, please see
  * http://kirkwylie.blogspot.com/2010/06/performance-of-fudge-persistence-in.html and the comments
@@ -45,7 +45,7 @@ public class FudgeMongoDBObject implements DBObject {
   /**
    * The underlying message.
    */
-  private final FudgeFieldContainer _underlying;
+  private final FudgeMsg _underlying;
   /**
    * The cache.
    */
@@ -61,7 +61,7 @@ public class FudgeMongoDBObject implements DBObject {
    * 
    * @param underlying  the underlying Fudge message to be wrapped, not null
    */
-  public FudgeMongoDBObject(FudgeFieldContainer underlying) {
+  public FudgeMongoDBObject(FudgeMsg underlying) {
     if (underlying == null) {
       throw new IllegalArgumentException("FudgeFieldContainer must not be null");
     }
@@ -99,7 +99,7 @@ public class FudgeMongoDBObject implements DBObject {
    * 
    * @return the underlying message
    */
-  public FudgeFieldContainer getUnderlying() {
+  public FudgeMsg getUnderlying() {
     return _underlying;
   }
 
@@ -145,7 +145,7 @@ public class FudgeMongoDBObject implements DBObject {
   private static Object convertFudgeToMongoDB(FudgeField field) {
     if (field.getType().getTypeId() == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
       // Sub-message.
-      return new FudgeMongoDBObject((MutableFudgeFieldContainer) field.getValue());
+      return new FudgeMongoDBObject((MutableFudgeMsg) field.getValue());
     } else {
       return field.getValue();
     }
@@ -170,7 +170,7 @@ public class FudgeMongoDBObject implements DBObject {
   @Override
   public Object put(String key, Object v) {
     // cast allows writing an immutable message to Mongo, but only reading a mutable one
-    MutableFudgeFieldContainer underlying = (MutableFudgeFieldContainer) getUnderlying();
+    MutableFudgeMsg underlying = (MutableFudgeMsg) getUnderlying();
     if (v instanceof List) {
       for (Object o : (List) v) {
         put(key, o);

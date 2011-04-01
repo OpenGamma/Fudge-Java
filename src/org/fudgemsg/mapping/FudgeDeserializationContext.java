@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 
@@ -93,15 +93,15 @@ public class FudgeDeserializationContext {
    * Converts a field value to a Java object.
    * <p>
    * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
-   * A sub-message will be expanded through {@link #fudgeMsgToObject(FudgeFieldContainer)}.
+   * A sub-message will be expanded through {@link #fudgeMsgToObject(FudgeMsg)}.
    * 
    * @param field  the field to convert, not null
    * @return the deserialized object
    */
   public Object fieldValueToObject(final FudgeField field) {
     final Object obj = field.getValue();
-    if (obj instanceof FudgeFieldContainer) {
-      return fudgeMsgToObject((FudgeFieldContainer) obj);
+    if (obj instanceof FudgeMsg) {
+      return fudgeMsgToObject((FudgeMsg) obj);
     } else {
       return obj;
     }
@@ -111,7 +111,7 @@ public class FudgeDeserializationContext {
    * Converts a field value to a Java object with a specific type.
    * <p>
    * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
-   * A sub-message will be expanded through {@link #fudgeMsgToObject(Class,FudgeFieldContainer)}.
+   * A sub-message will be expanded through {@link #fudgeMsgToObject(Class,FudgeMsg)}.
    * 
    * @param <T> target Java type to decode to
    * @param clazz  the class of the target Java type to decode to, not null
@@ -120,8 +120,8 @@ public class FudgeDeserializationContext {
    */
   public <T> T fieldValueToObject(final Class<T> clazz, final FudgeField field) {
     final Object o = field.getValue();
-    if (o instanceof FudgeFieldContainer) {
-      return fudgeMsgToObject(clazz, (FudgeFieldContainer) o);
+    if (o instanceof FudgeMsg) {
+      return fudgeMsgToObject(clazz, (FudgeMsg) o);
     } else {
       return getFudgeContext().getFieldValue(clazz, field);
     }
@@ -137,7 +137,7 @@ public class FudgeDeserializationContext {
    * @param message  the message to deserialize, not null
    * @return the deserialized object
    */
-  public Object fudgeMsgToObject(final FudgeFieldContainer message) {
+  public Object fudgeMsgToObject(final FudgeMsg message) {
     List<FudgeField> types = message.getAllByOrdinal(FudgeSerializationContext.TYPES_HEADER_ORDINAL);
     if (types.size() == 0) {
       // no types passed in ordinal zero
@@ -193,7 +193,7 @@ public class FudgeDeserializationContext {
    * @return the deserialized object
    */
   @SuppressWarnings("unchecked")
-  public <T> T fudgeMsgToObject(final Class<T> clazz, final FudgeFieldContainer message) {
+  public <T> T fudgeMsgToObject(final Class<T> clazz, final FudgeMsg message) {
     FudgeObjectBuilder<T> builder;
     Exception lastError = null;
     /*if (clazz == Object.class) {

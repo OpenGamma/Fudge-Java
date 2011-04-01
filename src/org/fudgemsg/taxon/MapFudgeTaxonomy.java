@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgFactory;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * An immutable taxonomy implementation based on a bidirectional map.
@@ -130,8 +130,8 @@ public class MapFudgeTaxonomy implements FudgeTaxonomy {
    * @param context  the message context, not null
    * @return the created message, not null
    */
-  public MutableFudgeFieldContainer toFudgeMsg(final FudgeMsgFactory context) {
-    final MutableFudgeFieldContainer msg = context.newMessage();
+  public MutableFudgeMsg toFudgeMsg(final FudgeMsgFactory context) {
+    final MutableFudgeMsg msg = context.newMessage();
     for (Map.Entry<Integer, String> entry : _ordinalToNameMap.entrySet()) {
       msg.add(entry.getKey(), entry.getValue());
     }
@@ -146,7 +146,7 @@ public class MapFudgeTaxonomy implements FudgeTaxonomy {
    * @param msg  the message to decode, not null
    * @return the encoded taxonomy, not null
    */
-  public static FudgeTaxonomy fromFudgeMsg(final FudgeFieldContainer msg) {
+  public static FudgeTaxonomy fromFudgeMsg(final FudgeMsg msg) {
     final List<FudgeField> fields = msg.getAllFields();
     final Map<Integer, String> ordinalToNameMap = new HashMap<Integer, String>(fields.size());
     int i = 0;

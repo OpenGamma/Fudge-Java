@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 
 import com.mongodb.BasicDBObject;
@@ -43,11 +43,11 @@ import com.mongodb.DBObject;
   }
 
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, DBObject dbObject) {
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, DBObject dbObject) {
     if (dbObject == null) {
       return null;
     }
-    MutableFudgeFieldContainer msg = context.newMessage();
+    MutableFudgeMsg msg = context.newMessage();
     for (String key : dbObject.keySet()) {
       Object value = dbObject.get(key);
       if (value instanceof List<?>) {
@@ -123,8 +123,8 @@ import com.mongodb.DBObject;
 
   private Object encodeFieldValue(final FudgeDeserializationContext context, final Object currentValue, Object fieldValue) {
     boolean structureExpected = false;
-    if (fieldValue instanceof FudgeFieldContainer) {
-      fieldValue = buildObject(context, (FudgeFieldContainer) fieldValue);
+    if (fieldValue instanceof FudgeMsg) {
+      fieldValue = buildObject(context, (FudgeMsg) fieldValue);
       structureExpected = true;
     }
     if (currentValue instanceof List<?>) {
@@ -149,7 +149,7 @@ import com.mongodb.DBObject;
   }
 
   @Override
-  public DBObject buildObject(FudgeDeserializationContext context, FudgeFieldContainer fields) {
+  public DBObject buildObject(FudgeDeserializationContext context, FudgeMsg fields) {
     if (fields == null) {
       return null;
     }

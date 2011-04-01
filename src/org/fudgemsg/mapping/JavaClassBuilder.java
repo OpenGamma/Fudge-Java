@@ -16,9 +16,9 @@
 
 package org.fudgemsg.mapping;
 
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
@@ -40,15 +40,15 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeFieldContainer buildMessage(FudgeSerializationContext context, Class<?> object) {
-    final MutableFudgeFieldContainer msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Class<?> object) {
+    final MutableFudgeMsg msg = context.newMessage();
     FudgeSerializationContext.addClassHeader(msg, object.getClass());
     msg.add("name", null, FudgeWireType.STRING, object.getName());
     return msg;
   }
 
   @Override
-  public Class<?> buildObject(FudgeDeserializationContext context, FudgeFieldContainer message) {
+  public Class<?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
     final String str = message.getString("name");
     if (str == null) {
       throw new IllegalArgumentException("Sub-message doesn't contain a Java class name");

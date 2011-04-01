@@ -80,7 +80,7 @@ public class DateTimeTest {
     }
   }
   
-  private FudgeFieldContainer cycle (final FudgeFieldContainer msg) {
+  private FudgeMsg cycle (final FudgeMsg msg) {
     final byte[] data = _fudgeContext.toByteArray (msg);
     printMessage (data);
     return _fudgeContext.deserialize (data).getMessage ();
@@ -91,11 +91,11 @@ public class DateTimeTest {
    */
   @Test
   public void fudgeDateCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, new FudgeDate (2010));
     msg.add (1, new FudgeDate (2010, 3));
     msg.add (2, new FudgeDate (2010, 3, 4));
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (DateTimeAccuracy.YEAR, msgOut.getFieldValue (FudgeDate.class, msgOut.getByOrdinal (0)).getAccuracy ());
     assertEquals (DateTimeAccuracy.MONTH, msgOut.getFieldValue (FudgeDate.class, msgOut.getByOrdinal (1)).getAccuracy ());
     assertEquals (DateTimeAccuracy.DAY, msgOut.getFieldValue (FudgeDate.class, msgOut.getByOrdinal (2)).getAccuracy ());
@@ -117,7 +117,7 @@ public class DateTimeTest {
    */
   @Test
   public void fudgeTimeCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     // different resolutions
     msg.add (0, new FudgeTime (DateTimeAccuracy.HOUR, 0, 11 * 3600, 0)); // 11am
     msg.add (1, new FudgeTime (DateTimeAccuracy.MINUTE, 0, 11 * 3600, 0)); // 11:00am
@@ -134,7 +134,7 @@ public class DateTimeTest {
     msg.add (11, new FudgeTime (DateTimeAccuracy.NANOSECOND, -4, 11 * 3600 + 12 * 60 + 13, 456789001)); // 11:12:13.456789001 -01:00
     msg.add (12, new FudgeTime (DateTimeAccuracy.NANOSECOND, -128, 11 * 3600 + 12 * 60 + 13, 456789001)); // 11:12:13.456789001 No timezone
     msg.add (13, new FudgeTime (DateTimeAccuracy.NANOSECOND, 4, 11 * 3600 + 12 * 60 + 13, 456789001)); // 11:12:13.456789001 +01:00
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     for (int i = 0; i < msg.getNumFields (); i++) {
       FudgeTime iTime = (FudgeTime)msg.getByOrdinal (i).getValue ();
       for (int j = 0; j < msg.getNumFields (); j++) {
@@ -153,7 +153,7 @@ public class DateTimeTest {
    */
   @Test
   public void fudgeDateTimeCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     // different resolutions
     msg.add (0, new FudgeDateTime (DateTimeAccuracy.YEAR, 2010, 0, 0, 0, 0, 0)); // 2010
     msg.add (1, new FudgeDateTime (DateTimeAccuracy.MONTH, 2010, 3, 0, 0, 0, 0)); // April-2010
@@ -177,7 +177,7 @@ public class DateTimeTest {
     msg.add (18, new FudgeDateTime (DateTimeAccuracy.NANOSECOND, 2010, 3, 4, -4, 11 * 3600 + 12 * 60 + 13, 456789001)); // 3-April-2010, 11:12:13.456789001, -01:00
     msg.add (19, new FudgeDateTime (DateTimeAccuracy.NANOSECOND, 2010, 3, 4, -128, 11 * 3600 + 12 * 60 + 13, 456789001)); // 3-April-2010, 11:12:13.456789001, no timezone
     msg.add (20, new FudgeDateTime (DateTimeAccuracy.NANOSECOND, 2010, 3, 4, 4, 11 * 3600 + 12 * 60 + 13, 456789001)); // 3-April-2010, 11:12:13.456789001, +01:00
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     for (int i = 0; i < msg.getNumFields (); i++) {
       FudgeDateTime iTime = (FudgeDateTime)msg.getByOrdinal (i).getValue ();
       for (int j = 0; j < msg.getNumFields (); j++) {
@@ -325,9 +325,9 @@ public class DateTimeTest {
    */
   @Test
   public void calendarCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceCalendar ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.MILLISECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceCalendar ().getTime (), msgOut.getFieldValue (Calendar.class, msgOut.getByOrdinal (0)).getTime ());
   }
@@ -337,9 +337,9 @@ public class DateTimeTest {
    */
   @Test
   public void dateCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceDate ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeUTC (DateTimeAccuracy.MILLISECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceDate (), msgOut.getFieldValue (Date.class, msgOut.getByOrdinal (0)));
   }
@@ -349,9 +349,9 @@ public class DateTimeTest {
    */
   @Test
   public void timeZoneCycle() {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage();
     msg.add(0, getReferenceTimeZone());
-    final FudgeFieldContainer msgOut = cycle(msg);
+    final FudgeMsg msgOut = cycle(msg);
     assertEquals(getReferenceTimeZone(), (java.util.TimeZone) msgOut.getFieldValue(java.util.TimeZone.class, msgOut.getByOrdinal(0)));
   }
   
@@ -360,9 +360,9 @@ public class DateTimeTest {
    */
   @Test
   public void dateProviderCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceDateProvider ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.NANOSECOND).getDate (), (FudgeDate)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceDateProvider ().toLocalDate (), msgOut.getFieldValue (DateProvider.class, msgOut.getByOrdinal (0)).toLocalDate ());
   }
@@ -372,9 +372,9 @@ public class DateTimeTest {
    */
   @Test
   public void dateTimeProviderCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceDateTimeProvider ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeNoTimezone (DateTimeAccuracy.NANOSECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceDateTimeProvider ().toLocalDateTime (), msgOut.getFieldValue (DateTimeProvider.class, msgOut.getByOrdinal (0)).toLocalDateTime ());
   }
@@ -384,9 +384,9 @@ public class DateTimeTest {
    */
   @Test
   public void instantCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceInstant ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeUTC (DateTimeAccuracy.NANOSECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceInstant (), msgOut.getFieldValue (Instant.class, msgOut.getByOrdinal (0)));
   }
@@ -396,9 +396,9 @@ public class DateTimeTest {
    */
   @Test
   public void instantProviderCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceInstantProvider ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeUTC (DateTimeAccuracy.NANOSECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceInstantProvider ().toInstant (), msgOut.getFieldValue (InstantProvider.class, msgOut.getByOrdinal (0)).toInstant ());
   }
@@ -408,9 +408,9 @@ public class DateTimeTest {
    */
   @Test
   public void localDateCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceLocalDate ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeNoTimezone (DateTimeAccuracy.NANOSECOND).getDate (), (FudgeDate)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceLocalDate (), msgOut.getFieldValue (LocalDate.class, msgOut.getByOrdinal (0)));
   }
@@ -420,9 +420,9 @@ public class DateTimeTest {
    */
   @Test
   public void localDateTimeCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceLocalDateTime ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeNoTimezone (DateTimeAccuracy.NANOSECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceLocalDateTime (), msgOut.getFieldValue (LocalDateTime.class, msgOut.getByOrdinal (0)));
   }
@@ -432,9 +432,9 @@ public class DateTimeTest {
    */
   @Test
   public void localTimeCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceLocalTime ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeNoTimezone (DateTimeAccuracy.NANOSECOND).getTime (), (FudgeTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceLocalTime (), msgOut.getFieldValue (LocalTime.class, msgOut.getByOrdinal (0)));
   }
@@ -444,9 +444,9 @@ public class DateTimeTest {
    */
   @Test
   public void offsetDateCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceOffsetDate ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.DAY), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceOffsetDate (), msgOut.getFieldValue (OffsetDate.class, msgOut.getByOrdinal (0)));
   }
@@ -456,9 +456,9 @@ public class DateTimeTest {
    */
   @Test
   public void offsetDateTimeCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceOffsetDateTime ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.NANOSECOND), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceOffsetDateTime (), msgOut.getFieldValue (OffsetDateTime.class, msgOut.getByOrdinal (0)));
   }
@@ -468,9 +468,9 @@ public class DateTimeTest {
    */
   @Test
   public void offsetTimeCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceOffsetTime ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.NANOSECOND).getTime (), (FudgeTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceOffsetTime (), msgOut.getFieldValue (OffsetTime.class, msgOut.getByOrdinal (0)));
   }
@@ -480,9 +480,9 @@ public class DateTimeTest {
    */
   @Test
   public void timeProviderCycle () {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage ();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
     msg.add (0, getReferenceTimeProvider ());
-    final FudgeFieldContainer msgOut = cycle (msg);
+    final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeNoTimezone (DateTimeAccuracy.NANOSECOND).getTime (), (FudgeTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceTimeProvider ().toLocalTime (), msgOut.getFieldValue (TimeProvider.class, msgOut.getByOrdinal (0)).toLocalTime ());
   }
@@ -492,9 +492,9 @@ public class DateTimeTest {
    */
   @Test
   public void timeZone310Cycle() {
-    final MutableFudgeFieldContainer msg = _fudgeContext.newMessage();
+    final MutableFudgeMsg msg = _fudgeContext.newMessage();
     msg.add(0, getReferenceTimeZone310());
-    final FudgeFieldContainer msgOut = cycle(msg);
+    final FudgeMsg msgOut = cycle(msg);
     assertEquals(getReferenceTimeZone310(), (javax.time.calendar.TimeZone) msgOut.getFieldValue(javax.time.calendar.TimeZone.class, msgOut.getByOrdinal(0)));
   }
   

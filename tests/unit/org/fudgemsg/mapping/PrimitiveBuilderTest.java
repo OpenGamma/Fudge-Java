@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgEnvelope;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class PrimitiveBuilderTest {
     _dcontext = new FudgeDeserializationContext(FudgeContext.GLOBAL_DEFAULT);
   }
 
-  private FudgeFieldContainer cycle(final FudgeFieldContainer message) {
+  private FudgeMsg cycle(final FudgeMsg message) {
     final FudgeContext context = _scontext.getFudgeContext();
     final byte[] binary = context.toByteArray(message);
     final FudgeMsgEnvelope envelope = context.deserialize(binary);
@@ -44,7 +44,7 @@ public class PrimitiveBuilderTest {
   }
 
   private <T> void cycle(final Class<T> clazz, final T value) {
-    FudgeFieldContainer message = FudgeSerializationContext.addClassHeader(_scontext.objectToFudgeMsg(value), clazz, Object.class);
+    FudgeMsg message = FudgeSerializationContext.addClassHeader(_scontext.objectToFudgeMsg(value), clazz, Object.class);
     System.out.println(clazz + ":" + value + " => " + message);
     message = cycle(message);
     System.out.println(clazz + ":" + value + " => " + message);

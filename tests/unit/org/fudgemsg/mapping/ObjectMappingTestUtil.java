@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.MutableFudgeFieldContainer;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * 
@@ -109,12 +109,12 @@ public class ObjectMappingTestUtil {
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer constructSimpleMessage(FudgeContext fudgeContext) {
-    MutableFudgeFieldContainer msg = fudgeContext.newMessage();
+  public static FudgeMsg constructSimpleMessage(FudgeContext fudgeContext) {
+    MutableFudgeMsg msg = fudgeContext.newMessage();
     msg.add("fieldOne", "Kirk Wylie");
     msg.add("fieldThree", 98);
     
-    MutableFudgeFieldContainer subMsg = fudgeContext.newMessage();
+    MutableFudgeMsg subMsg = fudgeContext.newMessage();
     subMsg.add("fieldThree", 99999);
     msg.add("fieldTwo", subMsg);
     
@@ -229,8 +229,8 @@ public class ObjectMappingTestUtil {
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
    */
-  public static FudgeFieldContainer constructSetMessage(FudgeContext fudgeContext) {
-    MutableFudgeFieldContainer msg = fudgeContext.newMessage();
+  public static FudgeMsg constructSetMessage(FudgeContext fudgeContext) {
+    MutableFudgeMsg msg = fudgeContext.newMessage();
     msg.add("strings", "Kirk Wylie");
     msg.add("strings", "Yomi Ayodele");
     msg.add("strings", "Yan Tordoff");
