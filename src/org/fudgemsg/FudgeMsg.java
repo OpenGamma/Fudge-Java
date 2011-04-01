@@ -233,12 +233,18 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     getFields().clear();
   }
 
+  //-------------------------------------------------------------------------
   @Override
   public boolean equals(final Object obj) {
     if (obj == this) {
       return true;
     }
     return obj instanceof FudgeMsg && super.equals(obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return FudgeMsg.class.hashCode() ^ super.hashCode();
   }
 
 }

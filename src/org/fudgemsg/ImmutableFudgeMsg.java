@@ -69,15 +69,17 @@ public class ImmutableFudgeMsg extends FudgeMsgBase implements ImmutableFudgeFie
   }
 
   //-------------------------------------------------------------------------
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == this) {
       return true;
     }
     return obj instanceof ImmutableFudgeMsg && super.equals(obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return ImmutableFudgeMsg.class.hashCode() ^ super.hashCode();
   }
 
 }

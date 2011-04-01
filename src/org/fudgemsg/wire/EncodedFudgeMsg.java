@@ -440,4 +440,18 @@ public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeField
     }
   }
 
+  //-------------------------------------------------------------------------
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    return obj instanceof EncodedFudgeMsg && super.equals(obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return EncodedFudgeMsg.class.hashCode() ^ super.hashCode();
+  }
+
 }
