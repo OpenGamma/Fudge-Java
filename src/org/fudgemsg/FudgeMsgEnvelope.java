@@ -43,10 +43,6 @@ public class FudgeMsgEnvelope implements Serializable {
   private final int _version;
 
   /**
-   * The processing direcives.
-   */
-
-  /**
    * Creates an envelope wrapping the given message.
    * No version or processing directives are used.
    * 
@@ -115,6 +111,34 @@ public class FudgeMsgEnvelope implements Serializable {
    */
   public int getProcessingDirectives() {
     return _processingDirectives;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Compares this envelope to another.
+   * 
+   * @param obj  the other object, null returns false
+   * @return true if equal
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof FudgeMsgEnvelope) {
+      FudgeMsgEnvelope other = (FudgeMsgEnvelope) obj;
+      return _version == other._version &&
+              _processingDirectives == other._processingDirectives &&
+              _message.equals(other._message);
+    }
+    return false;
+  }
+
+  /**
+   * Returns a suitable hash code.
+   * 
+   * @return the hash code
+   */
+  @Override
+  public int hashCode() {
+    return _version ^ _processingDirectives ^ _message.hashCode();
   }
 
 }
