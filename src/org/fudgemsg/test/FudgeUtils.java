@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.UnknownFudgeFieldValue;
 
 /**
@@ -80,9 +79,9 @@ public class FudgeUtils {
         } else if (expectedField.getValue() instanceof double[]) {
           FudgeUtils.assertArraysMatch((double[]) expectedField.getValue(), (double[]) actualField.getValue());
         }
-      } else if (expectedField.getValue() instanceof FudgeMsg) {
-        assertTrue(actualField.getValue() instanceof FudgeMsg);
-        assertAllFieldsMatch((FudgeMsg) expectedField.getValue(), (FudgeMsg) actualField.getValue());
+      } else if (expectedField.getValue() instanceof FudgeFieldContainer) {
+        assertTrue(actualField.getValue() instanceof FudgeFieldContainer);
+        assertAllFieldsMatch((FudgeFieldContainer) expectedField.getValue(), (FudgeFieldContainer) actualField.getValue());
       } else if (expectedField.getValue() instanceof UnknownFudgeFieldValue) {
         assertTrue(actualField.getValue() instanceof UnknownFudgeFieldValue);
         UnknownFudgeFieldValue expectedValue = (UnknownFudgeFieldValue) expectedField.getValue();

@@ -28,7 +28,6 @@ import org.bson.types.ObjectId;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldContainer;
-import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.MutableFudgeFieldContainer;
 
@@ -46,7 +45,7 @@ public class FudgeMongoDBObject implements DBObject {
   /**
    * The underlying message.
    */
-  private final FudgeMsg _underlying;
+  private final FudgeFieldContainer _underlying;
   /**
    * The cache.
    */
@@ -58,21 +57,19 @@ public class FudgeMongoDBObject implements DBObject {
   private ObjectId _objectId;
 
   /**
-   * The primary constructor.
+   * Creates an instance decorating a Fudge message.
    * 
-   * @param underlying  the underlying FudgeFieldContainer to be wrapped
+   * @param underlying  the underlying Fudge message to be wrapped, not null
    */
-  public FudgeMongoDBObject(MutableFudgeFieldContainer underlying) {
+  public FudgeMongoDBObject(FudgeFieldContainer underlying) {
     if (underlying == null) {
-      throw new IllegalArgumentException("Must provide an underlying");
+      throw new IllegalArgumentException("FudgeFieldContainer must not be null");
     }
-    if (!(underlying instanceof FudgeMsg)) {
-      throw new IllegalArgumentException("Underlying must extend FudgeMsgBase");
-    }
-    _underlying = (FudgeMsg) underlying;
+    _underlying = underlying;
     buildFastSingleValueCache();
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Builds a cache.
    */
@@ -102,7 +99,7 @@ public class FudgeMongoDBObject implements DBObject {
    * 
    * @return the underlying message
    */
-  public FudgeMsg getUnderlying() {
+  public FudgeFieldContainer getUnderlying() {
     return _underlying;
   }
 
@@ -172,18 +169,22 @@ public class FudgeMongoDBObject implements DBObject {
   @SuppressWarnings("rawtypes")
   @Override
   public Object put(String key, Object v) {
+    // cast allows writing an immutable message to Mongo, but only reading a mutable one
+    MutableFudgeFieldContainer underlying = (MutableFudgeFieldContainer) getUnderlying();
     if (v instanceof List) {
       for (Object o : (List) v) {
         put(key, o);
       }
     } else if (v instanceof DBObject) {
       put(key, FudgeContext.GLOBAL_DEFAULT.toFudgeMsg((DBObject) v));
-    } else if (v instanceof ObjectId) {
-      // GROSS HACK HERE. Should be smarter in our fudge use.
-      getUnderlying().add(key, ((ObjectId) v).toString());
-      _objectId = (ObjectId) v;
     } else {
-      getUnderlying().add(key, v);
+      if (v instanceof ObjectId) {
+        // GROSS HACK HERE. Should be smarter in our fudge use.
+        underlying.add(key, ((ObjectId) v).toString());
+        _objectId = (ObjectId) v;
+      } else {
+        underlying.add(key, v);
+      }
     }
     return null;
   }

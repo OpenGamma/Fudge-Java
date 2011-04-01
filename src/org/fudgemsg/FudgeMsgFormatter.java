@@ -215,9 +215,9 @@ public class FudgeMsgFormatter {
       getWriter().print(' ');
       nWritten++;
     }
-    if (field.getValue() instanceof FudgeMsg) {
+    if (field.getValue() instanceof FudgeFieldContainer) {
       getWriter().println();
-      FudgeMsg msgValue = (FudgeMsg) field.getValue();
+      FudgeFieldContainer msgValue = (FudgeFieldContainer) field.getValue();
       format(msgValue, depth + 1);
     } else {
       getWriter().print(field.getValue());

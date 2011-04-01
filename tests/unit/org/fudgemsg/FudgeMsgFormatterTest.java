@@ -41,23 +41,17 @@ public class FudgeMsgFormatterTest {
     msg.add("Sub Message", 9999, StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext));
     return msg;
   }
-  
-  /**
-   * Will output a {@link FudgeMsg} to {@code System.out} so that you can visually
-   * examine it.
-   */
+
   @Test
   public void outputToStdoutAllNames() {
+    // this method exists for visual inspection of a message
     System.out.println("FudgeMsgFormatterTest.outputToStdoutAllNames()");
     (new FudgeMsgFormatter(new PrintWriter(System.out))).format(allNames ());
   }
-  
-  /**
-   * Will output a {@link FudgeMsg} to {@code System.out} so that you can visually
-   * examine it.
-   */
+
   @Test
   public void outputToStdoutAllOrdinals() {
+    // this method exists for visual inspection of a message
     System.out.println("FudgeMsgFormatterTest.outputToStdoutAllOrdinals()");
     (new FudgeMsgFormatter(new PrintWriter(System.out))).format(allOrdinals ());
   }
