@@ -169,7 +169,7 @@ public class FudgeContext implements FudgeMsgFactory {
    */ 
   @Override
   public MutableFudgeFieldContainer newMessage() {
-    return new FudgeMsg(this);
+    return new StandardFudgeMsg(this);
   }
   
   /**
@@ -177,34 +177,27 @@ public class FudgeContext implements FudgeMsgFactory {
    */
   @Override
   public MutableFudgeFieldContainer newMessage (final FudgeFieldContainer fromMessage) {
-    return new FudgeMsg (fromMessage, this);
+    return new StandardFudgeMsg (fromMessage, this);
   }
   
   /**
-   * Encodes a Fudge message object to an {@link OutputStream} without any
-   * taxonomy reference.
+   * Serializes a Fudge message to the output stream, without using a taxonomy,
    * 
-   * @param msg
-   *          the {@code FudgeFieldContainer} to write
-   * @param os
-   *          the {@code OutputStream} to write to
+   * @param msg  the message to write
+   * @param os  the output stream to write to, not null
    */
   public void serialize(FudgeFieldContainer msg, OutputStream os) {
     serialize(msg, null, os);
   }
 
   /**
-   * Encodes a Fudge message object to an {@link OutputStream} with an
-   * optional taxonomy reference. If a taxonomy is supplied it may be used to
-   * optimize the output by writing ordinals instead of field names.
+   * Serializes a Fudge message to the output stream, using an optional taxonomy.
+   * <p>
+   * Taxonomies are used to reduce the size of the binary message.
    * 
-   * @param msg
-   *          the {@code FudgeMsg} to write
-   * @param taxonomyId
-   *          the identifier of the taxonomy to use. Specify {@code null} for no
-   *          taxonomy.
-   * @param os
-   *          the {@code OutputStream} to write to
+   * @param msg  the message to write
+   * @param taxonomyId  the identifier of the taxonomy to use, may be null
+   * @param os  the output stream to write to, not null
    */
   public void serialize(FudgeFieldContainer msg, Short taxonomyId, OutputStream os) {
     int realTaxonomyId = (taxonomyId == null) ? 0 : taxonomyId.intValue();
@@ -212,7 +205,7 @@ public class FudgeContext implements FudgeMsgFactory {
     FudgeMsgEnvelope envelope = new FudgeMsgEnvelope(msg);
     writer.writeMessageEnvelope(envelope, realTaxonomyId);
   }
-  
+
   /**
    * Returns the Fudge encoded form of a {@link FudgeFieldContainer} as a {@code byte} array
    * with a taxonomy reference. The encoding includes an envelope header.

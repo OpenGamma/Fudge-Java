@@ -29,8 +29,9 @@ import java.util.Set;
  * All four combinations are possible - from both present to both absent.
  * Methods provide the ability to lookup a field by both name or ordinal.
  * <p>
- * Applications working with messages should use this interface rather than
- * {@link FudgeMsg} directly where possible for flexibility.
+ * Applications working with messages should use this interface or
+ * {@link MutableFudgeFieldContainer} rather than a concrete class like
+ * {@link StandardFudgeMsg} for flexibility.
  * <p>
  * This interface makes no guarantees about the mutability or thread-safety of implementations.
  */

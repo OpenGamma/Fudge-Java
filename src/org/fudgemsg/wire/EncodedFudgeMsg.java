@@ -24,7 +24,7 @@ import java.util.List;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeMsgBase;
+import org.fudgemsg.AbstractFudgeMsg;
 import org.fudgemsg.FudgeMsgField;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.ImmutableFudgeFieldContainer;
@@ -41,7 +41,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * <p>
  * This is intended to be immutable, but not thread-safe.
  */
-public class EncodedFudgeMsg extends FudgeMsgBase implements ImmutableFudgeFieldContainer, FudgeEncoded {
+public class EncodedFudgeMsg extends AbstractFudgeMsg implements ImmutableFudgeFieldContainer, FudgeEncoded {
 
   /* package */static class Reader implements FudgeStreamReader, FudgeEncoded {
     

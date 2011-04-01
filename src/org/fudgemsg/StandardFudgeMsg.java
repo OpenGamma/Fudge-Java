@@ -23,9 +23,9 @@ import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
- * A mutable message in the Fudge system.
+ * A standard mutable Fudge message.
  * <p>
- * The message consists of a list of {@link FudgeMsgField Fudge fields}.
+ * The message consists of a list of {@link FudgeField Fudge fields}.
  * This class holds the entire message in memory.
  * <p>
  * Applications are recommended to store and manipulate a {@link FudgeFieldContainer}
@@ -34,14 +34,14 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * <p>
  * This class is mutable and not thread-safe.
  */
-public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer {
+public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeFieldContainer {
 
   /**
    * Constructor taking a Fudge context.
    * 
-   * @param fudgeContext the {@code FudgeContext} to use for type resolution and other services 
+   * @param fudgeContext  the context to use for type resolution and other services, not null
    */
-  protected FudgeMsg(FudgeContext fudgeContext) {
+  protected StandardFudgeMsg(FudgeContext fudgeContext) {
     super(fudgeContext);
   }
 
@@ -54,7 +54,7 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
    * @param fields  the initial set of fields, not null
    * @param fudgeContext  the context to use for type resolution and other services, not null
    */
-  protected FudgeMsg(final FudgeFieldContainer fields, final FudgeContext fudgeContext) {
+  protected StandardFudgeMsg(final FudgeFieldContainer fields, final FudgeContext fudgeContext) {
     super(fields, fudgeContext);
   }
 
@@ -180,11 +180,11 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
           getFields().set(i, field);
         }
       }
-      if (field.getValue() instanceof FudgeMsg) {
-        FudgeMsg subMsg = (FudgeMsg) field.getValue();
+      if (field.getValue() instanceof StandardFudgeMsg) {
+        StandardFudgeMsg subMsg = (StandardFudgeMsg) field.getValue();
         subMsg.setNamesFromTaxonomy(taxonomy);
       } else if (field.getValue() instanceof FudgeFieldContainer) {
-        FudgeMsg subMsg = new FudgeMsg((FudgeFieldContainer) field.getValue(), getFudgeContext());
+        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeFieldContainer) field.getValue(), getFudgeContext());
         subMsg.setNamesFromTaxonomy(taxonomy);
         field = FudgeMsgField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
         getFields().set(i, field);
@@ -239,12 +239,12 @@ public class FudgeMsg extends FudgeMsgBase implements MutableFudgeFieldContainer
     if (obj == this) {
       return true;
     }
-    return obj instanceof FudgeMsg && super.equals(obj);
+    return obj instanceof StandardFudgeMsg && super.equals(obj);
   }
 
   @Override
   public int hashCode() {
-    return FudgeMsg.class.hashCode() ^ super.hashCode();
+    return StandardFudgeMsg.class.hashCode() ^ super.hashCode();
   }
 
 }

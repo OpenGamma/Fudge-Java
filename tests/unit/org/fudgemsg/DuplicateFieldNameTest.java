@@ -71,8 +71,8 @@ public class DuplicateFieldNameTest {
     msg.add (FIELD_ORDINAL, CONST_STRING);
   }
   
-  private static FudgeMsg createFudgeMsg () {
-    final FudgeMsg msg = new FudgeMsg (FudgeContext.GLOBAL_DEFAULT);
+  private static StandardFudgeMsg createFudgeMsg () {
+    final StandardFudgeMsg msg = new StandardFudgeMsg (FudgeContext.GLOBAL_DEFAULT);
     populateMutableFudgeFieldContainer (msg);
     return msg;
   }

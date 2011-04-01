@@ -16,9 +16,9 @@
 package org.fudgemsg;
 
 /**
- * An immutable message in the Fudge system.
+ * A standard immutable Fudge message.
  * <p>
- * The message consists of a list of {@link FudgeMsgField Fudge fields}.
+ * The message consists of a list of {@link FudgeField Fudge fields}.
  * This class holds the entire message in memory.
  * <p>
  * Applications are recommended to store and manipulate a {@link ImmutableFudgeFieldContainer}
@@ -34,7 +34,7 @@ package org.fudgemsg;
  * <p>
  * This class is intended to be immutable but not all contents will necessarily be immutable.
  */
-public class ImmutableFudgeMsg extends FudgeMsgBase implements ImmutableFudgeFieldContainer {
+public class ImmutableFudgeMsg extends AbstractFudgeMsg implements ImmutableFudgeFieldContainer {
 
   /**
    * Creates a new instance by copying another message.
@@ -44,7 +44,7 @@ public class ImmutableFudgeMsg extends FudgeMsgBase implements ImmutableFudgeFie
    * 
    * @param fudgeMsg  the message to copy, not null
    */
-  public ImmutableFudgeMsg(final FudgeMsgBase fudgeMsg) {
+  public ImmutableFudgeMsg(final AbstractFudgeMsg fudgeMsg) {
     this(fudgeMsg, fudgeMsg.getFudgeContext());
   }
 
@@ -53,16 +53,16 @@ public class ImmutableFudgeMsg extends FudgeMsgBase implements ImmutableFudgeFie
    * the specified {@link FudgeContext} for type resolution. 
    * 
    * @param fields  the message to copy, not null
-   * @param fudgeContext  the context to use for the new message, not null
+   * @param fudgeContext  the context to use for type resolution and other services, not null
    */
   public ImmutableFudgeMsg(final FudgeFieldContainer fields, final FudgeContext fudgeContext) {
     super(fields, fudgeContext);
   }
 
   /**
-   * Creates an immutable empty message.
+   * Creates an empty message.
    * 
-   * @param fudgeContext  the context, not null
+   * @param fudgeContext  the context to use for type resolution and other services, not null
    */
   protected ImmutableFudgeMsg(final FudgeContext fudgeContext) {
     super(fudgeContext);
