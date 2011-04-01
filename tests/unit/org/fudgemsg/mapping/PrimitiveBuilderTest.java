@@ -70,8 +70,20 @@ public class PrimitiveBuilderTest {
   public void testDouble () {
     cycle(Double.class, (Double) 0d);
     cycle(Double.class, (Double) 42d);
+  }
+
+  @Test(expected = ArithmeticException.class)
+  public void testDouble_NaN() {
     cycle(Double.class, (Double) Double.NaN);
+  }
+
+  @Test(expected = ArithmeticException.class)
+  public void testDouble_NEGATIVE_INFINITY() {
     cycle(Double.class, (Double) Double.NEGATIVE_INFINITY);
+  }
+
+  @Test(expected = ArithmeticException.class)
+  public void testDouble_POSITIVE_INFINITY() {
     cycle(Double.class, (Double) Double.POSITIVE_INFINITY);
   }
 
@@ -84,8 +96,20 @@ public class PrimitiveBuilderTest {
   public void testFloat() {
     cycle(Float.class, (Float) (float) 0.0);
     cycle(Float.class, (Float) (float) 42.0);
+  }
+
+  @Test(expected = ArithmeticException.class)
+  public void testFloat_NaN() {
     cycle(Float.class, (Float) Float.NaN);
+  }
+
+  @Test(expected = ArithmeticException.class)
+  public void testFloat_NEGATIVE_INFINITY() {
     cycle(Float.class, (Float) Float.NEGATIVE_INFINITY);
+  }
+
+  @Test(expected = ArithmeticException.class)
+  public void testFloat_POSITIVE_INFINITY() {
     cycle(Float.class, (Float) Float.POSITIVE_INFINITY);
   }
 
