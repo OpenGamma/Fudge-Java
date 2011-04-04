@@ -99,11 +99,11 @@ public class FudgeDeserializationContext {
    * @return the deserialized object
    */
   public Object fieldValueToObject(final FudgeField field) {
-    final Object obj = field.getValue();
-    if (obj instanceof FudgeMsg) {
-      return fudgeMsgToObject((FudgeMsg) obj);
+    final Object value = field.getValue();
+    if (value instanceof FudgeMsg) {
+      return fudgeMsgToObject((FudgeMsg) value);
     } else {
-      return obj;
+      return value;
     }
   }
 
@@ -119,9 +119,9 @@ public class FudgeDeserializationContext {
    * @return the deserialized object
    */
   public <T> T fieldValueToObject(final Class<T> clazz, final FudgeField field) {
-    final Object o = field.getValue();
-    if (o instanceof FudgeMsg) {
-      return fudgeMsgToObject(clazz, (FudgeMsg) o);
+    final Object value = field.getValue();
+    if (value instanceof FudgeMsg) {
+      return fudgeMsgToObject(clazz, (FudgeMsg) value);
     } else {
       return getFudgeContext().getFieldValue(clazz, field);
     }
@@ -194,6 +194,9 @@ public class FudgeDeserializationContext {
    */
   @SuppressWarnings("unchecked")
   public <T> T fudgeMsgToObject(final Class<T> clazz, final FudgeMsg message) {
+    if (clazz == FudgeMsg.class) {
+      return (T) message;
+    }
     FudgeObjectBuilder<T> builder;
     Exception lastError = null;
     /*if (clazz == Object.class) {
