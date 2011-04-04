@@ -103,9 +103,11 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
 
   //-------------------------------------------------------------------------
   /**
-   * Converts a Java object to a Fudge message form.
+   * Adds an object to a Fudge message in the simplest way.
    * <p>
-   * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
+   * The object must be a native type or a type known to the {@link FudgeTypeDictionary}.
+   * A complex object sent using this method may not be able to be converted back to
+   * an equivalent object at the other end as only basic information about the type is sent.
    * 
    * @param message  the message to add this object to, not null
    * @param name  the field name for the field, null if no field name required
@@ -118,8 +120,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
       return;
     }
     final FudgeFieldType fieldType = getFudgeContext().getTypeDictionary().getByJavaType(object.getClass());
-    if (fieldType != null && FudgeWireType.SUB_MESSAGE.equals(fieldType) == false) {
-      // goes natively into a message
+    if (isNative(fieldType, object)) {
       message.add(name, ordinal, fieldType, object);
     } else {
       // look up a custom or default builder and embed as sub-message
@@ -128,12 +129,11 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
   }
 
   /**
-   * Converts a Java object to a Fudge message sending class headers.
+   * Adds an object to a Fudge message sending class name headers.
    * <p>
-   * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
-   * If encoded as a sub-message then class header fields are added.
-   * These specify the Java type in the message, including superclasses.
-   * This makes deserialization easier at the expense of message size.
+   * The object must be a native type or a type known to the {@link FudgeTypeDictionary}.
+   * If it is a complex object, it will be converted to a sub-message.
+   * The sub-message will include the Java type as a header to allow full deserialization.
    * 
    * @param message  the message to add this object to, not null
    * @param name  the field name for the field, null if no field name required
@@ -146,14 +146,14 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
   }
 
   /**
-   * Converts a Java object to a Fudge message sending class headers.
+   * Adds an object to a Fudge message sending class name headers.
    * <p>
-   * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
-   * If encoded as a sub-message then class header fields are added.
-   * These specify the Java type in the message, with superclasses up to the specified type.
-   * This makes deserialization easier at the expense of message size.
+   * The object must be a native type or a type known to the {@link FudgeTypeDictionary}.
+   * If it is a complex object, it will be converted to a sub-message.
+   * The sub-message will include the Java type as a header to allow full deserialization.
    * <p>
-   * By manually specifying the receiver type, the number of superclasses can be reduced.
+   * Class name headers will only be sent up to the specified type (exclusive).
+   * This handles subclasses of a known type effectively, reducing the message size.
    * 
    * @param message  the message to add this object to, not null
    * @param name  the field name for the field, null if no field name required
@@ -169,9 +169,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
     }
     final Class<?> clazz = object.getClass();
     final FudgeFieldType fieldType = getFudgeContext().getTypeDictionary().getByJavaType(clazz);
-    if (fieldType != null && (FudgeWireType.SUB_MESSAGE.equals(fieldType) == false ||
-                              (FudgeWireType.SUB_MESSAGE.equals(fieldType) && object instanceof FudgeMsg))) {
-      // goes natively into a message
+    if (isNative(fieldType, object)) {
       message.add(name, ordinal, fieldType, object);
     } else {
       // look up a custom or default builder and embed as sub-message
@@ -183,6 +181,21 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
       }
       message.add(name, ordinal, FudgeWireType.SUB_MESSAGE, submsg);
     }
+  }
+
+  /**
+   * Checks if the object is in the correct native format to send.
+   * 
+   * @param fieldType  the Fudge type, may be null
+   * @param object  the value to add, not null
+   * @return true if the object can be sent natively
+   */
+  private boolean isNative(final FudgeFieldType fieldType, final Object object) {
+    if (fieldType == null) {
+      return false;
+    }
+    return FudgeWireType.SUB_MESSAGE.equals(fieldType) == false ||
+            (FudgeWireType.SUB_MESSAGE.equals(fieldType) && object instanceof FudgeMsg);
   }
 
   /**
@@ -222,7 +235,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @return the modified message, for method chaining, not null
    */
   public static MutableFudgeMsg addClassHeader(final MutableFudgeMsg message, Class<?> clazz) {
-    while ((clazz != null) && (clazz != Object.class)) {
+    while (clazz != null && clazz != Object.class) {
       message.add(null, TYPES_HEADER_ORDINAL, FudgeWireType.STRING, clazz.getName());
       clazz = clazz.getSuperclass();
     }
@@ -244,7 +257,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    */
   public static MutableFudgeMsg addClassHeader(
       final MutableFudgeMsg message, Class<?> clazz, Class<?> receiverTarget) {
-    while ((clazz != null) && receiverTarget.isAssignableFrom(clazz) && (receiverTarget != clazz)) {
+    while (clazz != null && receiverTarget.isAssignableFrom(clazz) && receiverTarget != clazz) {
       message.add(null, TYPES_HEADER_ORDINAL, FudgeWireType.STRING, clazz.getName());
       clazz = clazz.getSuperclass();
     }
