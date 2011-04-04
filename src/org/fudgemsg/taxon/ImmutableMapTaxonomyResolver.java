@@ -28,6 +28,11 @@ import java.util.Map;
 public class ImmutableMapTaxonomyResolver implements TaxonomyResolver {
 
   /**
+   * A singleton empty taxonomy resolver.
+   */
+  public static final TaxonomyResolver EMPTY = new ImmutableMapTaxonomyResolver();
+
+  /**
    * The taxonomies by ID.
    */
   private final Map<Short, FudgeTaxonomy> _taxonomiesById;
@@ -35,7 +40,7 @@ public class ImmutableMapTaxonomyResolver implements TaxonomyResolver {
   /**
    * Creates a resolver that contains no taxonomies.
    */
-  public ImmutableMapTaxonomyResolver() {
+  private ImmutableMapTaxonomyResolver() {
     this(Collections.<Short, FudgeTaxonomy> emptyMap());
   }
 

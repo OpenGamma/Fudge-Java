@@ -15,7 +15,9 @@
  */
 package org.fudgemsg;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.types.IndicatorType;
@@ -37,31 +39,61 @@ import org.fudgemsg.wire.types.FudgeWireType;
 public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMsg {
 
   /**
+   * The list of fields.
+   */
+  private final List<FudgeField> _fields = new ArrayList<FudgeField>();
+
+  /**
    * Constructor taking a Fudge context.
    * 
    * @param fudgeContext  the context to use for type resolution and other services, not null
    */
   protected StandardFudgeMsg(FudgeContext fudgeContext) {
-    super(fudgeContext);
+    this(fudgeContext, null);
   }
 
   /**
-   * Constructor taking a set of fields and a Fudge context.
+   * Constructor taking a Fudge context that copies another message.
    * <p>
    * The fields from the container are copied into this message, creating a new
    * field for each supplied field.
    * 
-   * @param fields  the initial set of fields, not null
    * @param fudgeContext  the context to use for type resolution and other services, not null
+   * @param fieldsToCopy  the initial set of fields to shallow copy, null ignored
    */
-  protected StandardFudgeMsg(final FudgeMsg fields, final FudgeContext fudgeContext) {
-    super(fields, fudgeContext);
+  protected StandardFudgeMsg(final FudgeContext fudgeContext, Iterable<FudgeField> fieldsToCopy) {
+    super(fudgeContext);
+    if (fieldsToCopy != null) {
+      for (FudgeField field : fieldsToCopy) {
+        _fields.add(FudgeMsgField.of(field));
+      }
+    }
   }
 
   //-------------------------------------------------------------------------
   /**
-   * {@inheritDoc}
+   * Gets the live list of fields.
+   * 
+   * @return the mutable list of fields, not null
    */
+  @Override
+  protected List<FudgeField> getFields() {
+    return _fields;
+  }
+
+  /**
+   * Gets a modifiable iterator over the list of fields in this message.
+   * <p>
+   * A message is partially ordered and the returned iterator reflects that order.
+   * 
+   * @return the modifiable iterator of fields, not null
+   */
+  @Override
+  public Iterator<FudgeField> iterator() {
+    return getFields().iterator();  // modifiable iterator, as this is a mutable message
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public void add(FudgeField field) {
     if (field == null) {
@@ -70,25 +102,16 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     getFields().add(FudgeMsgField.of(field));
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void add(String name, Object value) {
     add(name, null, value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void add(Integer ordinal, Object value) {
     add(null, ordinal, value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void add(String name, Integer ordinal, Object value) {
     FudgeFieldType type = determineTypeFromValue(value);
@@ -162,6 +185,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     return type;
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Resolves any field ordinals to field names from the given taxonomy.
    * 
@@ -184,7 +208,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
         StandardFudgeMsg subMsg = (StandardFudgeMsg) field.getValue();
         subMsg.setNamesFromTaxonomy(taxonomy);
       } else if (field.getValue() instanceof FudgeMsg) {
-        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeMsg) field.getValue(), getFudgeContext());
+        StandardFudgeMsg subMsg = new StandardFudgeMsg(getFudgeContext(), (FudgeMsg) field.getValue());
         subMsg.setNamesFromTaxonomy(taxonomy);
         field = FudgeMsgField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
         getFields().set(i, field);
@@ -193,18 +217,6 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
   }
 
   //-------------------------------------------------------------------------
-  /**
-   * Gets a modifiable iterator over the list of fields in this message.
-   * <p>
-   * A message is partially ordered and the returned iterator reflects that order.
-   * 
-   * @return the modifiable iterator of fields, not null
-   */
-  @Override
-  public Iterator<FudgeField> iterator() {
-    return getFields().iterator();  // modifiable iterator, as this is a mutable message
-  }
-
   @Override
   public void remove(Integer ordinal) {
     final Iterator<FudgeField> it = iterator();

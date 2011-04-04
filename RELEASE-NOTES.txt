@@ -41,3 +41,6 @@ Changes:
 
 - Remove classes
    ImmutableFudgeFieldContainer
+
+- Change constructors on ImmutableFudgeMsg
+   

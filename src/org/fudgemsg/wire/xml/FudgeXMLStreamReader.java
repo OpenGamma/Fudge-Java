@@ -348,9 +348,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
     _processingDirectives = toInt(processingDirectivesAttr, 0);
     String taxonomyIdAttr = _xmlStreamReader.getAttributeValue(null, _settings.getEnvelopeAttributeTaxonomy());
     _taxonomyId = toInt(taxonomyIdAttr, 0);
-    if (_taxonomyId != 0) {
-      _taxonomy = _fudgeContext.getTaxonomyResolver().resolveTaxonomy((short) _taxonomyId);
-    }
+    _taxonomy = _fudgeContext.getTaxonomyResolver().resolveTaxonomy((short) _taxonomyId);
     _messageStack.push(element);
     return FudgeStreamElement.MESSAGE_ENVELOPE;
   }

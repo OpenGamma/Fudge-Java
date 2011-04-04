@@ -247,7 +247,7 @@ public class FudgeMsgTest {
   @Test
   public void immutableFudgeMsgTest() {
     MutableFudgeMsg mutableMsg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
-    ImmutableFudgeMsg msg = new ImmutableFudgeMsg(mutableMsg, s_fudgeContext);
+    ImmutableFudgeMsg msg = new ImmutableFudgeMsg(s_fudgeContext, mutableMsg);
     
     assertEquals(null, mutableMsg.getString("field not there"));
     assertEquals(null, msg.getString("field not there"));
@@ -392,12 +392,12 @@ public class FudgeMsgTest {
   public void iterableContainer() {
     FudgeMsg msg = StandardFudgeMessages.createMessageAllNames(s_fudgeContext);
     int fieldCount = 0;
-    for(@SuppressWarnings("unused") FudgeField field : msg) {
+    for (@SuppressWarnings("unused") FudgeField field : msg) {
       fieldCount++;
     }
     assertEquals(msg.getNumFields(), fieldCount);
   }
-  
+
   /**
    * 
    */
@@ -408,56 +408,56 @@ public class FudgeMsgTest {
     assertNull(msg.getMessage("No Such Field"));
     assertTrue(msg.getMessage("sub1") instanceof FudgeMsg);
   }
-  
+
   /**
    * 
    */
   @Test
-  public void testIsEmpty () {
-    MutableFudgeMsg msg = s_fudgeContext.newMessage ();
-    assertTrue (msg.isEmpty ());
-    msg.add (null, null, "foo");
-    assertFalse (msg.isEmpty ());
+  public void testIsEmpty() {
+    MutableFudgeMsg msg = s_fudgeContext.newMessage();
+    assertTrue(msg.isEmpty());
+    msg.add(null, null, "foo");
+    assertFalse(msg.isEmpty());
   }
-  
+
   /**
    * 
    */
   @Test
-  public void testEquals () {
-    MutableFudgeMsg msg1 = s_fudgeContext.newMessage ();
-    msg1.add ("foo", 1, "hello world");
-    msg1.add ("bar", 2, 42);
-    MutableFudgeMsg msg2 = s_fudgeContext.newMessage ();
-    assertFalse (msg1.equals (msg2));
-    assertFalse (msg2.equals (msg1));
-    msg2.add ("foo", 1, "hello world");
-    assertFalse (msg1.equals (msg2));
-    assertFalse (msg2.equals (msg1));
-    msg2.add ("bar", 2, 42);
-    assertTrue (msg1.equals (msg2));
-    assertTrue (msg2.equals (msg1));
-    FudgeMsg msg3 = new ImmutableFudgeMsg (msg2, s_fudgeContext);
-    FudgeMsg msg4 = new ImmutableFudgeMsg (msg1, s_fudgeContext);
-    assertTrue (msg3.equals (msg4));
-    assertTrue (msg4.equals (msg3));
-    assertFalse (msg1.equals (msg3));
-    assertFalse (msg3.equals (msg1));
-    assertFalse (msg2.equals (msg4));
-    assertFalse (msg4.equals (msg2));
+  public void testEquals() {
+    MutableFudgeMsg msg1 = s_fudgeContext.newMessage();
+    msg1.add("foo", 1, "hello world");
+    msg1.add("bar", 2, 42);
+    MutableFudgeMsg msg2 = s_fudgeContext.newMessage();
+    assertFalse(msg1.equals(msg2));
+    assertFalse(msg2.equals(msg1));
+    msg2.add("foo", 1, "hello world");
+    assertFalse(msg1.equals(msg2));
+    assertFalse(msg2.equals(msg1));
+    msg2.add("bar", 2, 42);
+    assertTrue(msg1.equals(msg2));
+    assertTrue(msg2.equals(msg1));
+    FudgeMsg msg3 = new ImmutableFudgeMsg(s_fudgeContext, msg2);
+    FudgeMsg msg4 = new ImmutableFudgeMsg(s_fudgeContext, msg1);
+    assertTrue(msg3.equals(msg4));
+    assertTrue(msg4.equals(msg3));
+    assertFalse(msg1.equals(msg3));
+    assertFalse(msg3.equals(msg1));
+    assertFalse(msg2.equals(msg4));
+    assertFalse(msg4.equals(msg2));
   }
-  
+
   /**
    * 
    */
   @Test
   public void hasFieldByName() {
-    MutableFudgeMsg msg1 = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg1 = s_fudgeContext.newMessage();
     msg1.add("foo", 1, "hello world 1");
     msg1.add("bar", 2, 42);
     msg1.add("foo", 1, "hello world 2");
     msg1.add(null, 3, "no name");
-    
+
     assertTrue(msg1.hasField("foo"));
     assertTrue(msg1.hasField("bar"));
     assertFalse(msg1.hasField("foobar"));
@@ -468,12 +468,12 @@ public class FudgeMsgTest {
    */
   @Test
   public void hasFieldByOrdinal() {
-    MutableFudgeMsg msg1 = s_fudgeContext.newMessage ();
+    MutableFudgeMsg msg1 = s_fudgeContext.newMessage();
     msg1.add("foo", 1, "hello world 1");
     msg1.add("bar", 2, 42);
     msg1.add("foo", 1, "hello world 2");
     msg1.add(null, 3, "no name");
-    
+
     assertTrue(msg1.hasField(1));
     assertTrue(msg1.hasField(2));
     assertTrue(msg1.hasField(3));

@@ -20,46 +20,48 @@ import org.fudgemsg.mapping.ImmutableFudgeObjectDictionary;
 import org.fudgemsg.taxon.TaxonomyResolver;
 
 /**
- * <p>Immutable wrapper for a {@link FudgeContext} that will be used for the global
- * "default", or for use with {@link ImmutableFudgeMsg}. It cannot be configured
- * after construction.</p>
+ * An immutable wrapper for {@code FudgeContext}.
+ * <p>
+ * This is a simple wrapper for a context that blocks the mutable methods.
+ * This does not fully secure the context from editing, being intended simply
+ * to stop common programming errors.
  */
 public class ImmutableFudgeContext extends FudgeContext {
-  
+
   /**
    * Creates an immutable version of an existing {@link FudgeContext}. Immutable copies of the type and object dictionaries
    * are taken from the source context.
    * 
    * @param context the {@code FudgeContext} to base this on
    */
-  public ImmutableFudgeContext (final FudgeContext context) {
-    super.setTaxonomyResolver (context.getTaxonomyResolver ());
-    super.setTypeDictionary (new ImmutableFudgeTypeDictionary (context.getTypeDictionary ()));
-    super.setObjectDictionary (new ImmutableFudgeObjectDictionary (context.getObjectDictionary ()));
+  public ImmutableFudgeContext(final FudgeContext context) {
+    super.setTaxonomyResolver(context.getTaxonomyResolver());
+    super.setTypeDictionary(new ImmutableFudgeTypeDictionary(context.getTypeDictionary()));
+    super.setObjectDictionary(new ImmutableFudgeObjectDictionary(context.getObjectDictionary()));
   }
-  
+
   /**
    * Always throws an exception - this is an immutable context.
    */
   @Override
-  public void setTaxonomyResolver (TaxonomyResolver taxonomyResolver) {
-    throw new UnsupportedOperationException ("setTaxonomyResolver called on an immutable Fudge context");
+  public void setTaxonomyResolver(TaxonomyResolver taxonomyResolver) {
+    throw new UnsupportedOperationException("setTaxonomyResolver called on an immutable Fudge context");
   }
-  
+
   /**
    * Always throws an exception - this is an immutable context.
    */
   @Override
-  public void setTypeDictionary (FudgeTypeDictionary typeDictionary) {
-    throw new UnsupportedOperationException ("setTypeDictionary called on an immutable Fudge context");
+  public void setTypeDictionary(FudgeTypeDictionary typeDictionary) {
+    throw new UnsupportedOperationException("setTypeDictionary called on an immutable Fudge context");
   }
-  
+
   /**
    * Always throws an exception - this is an immutable context.
    */
   @Override
-  public void setObjectDictionary (FudgeObjectDictionary objectDictionary) {
-    throw new UnsupportedOperationException ("setObjectDictionary called on an immutable Fudge context");
+  public void setObjectDictionary(FudgeObjectDictionary objectDictionary) {
+    throw new UnsupportedOperationException("setObjectDictionary called on an immutable Fudge context");
   }
-  
+
 }

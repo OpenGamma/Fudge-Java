@@ -174,11 +174,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
     _processingDirectives = processingDirectives;
     _schemaVersion = schemaVersion;
     _taxonomyId = taxonomyId;
-    if (_taxonomyId != 0) {
-      _taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) _taxonomyId);
-    } else {
-      _taxonomy = null;
-    }
+    _taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) _taxonomyId);
   }
 
   @Override

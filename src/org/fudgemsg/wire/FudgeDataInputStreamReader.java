@@ -436,10 +436,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     _schemaVersion = getDataInput().readUnsignedByte();
     _taxonomyId = getDataInput().readShort();
     _envelopeSize = getDataInput().readInt();
-    if(getFudgeContext().getTaxonomyResolver() != null) {
-      FudgeTaxonomy taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy(_taxonomyId);
-      _taxonomy = taxonomy;
-    }
+    _taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy(_taxonomyId);
     pushProcessingState(8, _envelopeSize);
     return true;
   }

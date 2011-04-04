@@ -25,8 +25,8 @@ import java.io.OutputStream;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 
@@ -140,12 +140,7 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
   @Override
   public void setCurrentTaxonomyId(final int taxonomyId) {
     _taxonomyId = taxonomyId;
-    if (getFudgeContext().getTaxonomyResolver() != null) {
-      FudgeTaxonomy taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) taxonomyId);
-      _taxonomy = taxonomy;
-    } else {
-      _taxonomy = null;
-    }
+    _taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) taxonomyId);
   }
 
   /**

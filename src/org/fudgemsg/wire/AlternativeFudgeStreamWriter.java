@@ -84,12 +84,7 @@ public abstract class AlternativeFudgeStreamWriter implements FudgeStreamWriter 
   @Override
   public void setCurrentTaxonomyId(final int taxonomyId) {
     _taxonomyId = taxonomyId;
-    if (getFudgeContext().getTaxonomyResolver() != null) {
-      FudgeTaxonomy taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) taxonomyId);
-      _taxonomy = taxonomy;
-    } else {
-      _taxonomy = null;
-    }
+    _taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) taxonomyId);
   }
 
   /**

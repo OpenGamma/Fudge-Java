@@ -28,6 +28,7 @@ import org.fudgemsg.mapping.FudgeObjectReader;
 import org.fudgemsg.mapping.FudgeObjectWriter;
 import org.fudgemsg.mapping.FudgeSerializationContext;
 import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxon.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxon.TaxonomyResolver;
 import org.fudgemsg.wire.FudgeDataInputStreamReader;
 import org.fudgemsg.wire.FudgeDataOutputStreamWriter;
@@ -58,128 +59,160 @@ import org.fudgemsg.wire.FudgeStreamWriter;
  * {@code FudgeContext}, one per feed.</p>
  */
 public class FudgeContext implements FudgeMsgFactory {
-  
+
   /**
-   * A default global {@link FudgeContext} for getting code up and running quickly. The context cannot be modified
-   * in any way so can only be used for the core Fudge data types and will not support a taxonomy resolver. This
-   * should be used for trivial projects and code only.
+   * A default global {@link FudgeContext} for getting code up and running quickly.
+   * The context cannot be modified in any way so can only be used for the core Fudge
+   * data types and will not support a taxonomy resolver.
+   * This should be used for trivial projects and code only.
    */
-  public static final FudgeContext GLOBAL_DEFAULT = new ImmutableFudgeContext (new FudgeContext ());
-  
+  public static final FudgeContext GLOBAL_DEFAULT = new ImmutableFudgeContext(new FudgeContext());
   /**
    * A global empty {@link FudgeMsg}.
    */
-  public static final FudgeMsg EMPTY_MESSAGE = new ImmutableFudgeMsg (GLOBAL_DEFAULT); 
-  
+  public static final FudgeMsg EMPTY_MESSAGE = new ImmutableFudgeMsg(GLOBAL_DEFAULT);
   /**
    * A global empty {@link FudgeMsgEnvelope}.
    */
-  public static final FudgeMsgEnvelope EMPTY_MESSAGE_ENVELOPE = new FudgeMsgEnvelope (EMPTY_MESSAGE);
-  
-  private FudgeTypeDictionary _typeDictionary;
-  private FudgeObjectDictionary _objectDictionary;
-  private TaxonomyResolver _taxonomyResolver = null;
+  public static final FudgeMsgEnvelope EMPTY_MESSAGE_ENVELOPE = new FudgeMsgEnvelope(EMPTY_MESSAGE);
 
   /**
-   * Constructs a new FudgeContext with a default type and object dictionary.
+   * The taxonomy resolver.
+   */
+  private TaxonomyResolver _taxonomyResolver;
+  /**
+   * The type dictionary.
+   */
+  private FudgeTypeDictionary _typeDictionary;
+  /**
+   * The object dictionary.
+   */
+  private FudgeObjectDictionary _objectDictionary;
+
+  /**
+   * Constructs a new context with default empty dictionaries.
    */
   public FudgeContext() {
+    _taxonomyResolver = ImmutableMapTaxonomyResolver.EMPTY;
     _typeDictionary = new FudgeTypeDictionary();
     _objectDictionary = new FudgeObjectDictionary();
   }
 
   /**
-   * Constructs a new FudgeContext with copies of the supplied context's type and object dictionaries. It will share the
-   * taxonomy resolver with the supplied context.
+   * Constructs a new context with a copy of the dictionaries and taxonomy resolver
+   * from another context.
    * 
-   * @param other the context to copy the type and object dictionaries from
+   * @param other  the context to copy the dictionaries and taxonomy resolver from, not null
    */
   public FudgeContext(final FudgeContext other) {
+    _taxonomyResolver = other.getTaxonomyResolver();
     _typeDictionary = new FudgeTypeDictionary(other.getTypeDictionary());
     _objectDictionary = new FudgeObjectDictionary(other.getObjectDictionary());
   }
 
+  //-------------------------------------------------------------------------
   /**
-   * Returns the current {@link TaxonomyResolver} used by this context. A new {@code FudgeContext} starts with its own, default,
-   * taxonomy resolver. Any custom taxonomies must be registered with a resolver before they can be used.
+   * Gets the taxonomy resolver being used by this context.
+   * <p>
+   * This is used to manage taxonomies for any messages created or decoded through the context.
+   * A new {@code FudgeContext} starts with its own, default, taxonomy resolver.
+   * Any custom taxonomies must be registered with a resolver before they can be used.
    * 
-   * @return the taxonomy resolver
+   * @return the taxonomy resolver, not null
    */
   public TaxonomyResolver getTaxonomyResolver() {
     return _taxonomyResolver;
   }
 
   /**
-   * Sets the {@link TaxonomyResolver} to be used by this context when expanding field names for incoming Fudge messages.
+   * Sets the taxonomy resolver to be used by this context.
    * 
-   * @param taxonomyResolver the {@link TaxonomyResolver} to set
+   * @param taxonomyResolver  the taxonomy resolver to set, not null
    */
   public void setTaxonomyResolver(TaxonomyResolver taxonomyResolver) {
+    if (taxonomyResolver == null) {
+      throw new NullPointerException("TaxonomyResolver must not be null");
+    }
     _taxonomyResolver = taxonomyResolver;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Returns the current {@link FudgeTypeDictionary} used by this context and any messages created or decoded through it. A new
-   * {@code FudgeContext} starts with its own, default, type dictionary. Any custom types must be registered with the dictionary
-   * before they can be used.
+   * Gets the type dictionary used by this context.
+   * <p>
+   * This is used to manage types for any messages created or decoded through the context.
+   * A new {@code FudgeContext} starts with its own, default, type dictionary.
+   * Any custom types must be registered with the dictionary before they can be used.
    * 
-   * @return the current {@code FudgeTypeDictionary}
-   */ 
+   * @return the type dictionary, not null
+   */
   public FudgeTypeDictionary getTypeDictionary() {
     return _typeDictionary;
   }
 
   /**
-   * Sets the current {@link FudgeTypeDictionary} to be used by the context and any messages created or decoded through it.
+   * Sets the type dictionary to be used by the context.
    * 
-   * @param typeDictionary the new {@code FudgeTypeDictionary}
+   * @param typeDictionary  the type dictionary to set, not null
    */
   public void setTypeDictionary(FudgeTypeDictionary typeDictionary) {
-    if(typeDictionary == null) {
-      throw new NullPointerException("Every fudge context must have a type dictionary.");
+    if (typeDictionary == null) {
+      throw new NullPointerException("FudgeTypeDictionary must not be null");
     }
     _typeDictionary = typeDictionary;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Returns the current {@link FudgeObjectDictionary} used by the context for object/Fudge message serialisation and deserialisation.
-   * A new {@code FudgeContext} starts with its own, default, object dictionary. Any custom object or message builders must be
-   * registered with the dictionary before they can be used.
+   * Gets the object dictionary used by the context.
+   * <p>
+   * This is used to manage object serializaton for any messages created or decoded through the context.
+   * A new {@code FudgeContext} starts with its own, default, object dictionary.
+   * Any custom builders must be registered with the dictionary before they can be used.
    * 
-   * @return the current {@code FudgeObjectDictionary}
+   * @return the object dictionary, not null
    */
   public FudgeObjectDictionary getObjectDictionary() {
     return _objectDictionary;
   }
 
   /**
-   * Sets the current {@link FudgeObjectDictionary} to be used for object/Fudge message serialisation and deserialisation.
+   * Sets the object dictionary to be used by the context.
    * 
-   * @param objectDictionary the new {@code FudgeObjectDictionary}
+   * @param objectDictionary  the object dictionary to set, not null
    */
   public void setObjectDictionary(FudgeObjectDictionary objectDictionary) {
-    if(objectDictionary == null) {
-      throw new NullPointerException("Every fudge context must have an object dictionary.");
+    if (objectDictionary == null) {
+      throw new NullPointerException("FudgeObjectDictionary must not be null");
     }
     _objectDictionary = objectDictionary;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * {@inheritDoc}
-   */ 
+   * Passes this context to the configuration objects supplied to update the type and object dictionaries.
+   * This can be used with Bean based frameworks to configure a context for custom types through injection.
+   * 
+   * @param configurations  the configuration objects to use, not null
+   */
+  public void setConfiguration(final FudgeContextConfiguration... configurations) {
+    for (FudgeContextConfiguration configuration : configurations) {
+      configuration.configureFudgeContext(this);
+    }
+  }
+
+  //-------------------------------------------------------------------------
   @Override
   public MutableFudgeMsg newMessage() {
     return new StandardFudgeMsg(this);
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public MutableFudgeMsg newMessage (final FudgeMsg fromMessage) {
-    return new StandardFudgeMsg (fromMessage, this);
+  public MutableFudgeMsg newMessage(final FudgeMsg fromMessage) {
+    return new StandardFudgeMsg(this, fromMessage);
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Serializes a Fudge message to the output stream, without using a taxonomy,
    * 
@@ -201,7 +234,7 @@ public class FudgeContext implements FudgeMsgFactory {
    */
   public void serialize(FudgeMsg msg, Short taxonomyId, OutputStream os) {
     int realTaxonomyId = (taxonomyId == null) ? 0 : taxonomyId.intValue();
-    FudgeMsgWriter writer = createMessageWriter (os);
+    FudgeMsgWriter writer = createMessageWriter(os);
     FudgeMsgEnvelope envelope = new FudgeMsgEnvelope(msg);
     writer.writeMessageEnvelope(envelope, realTaxonomyId);
   }
@@ -219,7 +252,7 @@ public class FudgeContext implements FudgeMsgFactory {
     serialize(msg, taxonomyId, baos);
     return baos.toByteArray();
   }
-  
+
   /**
    * Returns the Fudge encoded form of a {@link FudgeMsg} as a {@code byte} array
    * without a taxonomy reference. The encoding includes an envelope header.
@@ -227,10 +260,11 @@ public class FudgeContext implements FudgeMsgFactory {
    * @param msg  the Fudge message to encode
    * @return an array containing the encoded message
    */
-  public byte[] toByteArray (FudgeMsg msg) {
-    return toByteArray (msg, null);
+  public byte[] toByteArray(FudgeMsg msg) {
+    return toByteArray(msg, null);
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Decodes a Fudge message from an {@link InputStream}.
    * 
@@ -238,8 +272,8 @@ public class FudgeContext implements FudgeMsgFactory {
    *  @return the next {@link FudgeMsgEnvelope} encoded on the stream
    */
   public FudgeMsgEnvelope deserialize(InputStream is) {
-    FudgeMsgReader reader = createMessageReader (is);
-    FudgeMsgEnvelope envelope = reader.nextMessageEnvelope ();
+    FudgeMsgReader reader = createMessageReader(is);
+    FudgeMsgEnvelope envelope = reader.nextMessageEnvelope();
     return envelope;
   }
 
@@ -255,173 +289,176 @@ public class FudgeContext implements FudgeMsgFactory {
     ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
     return deserialize(bais);
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * Creates a new reader for extracting Fudge stream elements from an {@link InputStream}.
    * 
    * @param is the {@code InputStream} to read from
    * @return the {@link FudgeStreamReader}
    */
-  public FudgeStreamReader createReader (final InputStream is) {
-    return new FudgeDataInputStreamReader (this, is);
+  public FudgeStreamReader createReader(final InputStream is) {
+    return new FudgeDataInputStreamReader(this, is);
   }
-  
+
   /**
    * Creates a new reader for extracting Fudge stream elements from a {@link DataInput}.
    * 
    * @param di the {@code DataInput} to read from
    * @return the {@link FudgeStreamReader}
    */
-  public FudgeStreamReader createReader (final DataInput di) {
-    return new FudgeDataInputStreamReader (this, di);
+  public FudgeStreamReader createReader(final DataInput di) {
+    return new FudgeDataInputStreamReader(this, di);
   }
-  
+
   /**
    * Creates a new writer for encoding Fudge stream elements to a {@link OutputStream}.
    * 
    * @param outputStream the {@code OutputStream} to write to
    * @return the {@link FudgeStreamWriter}
    */
-  public FudgeStreamWriter createWriter (final OutputStream outputStream) {
+  public FudgeStreamWriter createWriter(final OutputStream outputStream) {
     return new FudgeDataOutputStreamWriter(this, outputStream);
   }
-  
+
   /**
    * Creates a new writer for encoding Fudge stream elements to a {@link DataOutput}.
    * 
    * @param dataOutput the {@code DataOutput} to write to
    * @return the {@link FudgeStreamWriter}
    */
-  public FudgeStreamWriter createWriter (final DataOutput dataOutput) {
-    return new FudgeDataOutputStreamWriter (this, dataOutput);
+  public FudgeStreamWriter createWriter(final DataOutput dataOutput) {
+    return new FudgeDataOutputStreamWriter(this, dataOutput);
   }
-  
+
   /**
    * Creates a new reader for extracting whole Fudge messages from a {@link DataInput} source.
    * 
    * @param dataInput the source of data
    * @return the {@code FudgeMsgReader}
    */
-  public FudgeMsgReader createMessageReader (final DataInput dataInput) {
-    return new FudgeMsgReader (createReader (dataInput));
+  public FudgeMsgReader createMessageReader(final DataInput dataInput) {
+    return new FudgeMsgReader(createReader(dataInput));
   }
-  
+
   /**
    * Creates a new reader for extracting whole Fudge messages from a {@link InputStream} source.
    * 
    * @param inputStream the source of data
    * @return the {@code FudgeMsgReader}
    */
-  public FudgeMsgReader createMessageReader (final InputStream inputStream) {
-    return new FudgeMsgReader (createReader (inputStream));
+  public FudgeMsgReader createMessageReader(final InputStream inputStream) {
+    return new FudgeMsgReader(createReader(inputStream));
   }
-  
+
   /**
    * Creates a new writer for sending whole Fudge messages to a {@link DataOutput} target.
    * 
    * @param dataOutput the target to write to
    * @return the {@link FudgeMsgWriter}
    */
-  public FudgeMsgWriter createMessageWriter (final DataOutput dataOutput) {
-    return new FudgeMsgWriter (createWriter (dataOutput));
+  public FudgeMsgWriter createMessageWriter(final DataOutput dataOutput) {
+    return new FudgeMsgWriter(createWriter(dataOutput));
   }
-  
+
   /**
    * Creates a new writer for sending whole Fudge messages to a {@link OutputStream} target.
    * 
    * @param outputStream the target to write to
    * @return the {@link FudgeMsgWriter}
    */
-  public FudgeMsgWriter createMessageWriter (final OutputStream outputStream) {
-    return new FudgeMsgWriter (createWriter (outputStream));
+  public FudgeMsgWriter createMessageWriter(final OutputStream outputStream) {
+    return new FudgeMsgWriter(createWriter(outputStream));
   }
-  
+
   /**
    * Creates a new reader for deserialising Java objects from a Fudge data source.
    * 
    * @param dataInput the {@code DataInput} to read from
    * @return the {@link FudgeObjectReader}
    */
-  public FudgeObjectReader createObjectReader (final DataInput dataInput) {
-    return new FudgeObjectReader (createMessageReader (dataInput));
+  public FudgeObjectReader createObjectReader(final DataInput dataInput) {
+    return new FudgeObjectReader(createMessageReader(dataInput));
   }
-  
+
   /**
    * Creates a new reader for deserialising Java objects from a Fudge data source.
    * 
    * @param inputStream the {@code InputStream} to read from
    * @return the {@link FudgeObjectReader}
    */
-  public FudgeObjectReader createObjectReader (final InputStream inputStream) {
-    return new FudgeObjectReader (createMessageReader (inputStream));
+  public FudgeObjectReader createObjectReader(final InputStream inputStream) {
+    return new FudgeObjectReader(createMessageReader(inputStream));
   }
-  
+
   /**
    * Creates a new writer for serialising Java objects to a Fudge stream.
    * 
    * @param dataOutput the target to write to
    * @return the {@link FudgeObjectWriter}
    */
-  public FudgeObjectWriter createObjectWriter (final DataOutput dataOutput) {
-    return new FudgeObjectWriter (createMessageWriter (dataOutput));
+  public FudgeObjectWriter createObjectWriter(final DataOutput dataOutput) {
+    return new FudgeObjectWriter(createMessageWriter(dataOutput));
   }
-  
+
   /**
    * Creates a new writer for serialising Java objects to a Fudge stream.
    * 
    * @param outputStream the target to write to
    * @return the {@link FudgeObjectWriter}
    */
-  public FudgeObjectWriter createObjectWriter (final OutputStream outputStream) {
-    return new FudgeObjectWriter (createMessageWriter (outputStream));
+  public FudgeObjectWriter createObjectWriter(final OutputStream outputStream) {
+    return new FudgeObjectWriter(createMessageWriter(outputStream));
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Writes a Java object to an {@link OutputStream} using the Fudge serialization framework. The
-   * current {@link FudgeObjectDictionary} will be used to identify any custom message builders or apply
-   * default serialization behavior. Either a new serialization context will be used or an existing
-   * one reset for this operation.
+   * Writes a Java object to an {@link OutputStream} using the Fudge serialization framework.
+   * The current {@link FudgeObjectDictionary} will be used to identify any custom message builders
+   * or apply default serialization behavior. Either a new serialization context will be used or
+   * an existing one reset for this operation.
    * 
-   * @param object the {@link Object} to write
-   * @param outputStream the {@code OutputStream} to write the Fudge encoded form of the object to
+   * @param object  the {@link Object} to write, null returns null
+   * @param outputStream  the stream to write the Fudge encoded form of the object to, not null
    */
   public void writeObject(Object object, OutputStream outputStream) {
-    if(object == null) {
+    if (object == null) {
       return;
     }
-    FudgeObjectWriter osw = createObjectWriter (outputStream);
-    osw.write (object);
+    FudgeObjectWriter osw = createObjectWriter(outputStream);
+    osw.write(object);
   }
-  
+
   /**
-   * Reads a Java object from an {@link InputStream} using the Fudge serialization framework. The
-   * current {@link FudgeObjectDictionary} will be used to identify any custom object builders or apply
-   * default deserialization behavior. Always reads the next available Fudge message from the
+   * Reads a Java object from an {@link InputStream} using the Fudge serialization framework.
+   * The current {@link FudgeObjectDictionary} will be used to identify any custom object builders
+   * or apply default deserialization behavior. Always reads the next available Fudge message from the
    * stream even if the message cannot be converted to the requested Object. Either a new deserialization
    * context will be used or an existing one reset for this operation.
    * 
    * @param <T> the target type to decode the message to
-   * @param objectClass the target {@link Class} to decode a message of. If an object of this or a sub-class is not available, an exception will be thrown.
-   * @param inputStream the {@code InputStream} to read the next Fudge message from
+   * @param objectClass  the target {@code Class} to decode a message of. If an object of this or a sub-class is not available, an exception will be thrown.
+   * @param inputStream  the stream to read the next Fudge message from, not null
    * @return the object read
    */
   public <T> T readObject(Class<T> objectClass, InputStream inputStream) {
-    FudgeObjectReader osr = createObjectReader (inputStream);
-    T result = osr.read (objectClass);
+    FudgeObjectReader osr = createObjectReader(inputStream);
+    T result = osr.read(objectClass);
     return result;
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * Converts a Java object to a {@link FudgeMsgEnvelope} using the Fudge serialization framework. Note
-   * that for repeated operations, it would be more efficient to maintain a {@link FudgeSerializationContext}
-   * instance and use that.
+   * Converts a Java object to a {@link FudgeMsgEnvelope} using the Fudge serialization framework.
+   * <p>
+   * This is a shortcut method for ease-of-use. The recommended approach is to create
+   * a {@link FudgeSerializationContext} instance and use that.
    * 
-   * @param <T> Java type
-   * @param obj object to serialize
+   * @param obj  object to serialize, not null
    * @return the serialized message
    */
-  public <T> FudgeMsgEnvelope toFudgeMsg (T obj) {
-    final FudgeSerializationContext fsc = new FudgeSerializationContext (this);
+  public FudgeMsgEnvelope toFudgeMsg(Object obj) {
+    final FudgeSerializationContext fsc = new FudgeSerializationContext(this);
     final MutableFudgeMsg message = fsc.objectToFudgeMsg(obj);
     final Class<?> clazz = obj.getClass();
     if (!getObjectDictionary().isDefaultObject(clazz)) {
@@ -429,57 +466,50 @@ public class FudgeContext implements FudgeMsgFactory {
     }
     return new FudgeMsgEnvelope(message);
   }
-  
+
   /**
-   * Deserializes a {@link FudgeMsg} message to a Java object, trying to determine the 
-   * type of the object automatically. Note that for repeated operations, it would be more efficient to maintain
+   * Deserializes a {@link FudgeMsg} message to a Java object, determining the type of the object automatically.
+   * <p>
+   * This is a shortcut method for ease-of-use. The recommended approach is to create
    * a {@link FudgeDeserializationContext} instance and use that.
    * 
-   * @param message the Fudge message to deserialize
+   * @param message  the message to process, not null
    * @return the deserialized object
    */
-  public Object fromFudgeMsg (FudgeMsg message) {
-    final FudgeDeserializationContext fdc = new FudgeDeserializationContext (this);
-    return fdc.fudgeMsgToObject (message);
-  }
-  
-  /**
-   * Deserializes a {@link FudgeMsg} message to a Java object of type {@code clazz}. Note that for
-   * repeated operations, it would be more efficient to maintain a {@link FudgeDeserializationContext}
-   * instance and use that.
-   * 
-   * @param <T> Java type
-   * @param clazz the target type to deserialize
-   * @param message the message to process
-   * @return the deserialized object
-   */
-  public <T> T fromFudgeMsg (Class<T> clazz, FudgeMsg message) {
-    final FudgeDeserializationContext fdc = new FudgeDeserializationContext (this);
-    return fdc.fudgeMsgToObject (clazz, message);
-  }
-  
-  /**
-   * Type conversion for secondary types using information registered in the current type dictionary.
-   * See {@link FudgeTypeDictionary#getFieldValue} for more information.
-   * 
-   * @param <T> type to convert to
-   * @param clazz target class for the converted value
-   * @param field field containing the value to convert
-   * @return the converted value
-   */
-  public <T> T getFieldValue (final Class<T> clazz, final FudgeField field) {
-    return getTypeDictionary ().getFieldValue (clazz, field);
+  public Object fromFudgeMsg(FudgeMsg message) {
+    final FudgeDeserializationContext fdc = new FudgeDeserializationContext(this);
+    return fdc.fudgeMsgToObject(message);
   }
 
   /**
-   * Passes this context to the configuration objects supplied to update the type and object dictionaries.
-   * This can be used with Bean based frameworks to configure a context for custom types through injection.
+   * Deserializes a {@link FudgeMsg} message to a Java object of the specified type.
+   * <p>
+   * This is a shortcut method for ease-of-use. The recommended approach is to create
+   * a {@link FudgeDeserializationContext} instance and use that.
    * 
-   * @param configurations the configuration objects to use
+   * @param <T> Java type
+   * @param clazz  the target type to deserialize, not null
+   * @param message  the message to process, not null
+   * @return the deserialized object
    */
-  public void setConfiguration(final FudgeContextConfiguration... configurations) {
-    for (FudgeContextConfiguration configuration : configurations) {
-      configuration.configureFudgeContext(this);
-    }
+  public <T> T fromFudgeMsg(Class<T> clazz, FudgeMsg message) {
+    final FudgeDeserializationContext fdc = new FudgeDeserializationContext(this);
+    return fdc.fudgeMsgToObject(clazz, message);
   }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Type conversion for secondary types using information registered in the current type dictionary.
+   * <p>
+   * This delegates to {@link FudgeTypeDictionary#getFieldValue}.
+   * 
+   * @param <T> type to convert to
+   * @param clazz  target class for the converted value
+   * @param field  field containing the value to convert
+   * @return the converted value
+   */
+  public <T> T getFieldValue(final Class<T> clazz, final FudgeField field) {
+    return getTypeDictionary().getFieldValue(clazz, field);
+  }
+
 }

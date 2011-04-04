@@ -35,16 +35,12 @@ import org.fudgemsg.taxon.FudgeTaxonomy;
  * <p>
  * This class is mutable and not thread-safe.
  */
-public class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>, Serializable {
+public abstract class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>, Serializable {
 
   /**
    * The Fudge context.
    */
   private final FudgeContext _fudgeContext;
-  /**
-   * The list of fields.
-   */
-  private final List<FudgeField> _fields = new ArrayList<FudgeField>();
 
   /**
    * Constructor taking a Fudge context.
@@ -58,27 +54,6 @@ public class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>, Seriali
     _fudgeContext = fudgeContext;
   }
 
-  /**
-   * Constructor taking a set of fields and a Fudge context.
-   * <p>
-   * The fields from the given container are converted to be immutable.
-   * 
-   * @param fields  the initial set of fields, not null
-   * @param fudgeContext  the context to use for type resolution and other services, not null
-   */
-  protected AbstractFudgeMsg(final FudgeMsg fields, final FudgeContext fudgeContext) {
-    if (fields == null) {
-      throw new NullPointerException("Cannot initialize from a null FudgeFieldContainer");
-    }
-    if (fudgeContext == null) {
-      throw new NullPointerException("Context must be provided");
-    }
-    _fudgeContext = fudgeContext;
-    for (FudgeField field : fields.getAllFields()) {
-      _fields.add(FudgeMsgField.of(field));
-    }
-  }
-
   //-------------------------------------------------------------------------
   /**
    * Returns this message's {@link FudgeContext}.
@@ -90,13 +65,11 @@ public class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>, Seriali
   }
 
   /**
-   * Gets the live list of fields.
+   * Gets the list of fields.
    * 
-   * @return the mutable list of fields, not null
+   * @return the list of fields, not null
    */
-  protected List<FudgeField> getFields() {
-    return _fields;
-  }
+  protected abstract List<FudgeField> getFields();
 
   //-------------------------------------------------------------------------
   /**
@@ -225,7 +198,7 @@ public class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>, Seriali
         StandardFudgeMsg subMsg = (StandardFudgeMsg) field.getValue();
         subMsg.setNamesFromTaxonomy(taxonomy);
       } else if (field.getValue() instanceof FudgeMsg) {
-        StandardFudgeMsg subMsg = new StandardFudgeMsg((FudgeMsg) field.getValue(), getFudgeContext());
+        StandardFudgeMsg subMsg = new StandardFudgeMsg(getFudgeContext(), (FudgeMsg) field.getValue());
         subMsg.setNamesFromTaxonomy(taxonomy);
         field = FudgeMsgField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
         getFields().set(i, field);
