@@ -31,3 +31,13 @@ Changes:
 - Move API to using Integer rather than Short for ordinals
 
 - Unify all methods on name-ordinal-type-value argument ordering
+
+- Rename classes
+   FudgeMessageFactory to FudgeMsgFactory
+   FudgeMsg to StandardFudgeMsg
+   FudgeMsgBase to AbstractFudgeMsg
+   FudgeFieldContainer to FudgeMsg
+   MutableFudgeFieldContainer to MutableFudgeMsg
+
+- Remove classes
+   ImmutableFudgeFieldContainer
