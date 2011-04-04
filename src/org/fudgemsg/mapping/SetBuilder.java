@@ -55,7 +55,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
       if (entry == null) {
         msg.add(null, 1, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.objectToFudgeMsgWithClassHeaders(msg, null, ORDINAL, entry);
+        context.addToMessageWithClassHeaders(msg, null, ORDINAL, entry);
       }
     }
     return msg;

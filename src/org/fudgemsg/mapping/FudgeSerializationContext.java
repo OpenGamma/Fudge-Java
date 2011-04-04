@@ -114,7 +114,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param ordinal  the ordinal for the field, null if no field ordinal required
    * @param object  the value to add, null ignored
    */
-  public void objectToFudgeMsg(
+  public void addToMessage(
       final MutableFudgeMsg message, final String name, final Integer ordinal, final Object object) {
     if (object == null) {
       return;
@@ -140,9 +140,9 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param ordinal  the ordinal for the field, null if no field ordinal required
    * @param object  the value to add, null ignored
    */
-  public void objectToFudgeMsgWithClassHeaders(
+  public void addToMessageWithClassHeaders(
       final MutableFudgeMsg message, final String name, final Integer ordinal, final Object object) {
-    objectToFudgeMsgWithClassHeaders(message, name, ordinal, object, Object.class);
+    addToMessageWithClassHeaders(message, name, ordinal, object, Object.class);
   }
 
   /**
@@ -161,7 +161,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * @param object  the value to add, null ignored
    * @param receiverTarget  the Java class the receiver will expect, not null
    */
-  public void objectToFudgeMsgWithClassHeaders(
+  public void addToMessageWithClassHeaders(
       final MutableFudgeMsg message, final String name,
       final Integer ordinal, final Object object, final Class<?> receiverTarget) {
     if (object == null) {

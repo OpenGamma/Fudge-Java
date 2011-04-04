@@ -63,12 +63,12 @@ import org.fudgemsg.wire.types.FudgeWireType;
       if (entry.getKey() == null) {
         msg.add(null, KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.objectToFudgeMsgWithClassHeaders(msg, null, KEY_ORDINAL, entry.getKey());
+        context.addToMessageWithClassHeaders(msg, null, KEY_ORDINAL, entry.getKey());
       }
       if (entry.getValue() == null) {
         msg.add(null, VALUE_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.objectToFudgeMsgWithClassHeaders(msg, null, VALUE_ORDINAL, entry.getValue());
+        context.addToMessageWithClassHeaders(msg, null, VALUE_ORDINAL, entry.getValue());
       }
     }
     return msg;

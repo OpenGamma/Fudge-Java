@@ -47,7 +47,7 @@ import org.fudgemsg.MutableFudgeMsg;
   public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Object[] array) {
     final MutableFudgeMsg msg = context.newMessage();
     for (Object entry : array) {
-      context.objectToFudgeMsg(msg, null, null, entry);
+      context.addToMessage(msg, null, null, entry);
     }
     return msg;
   }

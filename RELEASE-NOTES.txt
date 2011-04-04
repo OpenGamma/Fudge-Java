@@ -43,4 +43,8 @@ Changes:
    ImmutableFudgeFieldContainer
 
 - Change constructors on ImmutableFudgeMsg
-   
+
+- Rename methods
+   FudgeSerializationContext.objectToFudgeMsg* -> addToMessage*
+
+

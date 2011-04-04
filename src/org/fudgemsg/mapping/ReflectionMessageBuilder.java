@@ -81,7 +81,7 @@ import org.fudgemsg.MutableFudgeMsg;
     try {
       for (Map.Entry<String, Method> accessor : getMethods().entrySet()) {
         //System.out.println ("\t" + accessor.getValue ());
-        context.objectToFudgeMsg(message, accessor.getKey(), null, accessor.getValue().invoke(object));
+        context.addToMessage(message, accessor.getKey(), null, accessor.getValue().invoke(object));
       }
     } catch (IllegalArgumentException ex) {
       throw new FudgeRuntimeException("Unable to serialise " + object, ex);

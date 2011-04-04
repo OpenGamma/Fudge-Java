@@ -196,7 +196,7 @@ import org.fudgemsg.MutableFudgeMsg;
         if (prop.getRead() == null) {
           continue;
         }
-        context.objectToFudgeMsgWithClassHeaders(
+        context.addToMessageWithClassHeaders(
             message, prop.getName(), prop.getOrdinal(), prop.getRead().invoke(object), prop.getType());
       }
     } catch (IllegalArgumentException ex) {
