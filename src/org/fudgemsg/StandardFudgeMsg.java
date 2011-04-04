@@ -192,39 +192,46 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     }
   }
 
+  //-------------------------------------------------------------------------
+  /**
+   * Gets a modifiable iterator over the list of fields in this message.
+   * <p>
+   * A message is partially ordered and the returned iterator reflects that order.
+   * 
+   * @return the modifiable iterator of fields, not null
+   */
   @Override
   public Iterator<FudgeField> iterator() {
-    // return the real iterator since this is a mutable message
-    return getFields().iterator();
+    return getFields().iterator();  // modifiable iterator, as this is a mutable message
   }
 
   @Override
   public void remove(Integer ordinal) {
-    final Iterator<FudgeField> i = iterator();
-    while (i.hasNext()) {
-      final FudgeField field = i.next();
+    final Iterator<FudgeField> it = iterator();
+    while (it.hasNext()) {
+      final FudgeField field = it.next();
       if (fieldOrdinalEquals(ordinal, field))
-        i.remove();
+        it.remove();
     }
   }
 
   @Override
   public void remove(String name) {
-    final Iterator<FudgeField> i = iterator();
-    while (i.hasNext()) {
-      final FudgeField field = i.next();
+    final Iterator<FudgeField> it = iterator();
+    while (it.hasNext()) {
+      final FudgeField field = it.next();
       if (fieldNameEquals(name, field))
-        i.remove();
+        it.remove();
     }
   }
 
   @Override
   public void remove(String name, Integer ordinal) {
-    final Iterator<FudgeField> i = iterator();
-    while (i.hasNext()) {
-      final FudgeField field = i.next();
+    final Iterator<FudgeField> ii = iterator();
+    while (ii.hasNext()) {
+      final FudgeField field = ii.next();
       if (fieldOrdinalEquals(ordinal, field) && fieldNameEquals(name, field))
-        i.remove();
+        ii.remove();
     }
   }
 

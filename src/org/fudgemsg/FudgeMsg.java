@@ -38,7 +38,7 @@ import java.util.Set;
 public interface FudgeMsg extends Iterable<FudgeField> {
 
   /**
-   * Gets the size of the container.
+   * Gets the size of the message.
    * <p>
    * This returns the total number of fields.
    * 
@@ -47,19 +47,19 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   short getNumFields();
 
   /**
-   * Checks if the container is empty.
+   * Checks if the message is empty.
    * <p>
    * This checks to see if there are any fields present.
    * 
-   * @return true if the container is empty
+   * @return true if the message is empty
    */
   boolean isEmpty();
 
   //-------------------------------------------------------------------------
   /**
-   * Gets an iterator over the list of fields in this container.
+   * Gets an iterator over the list of fields in this message.
    * <p>
-   * A container is ordered and the returned iterator reflects that order.
+   * A message is partially ordered and the returned iterator reflects that order.
    * 
    * @return the iterator of fields, may be unmodifiable, not null
    */
@@ -67,16 +67,16 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   Iterator<FudgeField> iterator();
 
   /**
-   * Gets the list of all the fields in this container.
+   * Gets the list of all the fields in this message.
    * <p>
-   * A container is ordered and the returned list reflects that order.
+   * A message is partially ordered and the returned list reflects that order.
    * 
    * @return the unmodifiable list of fields, not null
    */
   List<FudgeField> getAllFields();
 
   /**
-   * Gets the set of all unique field names in this container.
+   * Gets the set of all unique field names in this message.
    * 
    * @return the unmodifiable set of names, not null
    */
@@ -84,7 +84,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
 
   //-------------------------------------------------------------------------
   /**
-   * Gets the field in the container with the given index offset.
+   * Gets the field in the message with the given index offset.
    * 
    * @param index  the zero-based offset into the message of the field, valid
    * @return the field
@@ -93,18 +93,18 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   FudgeField getByIndex(int index);
 
   /**
-   * Checks whether this container has any field which matches the given name.
+   * Checks whether this message has any field which matches the given name.
    * 
    * @param name  the field name to check, null matches fields without a name
-   * @return true if this container has at least one field with the specified name
+   * @return true if this message has at least one field with the specified name
    */
   boolean hasField(String name);
 
   /**
    * Gets the list of all fields with the given name.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
-   * This method returns all matching fields in the order of the container.
+   * A message is partially ordered and may contain multiple fields with the same name.
+   * This method returns all matching fields in the order of the message.
    * 
    * @param name  the field name, null matches fields without a name
    * @return the unmodifiable list of matching fields, not null
@@ -114,7 +114,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the first field with the given name.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the first that matches.
    * 
    * @param name  the field name, null matches fields without a name
@@ -123,18 +123,18 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   FudgeField getByName(String name);
 
   /**
-   * Checks whether this container has any field which matches the given ordinal.
+   * Checks whether this message has any field which matches the given ordinal.
    * 
    * @param ordinal  the field ordinal to check, null matches fields without an ordinal
-   * @return true if this container has at least one field with the specified ordinal
+   * @return true if this message has at least one field with the specified ordinal
    */
   boolean hasField(Integer ordinal);
 
   /**
    * Gets the list of all fields with the given ordinal.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
-   * This method returns all matching fields in the order of the container.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
+   * This method returns all matching fields in the order of the message.
    * 
    * @param ordinal  the field ordinal, null matches fields without an ordinal
    * @return the unmodifiable list of matching fields, not null
@@ -144,7 +144,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the first field with the given ordinal.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the first that matches.
    * 
    * @param ordinal  the field ordinal, null matches fields without an ordinal
@@ -175,7 +175,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches.
    * 
    * @param <T>  the class to convert to
@@ -188,7 +188,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches.
    * 
    * @param <T>  the class to convert to
@@ -203,7 +203,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as an {@code Object}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches.
    * 
    * @param name  the field name, null matches fields without a name
@@ -214,7 +214,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as an {@code Object}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches.
    * 
    * @param ordinal  the field ordinal
@@ -225,7 +225,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code Double}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a double.
    * 
@@ -237,7 +237,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code Double}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a double.
    * 
@@ -249,7 +249,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code Float}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a float.
    * 
@@ -261,7 +261,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code Float}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a float.
    * 
@@ -273,7 +273,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code Long}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a long.
    * 
@@ -285,7 +285,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code Long}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a long.
    * 
@@ -297,7 +297,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as an {@code Integer}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to an integer.
    * 
@@ -309,7 +309,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as an {@code Integer}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to an integer.
    * 
@@ -321,7 +321,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code Short}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a short.
    * 
@@ -333,7 +333,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code Short}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a short.
    * 
@@ -345,7 +345,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code Byte}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a byte.
    * 
@@ -357,7 +357,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code Byte}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a byte.
    * 
@@ -369,7 +369,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code String}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a string.
    * 
@@ -381,7 +381,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code String}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a string.
    * 
@@ -393,7 +393,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code Boolean}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a boolean.
    * 
@@ -405,7 +405,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code Boolean}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a boolean.
    * 
@@ -417,7 +417,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given name as a {@code FudgeMsg}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same name.
+   * A message is partially ordered and may contain multiple fields with the same name.
    * This method returns the value of the first that matches with a type that can
    * be converted to a message.
    * 
@@ -429,7 +429,7 @@ public interface FudgeMsg extends Iterable<FudgeField> {
   /**
    * Gets the value of the first field with the given ordinal as a {@code FudgeMsg}.
    * <p>
-   * A container is ordered and may contain multiple fields with the same ordinal.
+   * A message is partially ordered and may contain multiple fields with the same ordinal.
    * This method returns the value of the first that matches with a type that can
    * be converted to a message.
    * 
