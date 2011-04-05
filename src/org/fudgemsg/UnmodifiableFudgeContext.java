@@ -16,7 +16,7 @@
 package org.fudgemsg;
 
 import org.fudgemsg.mapping.FudgeObjectDictionary;
-import org.fudgemsg.mapping.ImmutableFudgeObjectDictionary;
+import org.fudgemsg.mapping.UnmodifiableFudgeObjectDictionary;
 import org.fudgemsg.taxon.TaxonomyResolver;
 
 /**
@@ -37,7 +37,7 @@ public class UnmodifiableFudgeContext extends FudgeContext {
   public UnmodifiableFudgeContext(final FudgeContext context) {
     super.setTaxonomyResolver(context.getTaxonomyResolver());
     super.setTypeDictionary(new UnmodifiableFudgeTypeDictionary(context.getTypeDictionary()));
-    super.setObjectDictionary(new ImmutableFudgeObjectDictionary(context.getObjectDictionary()));
+    super.setObjectDictionary(new UnmodifiableFudgeObjectDictionary(context.getObjectDictionary()));
   }
 
   /**

@@ -24,6 +24,8 @@ import java.util.Map;
  * <p>
  * The map of taxonomy by ID is loaded and fixed at construction.
  * This is most useful when the taxonomies are known at startup.
+ * <p>
+ * This class is immutable provided that the taxonomies are immutable.
  */
 public class ImmutableMapTaxonomyResolver implements TaxonomyResolver {
 

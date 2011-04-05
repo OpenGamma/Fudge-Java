@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
 /**
- * A decorator creating a factory that is immutable.
+ * An unmodifiable decorator wrapping a factory.
  * <p>
- * This class is not mutable and thread safe.
+ * This class is not-modifiable rather than immutable.
  */
-/* package */final class ImmutableFudgeBuilderFactory extends FudgeBuilderFactoryAdapter {
+/* package */final class UnmodifiableFudgeBuilderFactory extends FudgeBuilderFactoryAdapter {
 
   /**
    * Creates a new factory wrapping another instance.
    * 
    * @param underlying  the instance to pass non-overridden method calls to, not null
    */
-  /* package */ImmutableFudgeBuilderFactory(FudgeBuilderFactory underlying) {
+  UnmodifiableFudgeBuilderFactory(FudgeBuilderFactory underlying) {
     super(underlying);
   }
 

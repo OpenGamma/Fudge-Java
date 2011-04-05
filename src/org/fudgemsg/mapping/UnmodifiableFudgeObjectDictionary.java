@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
 /**
- * A decorator creating an immutable dictionary.
+ * An unmodifiable decorator wrapping an object dictionary.
  * <p>
- * This class is not mutable and thread safe.
+ * This class is not-modifiable rather than immutable.
  */
-public final class ImmutableFudgeObjectDictionary extends FudgeObjectDictionary {
+public final class UnmodifiableFudgeObjectDictionary extends FudgeObjectDictionary {
 
   /**
    * Creates a new dictionary wrapping another instance.
    * 
    * @param underlying  the instance to pass non-overridden method calls to, not null
    */
-  public ImmutableFudgeObjectDictionary(final FudgeObjectDictionary underlying) {
+  public UnmodifiableFudgeObjectDictionary(final FudgeObjectDictionary underlying) {
     super(underlying);
   }
 

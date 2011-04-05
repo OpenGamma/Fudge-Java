@@ -41,6 +41,8 @@ The wire protocol is unchanged.
    ImmutableFudgeMsg to UnmodifiableFudgeMsg
    ImmutableFudgeContext to UnmodifiableFudgeContext
    ImmutableFudgeTypeDictionary to UnmodifiableFudgeTypeDictionary
+   ImmutableFudgeBuilderFactory to UnmodifiableFudgeBuilderFactory
+   ImmutableFudgeObjectDictionary to UnmodifiableFudgeObjectDictionary
 
 - Remove classes
    ImmutableFudgeFieldContainer

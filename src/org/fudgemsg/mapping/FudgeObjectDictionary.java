@@ -125,7 +125,7 @@ public class FudgeObjectDictionary {
   public FudgeObjectDictionary(final FudgeObjectDictionary other) {
     _objectBuilders = new ConcurrentHashMap<Class<?>, FudgeObjectBuilder<?>>(other._objectBuilders);
     _messageBuilders = new ConcurrentHashMap<Class<?>, FudgeMessageBuilder<?>>(other._messageBuilders);
-    _defaultBuilderFactory = new ImmutableFudgeBuilderFactory(other._defaultBuilderFactory);
+    _defaultBuilderFactory = new UnmodifiableFudgeBuilderFactory(other._defaultBuilderFactory);
   }
 
   //-------------------------------------------------------------------------
