@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire.json;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 /**
- * Reader that decodes JSON into Fudge messages.
+ * A Fudge reader that interprets JSON.
  */
 public class FudgeJSONStreamReader implements FudgeStreamReader {
 
@@ -59,42 +58,55 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
   private final Queue<String> _fieldLookahead = new LinkedList<String>();
   private final Queue<Object> _valueLookahead = new LinkedList<Object>();
 
-  public FudgeJSONStreamReader(final FudgeContext fudgeContext, final Reader underlying, final JSONSettings settings) {
-    _fudgeContext = fudgeContext;
-    _underlying = underlying;
-    _settings = settings;
-    _tokener = new JSONTokener(underlying);
-  }
-
+  /**
+   * Creates a new instance for reading a Fudge stream from a JSON reader.
+   * 
+   * @param fudgeContext  the Fudge context, not null
+   * @param reader  the underlying reader, not null
+   */
   public FudgeJSONStreamReader(final FudgeContext fudgeContext, final Reader reader) {
     this(fudgeContext, reader, new JSONSettings());
   }
 
+  /**
+   * Creates a new instance for reading a Fudge stream from a JSON reader.
+   * 
+   * @param fudgeContext  the Fudge context, not null
+   * @param reader  the underlying reader, not null
+   * @param settings  the JSON settings to fine tune the read, not null
+   */
+  public FudgeJSONStreamReader(final FudgeContext fudgeContext, final Reader reader, final JSONSettings settings) {
+    _fudgeContext = fudgeContext;
+    _underlying = reader;
+    _settings = settings;
+    _tokener = new JSONTokener(reader);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Gets the underlying reader.
+   * 
+   * @return the reader, not null
+   */
   protected Reader getUnderlying() {
     return _underlying;
   }
 
+  /**
+   * Gets the JSON token provider.
+   * 
+   * @return the JSON reader, not null
+   */
   protected JSONTokener getTokener() {
     return _tokener;
   }
 
-  @Override
-  public void close() {
-    if (getUnderlying() != null) {
-      try {
-        getUnderlying().close();
-      } catch (IOException e) {
-        throw new FudgeRuntimeIOException(e);
-      }
-    }
-  }
-
-  protected RuntimeException wrapException(String message, final JSONException e) {
+  protected RuntimeException wrapException(String message, final JSONException ex) {
     message = "Error " + message + " from JSON stream";
-    if (e.getCause() instanceof IOException) {
-      return new FudgeRuntimeIOException(message, (IOException) e.getCause());
+    if (ex.getCause() instanceof IOException) {
+      return new FudgeRuntimeIOException(message, (IOException) ex.getCause());
     } else {
-      return new FudgeRuntimeException(message, e);
+      return new FudgeRuntimeException(message, ex);
     }
   }
 
@@ -366,6 +378,22 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
   @Override
   public FudgeStreamReader skipMessageField() {
     throw new UnsupportedOperationException();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Closes the underlying {@code DataInput} if it implements {@code Closeable}.
+   */
+  @Override
+  public void close() {
+    final Reader underlying = getUnderlying();
+    if (underlying != null) {
+      try {
+        underlying.close();
+      } catch (IOException ex) {
+        throw new FudgeRuntimeIOException(ex);
+      }
+    }
   }
 
 }

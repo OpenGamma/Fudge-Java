@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire.xml;
 
 import java.io.IOException;
@@ -41,7 +40,7 @@ import org.fudgemsg.wire.FudgeStreamReader;
  * Reader that decodes XML into Fudge messages.
  */
 public class FudgeXMLStreamReader implements FudgeStreamReader {
-  
+
   private final Stack<String> _messageStack = new Stack<String>();  
   private final FudgeXMLSettings _settings;
   private final FudgeContext _fudgeContext;
@@ -58,37 +57,57 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   private Object _fieldValue = null;
   private FudgeFieldType _fieldType = null;
   private int _currentEvent = XMLStreamConstants.START_DOCUMENT;
-  
+
+  /**
+   * Creates a new instance for reading a Fudge stream from an XML reader.
+   * 
+   * @param fudgeContext  the Fudge context, not null
+   * @param reader  the underlying reader, not null
+   */
   public FudgeXMLStreamReader(final FudgeContext fudgeContext, final Reader reader) {
     this(fudgeContext, reader, new FudgeXMLSettings());
   }
-  
-  public FudgeXMLStreamReader(final FudgeContext fudgeContext, final Reader underlying, final FudgeXMLSettings settings) {
+
+  /**
+   * Creates a new instance for reading a Fudge stream from an XML reader.
+   * 
+   * @param fudgeContext  the Fudge context, not null
+   * @param reader  the underlying reader, not null
+   * @param settings  the XML settings to fine tune the read, not null
+   */
+  public FudgeXMLStreamReader(final FudgeContext fudgeContext, final Reader reader, final FudgeXMLSettings settings) {
     if (fudgeContext == null) {
       throw new NullPointerException("FudgeContext must not be null");
     }
-    if (underlying == null) {
+    if (reader == null) {
       throw new NullPointerException("Reader must not be null");
     }
     if (settings == null) {
       throw new NullPointerException("FudgeXMLSettings must not be null");
     }
     _fudgeContext = fudgeContext;
-    _underlying = underlying;
+    _underlying = reader;
     _settings = settings;
-    _xmlStreamReader = createXMLStreamReader(underlying);
+    _xmlStreamReader = createXMLStreamReader(reader);
   }
 
+  /**
+   * Creates the XML reader.
+   * 
+   * @param reader  the underlying reader, not null
+   * @return the XML reader, not null
+   */
   private XMLStreamReader createXMLStreamReader(Reader reader) {
     XMLInputFactory factory = XMLInputFactory.newInstance();
     try {
       XMLStreamReader parser = factory.createXMLStreamReader(reader);
       return parser;
-    } catch (XMLStreamException e) {
-      throw wrapException("create", e);
+    } catch (XMLStreamException ex) {
+      throw wrapException("create", ex);
     }
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
    * @param currentElement the currentElement to set
    */
@@ -125,17 +144,6 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
     return _xmlStreamReader;
   }
 
-  @Override
-  public void close() {
-    if (getUnderlying() != null) {
-      try {
-        getUnderlying().close();
-      } catch (IOException e) {
-        throw new FudgeRuntimeIOException(e);
-      }
-    }
-  }
-
   private RuntimeException wrapException(String message, final XMLStreamException e) {
     message = "Error " + message + " from XML stream";
     if (e.getCause() instanceof IOException) {
@@ -153,7 +161,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   private boolean isEndOfEnvelopeElement() {
     return _currentEvent == XMLStreamConstants.END_ELEMENT && _messageStack.isEmpty();
   }
-  
+
   private boolean isEndOfDocument() {
     return _currentEvent == XMLStreamConstants.END_DOCUMENT;
   }
@@ -182,7 +190,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
     }
     return _currentElement;
   }
-  
+
   private FudgeStreamElement processStartElement() throws XMLStreamException {
     String element = _xmlStreamReader.getLocalName();
     String fieldAttrName = _xmlStreamReader.getAttributeValue(null, _settings.getFieldAttributeName());
@@ -208,7 +216,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   private boolean isEnvelopeElement(String element) {
     return element.equalsIgnoreCase(_settings.getEnvelopeElementName());
   }
-  
+
   private Object convertFieldValue(FudgeFieldType fudgeType, String elementValue) {
     switch (fudgeType.getTypeId()) {
       case FudgeTypeDictionary.INDICATOR_TYPE_ID:
@@ -258,7 +266,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
         return elementValue;
     }
   }
-  
+
   private Object toShortArray(final String fieldValue) {
     final String[] values = fieldValue.split(",");
     short[] result = new short[values.length];
@@ -335,7 +343,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
       }
     }
   }
-  
+
   private boolean isMessage(String type) {
     Integer fudgeTypeId = _settings.getIdentifiersToFudgeType().get(type);
     return FudgeTypeDictionary.FUDGE_MSG_TYPE_ID == fudgeTypeId;
@@ -352,7 +360,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
     _messageStack.push(element);
     return FudgeStreamElement.MESSAGE_ENVELOPE;
   }
-  
+
   private static int toInt(String str, int defaultValue) {
     if (str == null) {
       return defaultValue;
@@ -363,7 +371,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
       return defaultValue;
     }
   }
-  
+
   @Override
   public FudgeStreamElement getCurrentElement() {
     return _currentElement;
@@ -417,6 +425,22 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
   @Override
   public FudgeStreamReader skipMessageField() {
     throw new UnsupportedOperationException();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Closes the underlying {@code DataInput} if it implements {@code Closeable}.
+   */
+  @Override
+  public void close() {
+    final Reader underlying = getUnderlying();
+    if (underlying != null) {
+      try {
+        underlying.close();
+      } catch (IOException ex) {
+        throw new FudgeRuntimeIOException(ex);
+      }
+    }
   }
 
 }

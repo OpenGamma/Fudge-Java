@@ -23,9 +23,9 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
- * Abstract interface for reading Fudge elements from a source. This base can be used
- * to build full Fudge message parsers or deserialisers to construct Java objects directly
- * from Fudge streams.
+ * A reader that can receive and interpret Fudge messages.
+ * <p>
+ * This interface provides the basic contract for classes that read Fudge messages.
  */
 public interface FudgeStreamReader extends Closeable {
 
@@ -51,11 +51,23 @@ public interface FudgeStreamReader extends Closeable {
     SUBMESSAGE_FIELD_END
   }
 
+  //-------------------------------------------------------------------------
   /**
-   * <p>Returns true if there is at least one more element to be returned by a call to {@link #next()}. A return of {@code false}
-   * indicates the end of a message (or submessage) has been reached. After the end of a sub-message, the next immediate call will
-   * indicate whether there are further elements or the end of the outer message. After the end of the main message referenced by
-   * the envelope header, the next immediate call may:</p>
+   * Gets the Fudge context, used for type and taxonomy resolution.
+   * 
+   * @return the context, not null
+   */
+  FudgeContext getFudgeContext();
+
+  //-------------------------------------------------------------------------
+  /**
+   * Checks if there is another element in the stream.
+   * <p>
+   * This checks if there is another element to read using a call to {@link #next()}.
+   * A false result indicates the end of a message (or submessage) has been reached.
+   * After the end of a sub-message, the next immediate call will indicate whether there are
+   * further elements or the end of the outer message. After the end of the main message
+   * referenced by the envelope header, the next immediate call may:
    * <ol>
    * <li>Return {@code false} if the source does not contain any subsequent Fudge messages; or</li>
    * <li>Return {@code true} if the source may contain further Fudge messages. Calling {@code next()} will return the envelope header
@@ -64,101 +76,102 @@ public interface FudgeStreamReader extends Closeable {
    * 
    * @return {@code true} if there is at least one more element to read
    */
-  public boolean hasNext();
+  boolean hasNext();
 
   /**
    * Reads the next stream element from the source and returns the element type.
    * 
-   * @return the type of the next element in the stream, or {@code null} if the end of stream has been reached at a message
-   *         boundary (i.e. attempting to read the first byte of an envelope)
+   * @return the type of the next element in the stream, null if the end of stream has been reached
+   *   at a message boundary (i.e. attempting to read the first byte of an envelope)
    */
-  public FudgeStreamElement next();
+  FudgeStreamElement next();
 
   /**
    * Returns the value last returned by {@link #next()}.
    * 
    * @return the type of the current element in the stream
    */
-  public FudgeStreamElement getCurrentElement();
+  FudgeStreamElement getCurrentElement();
 
   /**
-   * If the current stream element is a field, returns the field value.
-   * 
-   * @return current field value
-   */
-  public Object getFieldValue();
-
-  /**
-   * Returns the processing directivies specified in the last envelope header read.
-   * 
-   * @return current processing directive flags 
-   */
-  public int getProcessingDirectives();
-
-  /**
-   * Returns the schema version specified in the last envelope header read.
-   * 
-   * @return current message schema version
-   */
-  public int getSchemaVersion();
-
-  /**
-   * Returns the taxonomy identifier specified in the last envelope header read.
-   * 
-   * @return current taxonomy identifier
-   */
-  public short getTaxonomyId();
-
-  /**
-   * If the current stream element is a field, returns the {@link FudgeFieldType}.
-   * 
-   * @return current field type
-   */
-  public FudgeFieldType getFieldType();
-
-  /**
-   * If the current stream element is a field, returns the ordinal index, or {@code null} if the field did not include an ordinal.
-   * 
-   * @return current field ordinal
-   */
-  public Integer getFieldOrdinal();
-
-  /**
-   * If the current stream element is a field, returns the field name. If the underlying stream does not specify a field
-   * name, but the ordinal can be resolved through a taxonomy, returns the resolved name.
-   * 
-   * @return current field name
-   */
-  public String getFieldName();
-
-  /**
-   * Returns the current {@link FudgeTaxonomy} corresponding to the taxonomy identifier specified in the message envelope. Returns
-   * {@code null} if the message did not specify a taxonomy or the taxonomy identifier cannot be resolved by the bound {@link FudgeContext}.
-   * 
-   * @return current taxonomy if available
-   */
-  public FudgeTaxonomy getTaxonomy();
-
-  /**
-   * Returns the {@link FudgeContext} bound to the reader used for type and taxonomy resolution.
-   * 
-   * @return the {@code FudgeContext}
-   */
-  public FudgeContext getFudgeContext();
-
-  /**
-   * Closes the {@link FudgeStreamReader} and attempts to close the underlying data source if appropriate.
-   */
-  public void close();
-
-  /**
-   * If a SUBMESSAGE_FIELD_START has just been encountered, advances the stream so that the next element read will be the field
-   * after the sub-message field. The returned stream will contain the elements skipped over. This is an optional operation and
-   * the stream may throw an UnsupportedOperationException if it does not support it.
+   * Skips a sub-message.
+   * <p>
+   * If a SUBMESSAGE_FIELD_START has just been encountered, this advances the stream
+   * so that the next element read will be the field after the sub-message field.
+   * The returned stream will contain the elements skipped over.
+   * This is an optional operation and the stream may throw an
+   * {@code UnsupportedOperationException} if it does not support it.
    * 
    * @return a reader for the skipped fields
    * @throws UnsupportedOperationException if the stream does not support this
    */
-  public FudgeStreamReader skipMessageField();
+  FudgeStreamReader skipMessageField();
+
+  //-------------------------------------------------------------------------
+  /**
+   * Gets the processing directives specified in the last envelope header read.
+   * 
+   * @return current processing directive flags 
+   */
+  int getProcessingDirectives();
+
+  /**
+   * Gets the schema version specified in the last envelope header read.
+   * 
+   * @return current message schema version
+   */
+  int getSchemaVersion();
+
+  /**
+   * Gets the taxonomy identifier specified in the last envelope header read.
+   * 
+   * @return current taxonomy identifier
+   */
+  short getTaxonomyId();
+
+  /**
+   * Gets the taxonomy associated with the taxonomy id in the last envelope header read.
+   * This returns null if there is no associated taxonomy.
+   * 
+   * @return current taxonomy, null if non taxonomy
+   */
+  FudgeTaxonomy getTaxonomy();
+
+  //-------------------------------------------------------------------------
+  /**
+   * Gets the field name of the current element if it is a field.
+   * If the field has no name but does have an ordinal, then the taxonomy
+   * will be used to attempt to lookup the name.
+   * 
+   * @return current field name, null if no name
+   */
+  String getFieldName();
+
+  /**
+   * Gets the field ordinal of the current element if it is a field.
+   * 
+   * @return current field ordinal, null if no ordinal
+   */
+  Integer getFieldOrdinal();
+
+  /**
+   * Gets the field type of the current element if it is a field.
+   * 
+   * @return current field type
+   */
+  FudgeFieldType getFieldType();
+
+  /**
+   * Gets the field value of the current element if it is a field.
+   * 
+   * @return current field value
+   */
+  Object getFieldValue();
+
+  //-------------------------------------------------------------------------
+  /**
+   * Closes the reader, and attempts to close any underlying data source.
+   */
+  void close();
 
 }
