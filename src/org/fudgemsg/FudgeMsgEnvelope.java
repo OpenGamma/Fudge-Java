@@ -34,7 +34,7 @@ public class FudgeMsgEnvelope implements Serializable {
    */
   private final FudgeMsg _message;
   /**
-   * The processing direcives.
+   * The processing directives.
    */
   private final int _processingDirectives;
   /**
@@ -139,6 +139,25 @@ public class FudgeMsgEnvelope implements Serializable {
   @Override
   public int hashCode() {
     return _version ^ _processingDirectives ^ _message.hashCode();
+  }
+
+  /**
+   * Returns a string suitable for debugging.
+   * 
+   * @return a string, not null
+   */
+  @Override
+  public String toString() {
+    StringBuilder buf = new StringBuilder();
+    buf.append("FudgeMsgEnvelope[");
+    if (getVersion() != 0) {
+      buf.append("version=").append(getVersion()).append(',');
+    }
+    if (getProcessingDirectives() != 0) {
+      buf.append("processing=").append(getProcessingDirectives()).append(',');
+    }
+    buf.append(getMessage()).append(']');
+    return buf.toString();
   }
 
 }
