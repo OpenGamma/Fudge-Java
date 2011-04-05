@@ -49,6 +49,7 @@ The wire protocol is unchanged.
 
 - Remove classes
    ImmutableFudgeFieldContainer
+   ModifiedUTF8Util
 
 - Change constructors
    UnmodifiableFudgeMsg (parameter order)
