@@ -31,7 +31,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * The object builder framework methods all take a serialization context.
  * Note that the serializer cannot process cyclic object graphs at present.
  * <p>
- * <p>
  * This class is mutable but thread-safe via concurrent collections.
  */
 public class FudgeSerializationContext implements FudgeMsgFactory {
