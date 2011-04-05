@@ -58,7 +58,7 @@ final class DateTimeWireType extends FudgeWireType {
    * @return the date
    * @throws IOException if there is an error from the input source
    */
-  final static FudgeDate readFudgeDate(final DataInput input) throws IOException {
+  static FudgeDate readFudgeDate(final DataInput input) throws IOException {
     final int n = input.readInt();
     final int dayOfMonth = (n & 31);
     final int monthOfYear = (n >> 5) & 15;
@@ -74,7 +74,7 @@ final class DateTimeWireType extends FudgeWireType {
    * @return the time
    * @throws IOException if there is an error from the input source
    */
-  final static FudgeTime readFudgeTime(final DataInput input) throws IOException {
+  static FudgeTime readFudgeTime(final DataInput input) throws IOException {
     final int hi = input.readInt();
     final int lo = input.readInt();
     final int timezoneOffset = (hi >> 24); // sign extend
@@ -92,7 +92,7 @@ final class DateTimeWireType extends FudgeWireType {
    * @param value Fudge date
    * @throws IOException if there is an error from the output target
    */
-  final static void writeFudgeDate(final DataOutput output, final FudgeDate value) throws IOException {
+  static void writeFudgeDate(final DataOutput output, final FudgeDate value) throws IOException {
     final int dayOfMonth = value.getDayOfMonth();
     final int monthOfYear = value.getMonthOfYear();
     final int year = value.getYear();
@@ -108,7 +108,7 @@ final class DateTimeWireType extends FudgeWireType {
    * @param value the Fudge time
    * @throws IOException if there is an error from the output target
    */
-  final static void writeFudgeTime(final DataOutput output, final FudgeTime value) throws IOException {
+  static void writeFudgeTime(final DataOutput output, final FudgeTime value) throws IOException {
     final int hi = (value.getSecondsSinceMidnight() & 0x1FFFF) | (value.getAccuracy().getEncodedValue() << 20)
         | (value.getEncodedTimezoneOffset() << 24);
     final int lo = value.getNanos() & 0x3FFFFFFF;
