@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire.json;
 
 import java.io.IOException;
@@ -30,23 +29,35 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 /**
- * Writer that converts Fudge messages to JSON.
+ * A Fudge writer that produces JSON.
+ * <p>
+ * This writer writes a Fudge stream as JSON to a text stream.
+ * This can be used for JSON output, or can be used to assist in developing/debugging
+ * a streaming serializer without having to inspect the binary output.
  * <p>
  * Please refer to <a href="http://wiki.fudgemsg.org/display/FDG/JSON+Fudge+Messages">JSON Fudge Messages</a>
- * for details onO the representation.
+ * for details on the representation.
  */
 public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
 
+  /**
+   * The JSON settings.
+   */
   private final JSONSettings _settings;
+  /**
+   * The underlying writer.
+   */
   private final Writer _underlyingWriter;
+  /**
+   * The JSON writer.
+   */
   private JSONWriter _writer;
 
   /**
-   * Creates a new stream writer for writing Fudge messages in JSON format to a given
-   * {@link Writer}.
+   * Creates a new instance for writing a Fudge stream to a JSON writer.
    * 
-   * @param fudgeContext the associated {@link FudgeContext}
-   * @param writer the target to write to
+   * @param fudgeContext  the Fudge context, not null
+   * @param writer  the underlying writer, not null
    */
   public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer) {
     this(fudgeContext, writer, new JSONSettings());
@@ -56,29 +67,36 @@ public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
    * Creates a new stream writer for writing Fudge messages in JSON format to a given
    * {@link Writer}.
    * 
-   * @param fudgeContext  the associated {@link FudgeContext}
-   * @param writer  the target to write to
-   * @param settings  the JSON settings
+   * @param fudgeContext  the Fudge context, not null
+   * @param writer  the underlying writer, not null
+   * @param settings  the JSON settings, not null
    */
   public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer, final JSONSettings settings) {
     super(fudgeContext);
+    if (writer == null) {
+      throw new NullPointerException("XMLStreamWriter must not be null");
+    }
+    if (settings == null) {
+      throw new NullPointerException("FudgeXMLSettings must not be null");
+    }
     _settings = settings;
     _underlyingWriter = writer;
   }
 
+  //-------------------------------------------------------------------------
   /**
-   * Returns the settings object .
+   * Gets the JSON settings.
    * 
-   * @return the JSON settings.
+   * @return the JSON settings, not null
    */
   public JSONSettings getSettings() {
     return _settings;
   }
 
   /**
-   * Returns the JSON writer being used, allocating one if necessary.
+   * Gets the JSON writer being used, allocating one if necessary.
    * 
-   * @return the writer
+   * @return the writer, not null
    */
   protected JSONWriter getWriter() {
     if (_writer == null) {
@@ -88,22 +106,24 @@ public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
   }
 
   /**
-   * Discards the JSON writer. The implementation only allows a single use so we must drop
-   * the instance after each message envelope completes.
+   * Discards the JSON writer.
+   * The implementation only allows a single use so we must drop the instance
+   * after each message envelope completes.
    */
   protected void clearWriter() {
     _writer = null;
   }
 
   /**
-   * Returns the underlying {@link Writer} that is wrapped by {@link JSONWriter} instances for messages.
+   * Gets the underlying {@link Writer} that is wrapped by {@link JSONWriter} instances for messages.
    * 
-   * @return the writer
+   * @return the writer, not null
    */
   protected Writer getUnderlying() {
     return _underlyingWriter;
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Wraps a JSON exception (which may in turn wrap {@link IOException} into
    * either a {@link FudgeRuntimeException} or {@link FudgeRuntimeIOException}.

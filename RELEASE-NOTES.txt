@@ -25,6 +25,7 @@ The wire protocol is unchanged.
   This allows certain places in the API to specifically require a wire type
 
 - Add EncodedFudgeMsg
+  This allows a Fudge message to be stored and processed while still encoded
 
 - Changed IndicatorType from singleton to enum singleton
 
@@ -54,4 +55,7 @@ The wire protocol is unchanged.
 
 - Rename methods
    FudgeSerializationContext.objectToFudgeMsg* -> addToMessage*
+
+- FudgeStreamWriter
+  Changed to accept an Iterable of FudgeField rather than just a Fudge message
 

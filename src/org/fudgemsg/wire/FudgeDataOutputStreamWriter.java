@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire;
 
 import java.io.Closeable;
@@ -28,132 +27,94 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
- * Implementation of a {@link FudgeStreamWriter} that writes to a {@link DataOutput}.
+ * A Fudge writer that uses a {@code DataOutput} stream.
+ * <p>
+ * This is the standard implementation of {@code FudgeStreamWriter}.
  */
-public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
+public class FudgeDataOutputStreamWriter extends AbstractFudgeStreamWriter {
 
-  private final FudgeContext _fudgeContext;
+  /**
+   * The underlying stream.
+   */
   private final DataOutput _dataOutput;
-  private FudgeTaxonomy _taxonomy = null;
-  private int _taxonomyId = 0;
+  /**
+   * Whether to automatically flush.
+   */
   private boolean _automaticFlush = true;
 
-  private static DataOutput convertOutputStream(final OutputStream outputStream) {
-    if (outputStream instanceof DataOutput) {
-      return (DataOutput) outputStream;
-    } else {
-      return new DataOutputStream(outputStream);
-    }
-  }
-
   /**
-   * Creates a new {@link FudgeDataOutputStreamWriter} associated with the given {@link FudgeContext} and {@link DataOutput} target.
-   * The Fudge context is used to hold all encoding parameters such as taxonomy and type resolution.
+   * Creates a new writer wrapping an output stream.
+   * <p>
+   * The Fudge context supplies all the necessary configuration.
    * 
-   * @param fudgeContext the {@code FudgeContext} to associate with
-   * @param dataOutput the target to write Fudge elements to
-   */
-  public FudgeDataOutputStreamWriter(FudgeContext fudgeContext, final DataOutput dataOutput) {
-    if (fudgeContext == null) {
-      throw new NullPointerException("Must provide a Fudge Context");
-    }
-    if (dataOutput == null) {
-      throw new NullPointerException("Must provide an output target");
-    }
-    _fudgeContext = fudgeContext;
-    _dataOutput = dataOutput;
-  }
-
-  /**
-   * Creates a new {@link FudgeDataOutputStreamWriter} by wrapping a {@link OutputStream} with a {@link DataOutput}.
-   * 
-   * @param fudgeContext the {@link FudgeContext} to associate with
-   * @param outputStream the target to write Fudge elements to
+   * @param fudgeContext  the Fudge context to use, not null
+   * @param outputStream  the target stream to write to, not null
    */
   public FudgeDataOutputStreamWriter(FudgeContext fudgeContext, final OutputStream outputStream) {
     this(fudgeContext, convertOutputStream(outputStream));
   }
 
   /**
-   * Flushes and closes this writer and the underlying target.
+   * Creates a new writer wrapping a data output stream.
+   * <p>
+   * The Fudge context supplies all the necessary configuration.
+   * 
+   * @param fudgeContext  the Fudge context to use, not null
+   * @param dataOutput  the target stream to write to, not null
    */
-  @Override
-  public void close() {
-    if (_dataOutput == null)
-      return;
-    flush();
-    if (_dataOutput instanceof Closeable) {
-      try {
-        ((Closeable) _dataOutput).close();
-      } catch (IOException e) {
-        throw new FudgeRuntimeIOException(e);
-      }
+  public FudgeDataOutputStreamWriter(FudgeContext fudgeContext, final DataOutput dataOutput) {
+    super(fudgeContext);
+    if (dataOutput == null) {
+      throw new NullPointerException("DataOutput must not be null");
     }
-    _taxonomy = null;
-    _taxonomyId = 0;
+    _dataOutput = dataOutput;
   }
 
   /**
-   * {@inheritDoc} 
+   * Efficiently convert a stream to a {@code DataOutput}.
+   * 
+   * @param outputStream  the stream, not null
+   * @return the data stream, not null
    */
-  @Override
-  public void flush() {
-    final Object out = getDataOutput();
-    if (out instanceof Flushable) {
-      try {
-        ((Flushable) out).flush();
-      } catch (IOException e) {
-        throw new FudgeRuntimeIOException(e);
-      }
+  private static DataOutput convertOutputStream(final OutputStream outputStream) {
+    if (outputStream instanceof DataOutput) {
+      return (DataOutput) outputStream;
     }
+    return new DataOutputStream(outputStream);
   }
 
+  //-------------------------------------------------------------------------
   /**
-   * {@inheritDoc}
+   * Checks whether this writer will flush once the envelope is complete.
+   * 
+   * @return true if {@code flush} is to be called
    */
-  @Override
-  public FudgeContext getFudgeContext() {
-    return _fudgeContext;
+  public boolean isFlushOnEnvelopeComplete() {
+    return _automaticFlush;
   }
 
   /**
-   * @return the dataOutput
+   * Sets whether this writer will flush once the envelope is complete.
+   * The default value is true, causing the writer to flush.
+   * 
+   * @param automaticFlush  true to call {@code flush} on envelope completion
+   */
+  public void setFlushOnEnvelopeComplete(final boolean automaticFlush) {
+    _automaticFlush = automaticFlush;
+  }
+
+  /**
+   * Gets the underlying data output stream.
+   * 
+   * @return the data output stream, not null
    */
   protected DataOutput getDataOutput() {
     return _dataOutput;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public FudgeTaxonomy getCurrentTaxonomy() {
-    return _taxonomy;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setCurrentTaxonomyId(final int taxonomyId) {
-    _taxonomyId = taxonomyId;
-    _taxonomy = getFudgeContext().getTaxonomyResolver().resolveTaxonomy((short) taxonomyId);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int getCurrentTaxonomyId() {
-    return _taxonomyId;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
   public void writeEnvelopeHeader(int processingDirectives, int schemaVersion, int messageSize) {
     try {
@@ -161,15 +122,17 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
       getDataOutput().writeByte(schemaVersion);
       getDataOutput().writeShort(getCurrentTaxonomyId());
       getDataOutput().writeInt(messageSize);
-    } catch (IOException e) {
-      throw new FudgeRuntimeIOException(e);
+    } catch (IOException ex) {
+      throw new FudgeRuntimeIOException(ex);
     }
   }
 
   /**
-   * No data is written - the end of the envelope is implied by the size from the header. If the writer is set
-   * to automatically flush on message completion (the default) then {@link #flush()} will be called to flush
-   * the underlying stream if possible.
+   * Handles the envelope complete event.
+   * <p>
+   * This does not send any data as the end of the envelope is implied by the size from the header.
+   * If the writer is set to automatically flush on message completion (the default) then
+   * this method calls {@link #flush()}.
    */
   @Override
   public void envelopeComplete() {
@@ -178,75 +141,41 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
     }
   }
 
-  /**
-   * Indicates if {@link #flush} is to be called on envelope completion.
-   * 
-   * @return {@code true} if {@code flush} is to be called, {@code false} otherwise
-   */
-  public boolean isFlushOnEnvelopeComplete() {
-    return _automaticFlush;
-  }
-
-  /**
-   * Set whether to call {@link #flush} on envelope completion. The default behavior is to do so.
-   * 
-   * @param automaticFlush {@code true} to call {@code flush} on envelope completion, {@code false} otherwise
-   */
-  public void setFlushOnEnvelopeComplete(final boolean automaticFlush) {
-    _automaticFlush = automaticFlush;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
-  public void writeFields(FudgeMsg msg) {
-    if (msg instanceof FudgeEncoded) {
+  public void writeFields(Iterable<FudgeField> fields) {
+    if (fields instanceof FudgeEncoded) {
+      // optimize for the case where the data is already encoded
       try {
-        getDataOutput().write(((FudgeEncoded) msg).getFudgeEncoded());
-      } catch (IOException e) {
-        throw new FudgeRuntimeIOException(e);
+        getDataOutput().write(((FudgeEncoded) fields).getFudgeEncoded());
+      } catch (IOException ex) {
+        throw new FudgeRuntimeIOException(ex);
       }
     } else {
-      writeFieldsImpl(msg);
+      // encode and write the data
+      writeAllFields(fields);
     }
   }
 
-  private void writeFieldsImpl(final FudgeMsg msg) {
-    for (FudgeField field : msg.getAllFields()) {
-      writeField(field);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void writeField(FudgeField field) {
-    if (field == null) {
-      throw new NullPointerException("Cannot write a null field to a Fudge stream");
-    }
-    writeField(field.getName(), field.getOrdinal(), field.getType(), field.getValue());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
+  //-------------------------------------------------------------------------
   @Override
   public void writeField(String name, Integer ordinal, FudgeFieldType type, Object fieldValue) {
     if (fieldValue == null) {
-      throw new NullPointerException("Cannot write a null field value to a Fudge stream.");
+      throw new NullPointerException("Value must not be null");
     }
-
-    //11/12/09 Andrew: If a taxonomy is being used, should we attempt to validate against it (i.e. refuse a mismatching fieldname/ordinal)
-    //11/12/09 Andrew: If name, ordinal and taxonomy are supplied, should we not write out the name (this would happen if no ordinal was supplied) 
-
-    if ((name != null) && (ordinal == null) && (getCurrentTaxonomy() != null)) {
+    
+    // 11/12/09 Andrew: If a taxonomy is being used, should we attempt to validate against it (i.e. refuse a mismatching fieldname/ordinal)
+    // 11/12/09 Andrew: If name, ordinal and taxonomy are supplied, should we not write out the name (this would happen if no ordinal was supplied) 
+    
+    // convert name to ordinal
+    if (name != null && ordinal == null && getCurrentTaxonomy() != null) {
       ordinal = getCurrentTaxonomy().getFieldOrdinal(name);
       if (ordinal != null) {
         name = null;
       }
     }
+    
+    // calculate field size
     int valueSize = 0;
     int varDataSize = 0;
     if (type.isVariableSize()) {
@@ -256,10 +185,22 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
       valueSize = type.getFixedSize();
       varDataSize = 0;
     }
-    int fieldPrefix = FudgeFieldPrefixCodec.composeFieldPrefix(type.isFixedSize(), varDataSize, (ordinal != null),
-        (name != null));
+    int fieldPrefix = FudgeFieldPrefixCodec.composeFieldPrefix(type.isFixedSize(), varDataSize, (ordinal != null), (name != null));
+    
+    // write the data
+    writeHeader(name, ordinal, type, fieldPrefix);
+    writeFieldValue(type, fieldValue, valueSize);
+  }
 
-    // Start writing.
+  /**
+   * Writes a field header.
+   * 
+   * @param name  the name of the field, null if no name
+   * @param ordinal  the ordinal index of the field, null if no ordinal
+   * @param type  the type of the underlying data, not null
+   * @param fieldPrefix  the calculated field prefix, not null
+   */
+  protected void writeHeader(String name, Integer ordinal, FudgeFieldType type, int fieldPrefix) {
     try {
       getDataOutput().writeByte(fieldPrefix);
       getDataOutput().writeByte(type.getTypeId());
@@ -275,17 +216,17 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
         getDataOutput().writeByte(utf8size);
         UTF8.writeString(getDataOutput(), name);
       }
-    } catch (IOException e) {
-      throw new FudgeRuntimeIOException(e);
+    } catch (IOException ex) {
+      throw new FudgeRuntimeIOException(ex);
     }
-
-    writeFieldValue(type, fieldValue, valueSize);
   }
 
   /**
-   * @param type the {@link FudgeFieldType} defining how to write this
-   * @param value the value to write
-   * @param valueSize the size of the value
+   * Writes the field value including the variable size data.
+   * 
+   * @param type  the type, not null
+   * @param value  the value to write, not null
+   * @param valueSize  the size of the value
    * @returns number of bytes written
    */
   protected void writeFieldValue(FudgeFieldType type, Object value, int valueSize) {
@@ -315,6 +256,8 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
         case FudgeTypeDictionary.DOUBLE_TYPE_ID:
           getDataOutput().writeDouble((Double) value);
           break;
+        case FudgeTypeDictionary.INDICATOR_TYPE_ID:
+          break;
         default:
           if (type.isVariableSize()) {
             // This is correct. We read this using a .readUnsignedByte(), so we can go to
@@ -330,25 +273,80 @@ public class FudgeDataOutputStreamWriter implements FudgeStreamWriter {
           if (value instanceof FudgeEncoded) {
             getDataOutput().write(((FudgeEncoded) value).getFudgeEncoded());
           } else if (value instanceof FudgeMsg) {
-            FudgeMsg subMsg = (FudgeMsg) value;
-            writeFieldsImpl(subMsg);
+            writeAllFields((FudgeMsg) value);
           } else {
             type.writeValue(getDataOutput(), value);
           }
       }
-    } catch (IOException e) {
-      throw new FudgeRuntimeIOException(e);
+    } catch (IOException ex) {
+      throw new FudgeRuntimeIOException(ex);
+    }
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Flushes the underlying {@code DataOutput} if it implements {@code Flushable}.
+   */
+  @Override
+  public void flush() {
+    final DataOutput out = getDataOutput();
+    doFlush(out);
+  }
+
+  /**
+   * Closes the underlying {@code DataOutput} if it implements {@code Closeable}.
+   * This calls {@link #flush()} before attempting to close the stream.
+   */
+  @Override
+  public void close() {
+    final DataOutput out = getDataOutput();
+    doFlush(out);
+    doClose(out);
+    clearTaxonomy();
+  }
+
+  /**
+   * Flushes the data stream.
+   * 
+   * @param out  the data stream, may be null
+   */
+  private void doFlush(final DataOutput out) {
+    if (out instanceof Flushable) {
+      try {
+        ((Flushable) out).flush();
+      } catch (IOException ex) {
+        throw new FudgeRuntimeIOException(ex);
+      }
     }
   }
 
   /**
-   * {@inheritDoc}
+   * Closes the data stream.
+   * 
+   * @param out  the data stream, may be null
+   */
+  private void doClose(final DataOutput out) {
+    if (out instanceof Closeable) {
+      try {
+        ((Closeable) out).close();
+      } catch (IOException ex) {
+        throw new FudgeRuntimeIOException(ex);
+      }
+    }
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Returns a string suitable for debugging.
+   * 
+   * @return the string, not null
    */
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("FudgeDataOutputStreamWriter{");
-    if (getDataOutput() != null)
+    if (getDataOutput() != null) {
       sb.append(getDataOutput());
+    }
     return sb.append('}').toString();
   }
 

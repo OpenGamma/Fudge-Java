@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire;
 
 import java.io.Closeable;
@@ -21,94 +20,110 @@ import java.io.Flushable;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
- * Abstract interface for writing Fudge elements to a target. This base can be used
- * to build full Fudge message writers or serializers to convert Java objects directly
- * to Fudge streams.
+ * A writer that can send Fudge messages.
+ * <p>
+ * This interface provides the basic contract for classes that write Fudge messages.
  */
 public interface FudgeStreamWriter extends Flushable, Closeable {
 
   /**
-   * Returns the bound {@link FudgeContext} used for type and taxonomy resolution.
+   * Gets the Fudge context that will be used for type and taxonomy resolution.
    * 
-   * @return the {@code FudgeContext}
+   * @return the context, not null
    */
-  public FudgeContext getFudgeContext();
+  FudgeContext getFudgeContext();
 
   /**
-   * Returns the taxonomy (if any) that is currently being used to encode fields. Returns {@code null}
-   * if no taxonomy is specified or the taxonomy identifier cannot be resolved by the bound {@link FudgeContext}.
+   * Gets the taxonomy being used to encode fields.
+   * <p>
+   * A taxonomy is optionally used to encode field names into numeric ordinals.
+   * This returns null if no taxonomy is in use, or the taxonomy identifier cannot
+   * be resolved by the context.
    * 
-   *  @return the {@code FudgeTaxonomy}
+   *  @return the taxonomy, not null
    */
-  public FudgeTaxonomy getCurrentTaxonomy();
+  FudgeTaxonomy getCurrentTaxonomy();
+
+  /**
+   * Gets the taxonomy identifier.
+   * 
+   * @return the taxonomy identifier
+   */
+  int getCurrentTaxonomyId();
 
   /**
    * Sets the current taxonomy, by identifier, to be used to encode fields.
    * 
-   * @param taxonomyId the taxonomy identifier
+   * @param taxonomyId  the taxonomy identifier
    */
-  public void setCurrentTaxonomyId(final int taxonomyId);
+  void setCurrentTaxonomyId(final int taxonomyId);
 
   /**
-   * Returns the current taxonomy identifier.
+   * Writes the message envelope header.
    * 
-   * @return current taxonomy identifier
+   * @param processingDirectives  the processing directive flags
+   * @param version  the schema version value
+   * @param messageSize  the Fudge encoded size of the underlying message, including the message envelope
    */
-  public int getCurrentTaxonomyId();
+  void writeEnvelopeHeader(int processingDirectives, int version, int messageSize);
 
   /**
-   * Writes a message envelope header.
+   * Event sent once the end of the message contained within an envelope is reached.
+   * <p>
+   * An implementation may not need to take any action at this point as the end of the envelope
+   * can be detected based on the message size in the header.
+   */
+  void envelopeComplete();
+
+  /**
+   * Writes a single message field.
+   * <p>
+   * If the ordinal is not present and the name matches an entry in the current taxonomy,
+   * then the name will be replaced by the taxonomy resolved ordinal.
    * 
-   * @param processingDirectives the processing directive flags
-   * @param schemaVersion the schema version value
-   * @param messageSize the Fudge encoded size of the underlying message, including the message envelope
+   * @param field  the message field to write, not null
    */
-  public void writeEnvelopeHeader(int processingDirectives, int schemaVersion, int messageSize);
+  void writeField(FudgeField field);
 
   /**
-   * Signal the end of the message contained within an envelope. An implementation may not need to take
-   * any action at this point as the end of the envelope can be detected based on the message size in the
-   * header.
-   */
-  public void envelopeComplete();
-
-  /**
-   * Writes a message field.
+   * Writes a single message field.
+   * <p>
+   * If the ordinal is omitted and the name matches an entry in the current taxonomy,
+   * then the name will be replaced by the taxonomy resolved ordinal.
    * 
-   * @param field the message field to write
+   * @param name  the name of the field, null if no name
+   * @param ordinal  the ordinal index of the field, null if no ordinal
+   * @param type  the type of the underlying data, not null
+   * @param fieldValue  value of the field, not null
    */
-  public void writeField(FudgeField field);
-
-  /**
-   * Writes a message field.
-   * 
-   * @param name  the name of the field, {@code null} to omit. If the ordinal is omitted and the name matches an entry in the current taxonomy the name will be replaced by the taxonomy resolved ordinal.
-   * @param ordinal  the ordinal index of the field, or {@code null} to omit.
-   * @param type  the type of the underlying data
-   * @param fieldValue  value of the field
-   */
-  public void writeField(String name, Integer ordinal, FudgeFieldType type, Object fieldValue);
+  void writeField(String name, Integer ordinal, FudgeFieldType type, Object fieldValue);
 
   /**
    * Writes a set of fields.
+   * <p>
+   * If the ordinal of any field is not present and the name matches an entry in the current
+   * taxonomy, then the name will be replaced by the taxonomy resolved ordinal.
    * 
-   * @param fields the fields to write.
+   * @param fields  the fields to write, not null
    */
-  public void writeFields(FudgeMsg fields);
+  void writeFields(Iterable<FudgeField> fields);
 
   /**
-   * Flushes any data from the internal buffers to the target stream and attempts to flush the underlying stream if appropriate.
+   * Flushes any data from the internal buffers.
+   * <p>
+   * This sends any stored data to the target stream, flushing the underlying stream if appropriate.
    */
-  public void flush();
+  void flush();
 
   /**
-   * Flushes and closes this writer and attempts to close the underlying stream if appropriate.
+   * Flushes and closes this write.
+   * <p>
+   * This attempts to close the underlying stream if appropriate.
    */
-  public void close();
+  void close();
 
 }

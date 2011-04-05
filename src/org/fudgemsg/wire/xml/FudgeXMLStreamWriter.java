@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire.xml;
 
 import java.io.ByteArrayOutputStream;
@@ -33,34 +32,50 @@ import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.wire.AlternativeFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
-import org.fudgemsg.wire.FudgeStreamWriter;
 
 /**
- * <p>Implementation of a {@link FudgeStreamWriter} that writes XML to a text stream. This can be
- * used for XML output, or can be used to assist in developing/debugging a streaming serializer
- * without having to inspect the binary output from a FudgeDataOutputStreamWriter.</p>
- * 
- * <p>This code should adhere to the <a href="http://wiki.fudgemsg.org/display/FDG/XML+Fudge+Messages">XML Fudge Message specification</a>.</p>
- * 
- * <p>Note that no pretty printing options are available here. This implementation uses the systems default {@link XMLOutputFactory} if only passed
- * a {@link Writer} object at construction. If you require control over the output, you will need to use a suitable {@link XMLStreamWriter}
- * implementation that allows it. For example <a href="http://www.java2s.com/Open-Source/Java-Document/XML/stax-utils/javanet.staxutils.htm">javanet.staxutils</a>.</p>
+ * A Fudge writer that produces XML.
+ * <p>
+ * This writer writes a Fudge stream as XML to a text stream.
+ * This can be used for XML output, or can be used to assist in developing/debugging
+ * a streaming serializer without having to inspect the binary output.
+ * <p>
+ * This code should adhere to the <a href="http://wiki.fudgemsg.org/display/FDG/XML+Fudge+Messages">XML Fudge Message specification</a>.
+ * <p>
+ * Note that no pretty printing options are available here.
+ * This implementation uses the systems default {@link XMLOutputFactory} if only passed
+ * a {@link Writer} object at construction. If you require control over the output, you will
+ * need to use a suitable {@link XMLStreamWriter} implementation that allows it.
+ * For example <a href="http://www.java2s.com/Open-Source/Java-Document/XML/stax-utils/javanet.staxutils.htm">javanet.staxutils</a>.</p>
  */
 public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
 
-  private FudgeXMLSettings _settings;
-  private XMLStreamWriter _writer;
-  
   /**
-   * Creates a new {@link FudgeXMLStreamWriter} for writing a Fudge stream to an {@link XMLStreamWriter}.
+   * The XML settings.
+   */
+  private FudgeXMLSettings _settings;
+  /**
+   * The XML writer.
+   */
+  private XMLStreamWriter _writer;
+
+  /**
+   * Creates a new instance for writing a Fudge stream to an XML writer.
    * 
-   * @param fudgeContext the {@link FudgeContext}
-   * @param writer the underlying {@link Writer}
+   * @param fudgeContext  the Fudge context, not null
+   * @param writer  the underlying writer, not null
    */
   public FudgeXMLStreamWriter(final FudgeContext fudgeContext, final XMLStreamWriter writer) {
     this(new FudgeXMLSettings(), fudgeContext, writer);
   }
-  
+
+  /**
+   * Creates a new instance for writing a Fudge stream to an XML writer.
+   * 
+   * @param settings  the XML settings to fine tune the output, not null
+   * @param fudgeContext  the Fudge context, not null
+   * @param writer  the underlying writer, not null
+   */
   public FudgeXMLStreamWriter(final FudgeXMLSettings settings, final FudgeContext fudgeContext, final XMLStreamWriter writer) {
     super(fudgeContext);
     if (writer == null) {
@@ -74,68 +89,99 @@ public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
   }
 
   /**
-   * Creates a new {@link FudgeXMLStreamWriter} for writing to the target XML device.
+   * Creates a new instance for writing a Fudge stream to a writer.
    * 
-   * @param fudgeContext the {@link FudgeContext}
-   * @param writer the underlying {@link Writer}
+   * @param fudgeContext  the Fudge context, not null
+   * @param writer  the underlying writer, not null
    */
   public FudgeXMLStreamWriter(final FudgeContext fudgeContext, final Writer writer) {
     this(fudgeContext, createXMLStreamWriter(writer));
   }
-  
+
+  /**
+   * Creates a new instance for writing a Fudge stream to a writer.
+   * 
+   * @param settings  the XML settings to fine tune the output, not null
+   * @param fudgeContext  the Fudge context, not null
+   * @param writer  the underlying writer, not null
+   */
   public FudgeXMLStreamWriter(final FudgeXMLSettings settings, final FudgeContext fudgeContext, final Writer writer) {
     this(settings, fudgeContext, createXMLStreamWriter(writer));
   }
-  
+
+  /**
+   * Efficiently converts a writer to an XML writer.
+   * 
+   * @param writer  the writer to convert, not null
+   * @return the XML writer, not null
+   */
   private static XMLStreamWriter createXMLStreamWriter(final Writer writer) {
     try {
       return XMLOutputFactory.newInstance().createXMLStreamWriter(writer);
-    } catch(XMLStreamException e) {
-      throw wrapException("create", e);
+    } catch (XMLStreamException ex) {
+      throw wrapException("create", ex);
     }
   }
-  
+
   /**
-   * @param operation the operation being attempted when the exception was caught
-   * @param e the exception caught
+   * Wraps an exception into a runtime exception.
+   * 
+   * @param operation  the operation being attempted when the exception was caught
+   * @param ex the exception caught
    * @return A fudgeRuntimeException 
    */
-  protected static FudgeRuntimeException wrapException(final String operation, final XMLStreamException e) {
-    if (e.getCause() instanceof IOException) {
-      return new FudgeRuntimeIOException((IOException)e.getCause ());
+  protected static FudgeRuntimeException wrapException(final String operation, final XMLStreamException ex) {
+    if (ex.getCause() instanceof IOException) {
+      return new FudgeRuntimeIOException((IOException) ex.getCause());
     } else {
-      return new FudgeRuntimeException("Couldn't " + operation + " XML stream", e);
+      return new FudgeRuntimeException("Couldn't " + operation + " XML stream", ex);
     }
   }
-  
+
+  //-------------------------------------------------------------------------
   /**
-   * @return the settings
+   * Gets the XML settings.
+   * 
+   * @return the settings, not null
    */
   public FudgeXMLSettings getSettings() {
     return _settings;
   }
 
   /**
-   * @param settings the settings to set
+   * Sets the XML settings.
+   * 
+   * @param settings  the settings, not null
    */
   public void setSettings(FudgeXMLSettings settings) {
+    if (settings == null) {
+      throw new NullPointerException("FudgeXMLSettings must not be null");
+    }
     _settings = settings;
   }
 
   /**
-   * @return the writer
+   * Gets the XML writer.
+   * 
+   * @return the writer, not null
    */
   public XMLStreamWriter getWriter() {
     return _writer;
   }
 
   /**
-   * @param writer the writer to set
+   * Sets the XML writer.
+   * 
+   * @param writer  the writer, not null
    */
   public void setWriter(XMLStreamWriter writer) {
+    if (writer == null) {
+      throw new NullPointerException("XMLStreamWriter must not be null");
+    }
     _writer = writer;
   }
 
+  //-------------------------------------------------------------------------
   @Override
   protected void fudgeEnvelopeStart(int processingDirectives, int schemaVersion) {
     try {
