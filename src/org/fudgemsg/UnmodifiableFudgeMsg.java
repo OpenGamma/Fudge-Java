@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A standard immutable Fudge message.
+ * A standard unmodifiable Fudge message.
  * <p>
  * The message consists of a list of {@link FudgeField Fudge fields}.
  * This class holds the entire message in memory.
@@ -34,14 +34,14 @@ import java.util.List;
  * For efficiency, the reference to a {@link FudgeContext} is kept and the context is not copied.
  * In that scenario, changes made to the context will be made visible through this class, for
  * example the behavior of {@link #getFieldValue}. If this is not desired, create a
- * {@link ImmutableFudgeContext} from your underlying {@code FudgeContext} for use in cloning messages.
+ * {@link UnmodifiableFudgeContext} from your underlying {@code FudgeContext} for use in cloning messages.
  * Message fields are copied at one level deep only.
  * Any sub-messages, or referenced objects may be still be mutable.
  * <p>
  * This class makes no guarantees about the immutability or thread-safety of its
  * content, although it holds the references in an immutable and thread-safe way.
  */
-public final class ImmutableFudgeMsg extends AbstractFudgeMsg {
+public final class UnmodifiableFudgeMsg extends AbstractFudgeMsg {
 
   /**
    * The unmodifiable list of fields.
@@ -53,7 +53,7 @@ public final class ImmutableFudgeMsg extends AbstractFudgeMsg {
    * 
    * @param fudgeContext  the context to use for type resolution and other services, not null
    */
-  protected ImmutableFudgeMsg(FudgeContext fudgeContext) {
+  protected UnmodifiableFudgeMsg(FudgeContext fudgeContext) {
     super(fudgeContext);
     _fields = Collections.emptyList();
   }
@@ -66,7 +66,7 @@ public final class ImmutableFudgeMsg extends AbstractFudgeMsg {
    * 
    * @param fudgeMsg  the Fudge message to copy, not null
    */
-  public ImmutableFudgeMsg(AbstractFudgeMsg fudgeMsg) {
+  public UnmodifiableFudgeMsg(AbstractFudgeMsg fudgeMsg) {
     this(fudgeMsg.getFudgeContext(), fudgeMsg);
   }
 
@@ -79,12 +79,12 @@ public final class ImmutableFudgeMsg extends AbstractFudgeMsg {
    * @param fudgeContext  the context to use for type resolution and other services, not null
    * @param fieldsToCopy  the initial set of fields to shallow copy, null ignored
    */
-  public ImmutableFudgeMsg(final FudgeContext fudgeContext, Iterable<FudgeField> fieldsToCopy) {
+  public UnmodifiableFudgeMsg(final FudgeContext fudgeContext, Iterable<FudgeField> fieldsToCopy) {
     super(fudgeContext);
     if (fieldsToCopy != null) {
       List<FudgeField> fields = new ArrayList<FudgeField>();
       for (FudgeField field : fieldsToCopy) {
-        fields.add(ImmutableFudgeField.of(field));
+        fields.add(UnmodifiableFudgeField.of(field));
       }
       _fields = Collections.unmodifiableList(fields);
     } else {
@@ -131,12 +131,12 @@ public final class ImmutableFudgeMsg extends AbstractFudgeMsg {
     if (obj == this) {
       return true;
     }
-    return obj instanceof ImmutableFudgeMsg && super.equals(obj);
+    return obj instanceof UnmodifiableFudgeMsg && super.equals(obj);
   }
 
   @Override
   public int hashCode() {
-    return ImmutableFudgeMsg.class.hashCode() ^ super.hashCode();
+    return UnmodifiableFudgeMsg.class.hashCode() ^ super.hashCode();
   }
 
 }

@@ -29,8 +29,8 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_of_checked() {
-    FudgeField field = ImmutableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE);
-    ImmutableFudgeField test = ImmutableFudgeField.of(field);
+    FudgeField field = UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE);
+    UnmodifiableFudgeField test = UnmodifiableFudgeField.of(field);
     assertSame(test, field);
     assertEquals(true, test.equals(field));
     assertEquals(true, field.equals(test));
@@ -38,7 +38,7 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_of_created() {
-    FudgeField expected = ImmutableFudgeField.of(FudgeWireType.INT, 9, "number", 12);
+    FudgeField expected = UnmodifiableFudgeField.of(FudgeWireType.INT, 9, "number", 12);
     FudgeField field = new FudgeField() {
       @Override
       public FudgeWireType getType() {
@@ -57,7 +57,7 @@ public class FudgeMsgFieldTest {
         return 12;
       }
     };
-    ImmutableFudgeField test = ImmutableFudgeField.of(field);
+    UnmodifiableFudgeField test = UnmodifiableFudgeField.of(field);
     assertNotSame(test, field);
     assertEquals(true, test.equals(expected));
     assertEquals(true, expected.equals(test));
@@ -65,7 +65,7 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_noNameNoOrdinal() {
-    ImmutableFudgeField field = ImmutableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE);
+    UnmodifiableFudgeField field = UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE);
     assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals(null, field.getName());
@@ -75,7 +75,7 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_ordinal() {
-    ImmutableFudgeField field = ImmutableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, 8);
+    UnmodifiableFudgeField field = UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, 8);
     assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals(null, field.getName());
@@ -85,7 +85,7 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_name() {
-    ImmutableFudgeField field = ImmutableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, "flag");
+    UnmodifiableFudgeField field = UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, "flag");
     assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("flag", field.getName());
@@ -95,7 +95,7 @@ public class FudgeMsgFieldTest {
 
   @Test
   public void test_nameOrdinal() {
-    ImmutableFudgeField field = ImmutableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, "flag", 8);
+    UnmodifiableFudgeField field = UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE, "flag", 8);
     assertEquals(FudgeWireType.BOOLEAN, field.getType());
     assertEquals(Boolean.TRUE, field.getValue());
     assertEquals("flag", field.getName());

@@ -66,11 +66,11 @@ public class FudgeContext implements FudgeMsgFactory {
    * data types and will not support a taxonomy resolver.
    * This should be used for trivial projects and code only.
    */
-  public static final FudgeContext GLOBAL_DEFAULT = new ImmutableFudgeContext(new FudgeContext());
+  public static final FudgeContext GLOBAL_DEFAULT = new UnmodifiableFudgeContext(new FudgeContext());
   /**
    * A global empty {@link FudgeMsg}.
    */
-  public static final FudgeMsg EMPTY_MESSAGE = new ImmutableFudgeMsg(GLOBAL_DEFAULT);
+  public static final FudgeMsg EMPTY_MESSAGE = new UnmodifiableFudgeMsg(GLOBAL_DEFAULT);
   /**
    * A global empty {@link FudgeMsgEnvelope}.
    */

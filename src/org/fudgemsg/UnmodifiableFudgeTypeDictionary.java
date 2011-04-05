@@ -18,21 +18,21 @@ package org.fudgemsg;
 import org.fudgemsg.types.FudgeTypeConverter;
 
 /**
- * An immutable dictionary of all known Fudge types.
+ * An unmodifiable dictionary of all known Fudge types.
  * <p>
  * In order to efficiently send messages, Fudge needs to know the type of each piece of data.
  * This dictionary keeps track of all the known types.
  * <p>
- * This class is not-modifiable rather than fully immutable.
+ * This class is not-modifiable rather than immutable.
  */
-/* package */class ImmutableFudgeTypeDictionary extends FudgeTypeDictionary {
+/* package */class UnmodifiableFudgeTypeDictionary extends FudgeTypeDictionary {
 
   /**
    * Creates a new {@link FudgeTypeDictionary} as an immutable clone of an existing one.
    * 
    * @param dictionary the {@code FudgeTypeDictionary} to wrap
    */
-  /* package */ImmutableFudgeTypeDictionary(final FudgeTypeDictionary dictionary) {
+  UnmodifiableFudgeTypeDictionary(final FudgeTypeDictionary dictionary) {
     super(dictionary);
   }
 

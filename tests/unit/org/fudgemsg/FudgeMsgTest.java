@@ -247,7 +247,7 @@ public class FudgeMsgTest {
   @Test
   public void immutableFudgeMsgTest() {
     MutableFudgeMsg mutableMsg = StandardFudgeMessages.createMessageAllOrdinals(s_fudgeContext);
-    ImmutableFudgeMsg msg = new ImmutableFudgeMsg(s_fudgeContext, mutableMsg);
+    UnmodifiableFudgeMsg msg = new UnmodifiableFudgeMsg(s_fudgeContext, mutableMsg);
     
     assertEquals(null, mutableMsg.getString("field not there"));
     assertEquals(null, msg.getString("field not there"));
@@ -437,8 +437,8 @@ public class FudgeMsgTest {
     msg2.add("bar", 2, 42);
     assertTrue(msg1.equals(msg2));
     assertTrue(msg2.equals(msg1));
-    FudgeMsg msg3 = new ImmutableFudgeMsg(s_fudgeContext, msg2);
-    FudgeMsg msg4 = new ImmutableFudgeMsg(s_fudgeContext, msg1);
+    FudgeMsg msg3 = new UnmodifiableFudgeMsg(s_fudgeContext, msg2);
+    FudgeMsg msg4 = new UnmodifiableFudgeMsg(s_fudgeContext, msg1);
     assertTrue(msg3.equals(msg4));
     assertTrue(msg4.equals(msg3));
     assertFalse(msg1.equals(msg3));

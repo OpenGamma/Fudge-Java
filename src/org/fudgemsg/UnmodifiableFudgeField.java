@@ -18,14 +18,14 @@ package org.fudgemsg;
 import java.io.Serializable;
 
 /**
- * A single immutable field in the Fudge system.
+ * A single unmodifiable field in the Fudge system.
  * <p>
- * This is the standard immutable implementation of {@link FudgeField}.
+ * This is the standard unmodifiable implementation of {@link FudgeField}.
  * <p>
  * This class makes no guarantees about the immutability or thread-safety of its
  * content, although it holds the references in an immutable and thread-safe way.
  */
-public final class ImmutableFudgeField implements FudgeField, Serializable {
+public final class UnmodifiableFudgeField implements FudgeField, Serializable {
 
   /**
    * The optional field name.
@@ -53,11 +53,11 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
    * @param field  the field to obtain data from, not null
    * @return the equivalent immutable field, not null
    */
-  public static ImmutableFudgeField of(FudgeField field) {
-    if (field instanceof ImmutableFudgeField) {
-      return (ImmutableFudgeField) field;
+  public static UnmodifiableFudgeField of(FudgeField field) {
+    if (field instanceof UnmodifiableFudgeField) {
+      return (UnmodifiableFudgeField) field;
     }
-    return ImmutableFudgeField.of(field.getType(), field.getValue(), field.getName(), field.getOrdinal());
+    return UnmodifiableFudgeField.of(field.getType(), field.getValue(), field.getName(), field.getOrdinal());
   }
 
   /**
@@ -67,8 +67,8 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
    * @param value  the payload value, may be null
    * @return the created immutable field, not null
    */
-  public static ImmutableFudgeField of(FudgeFieldType type, Object value) {
-    return new ImmutableFudgeField(type, value, null, null);
+  public static UnmodifiableFudgeField of(FudgeFieldType type, Object value) {
+    return new UnmodifiableFudgeField(type, value, null, null);
   }
 
   /**
@@ -79,8 +79,8 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
    * @param name  the optional field name, null if no name
    * @return the created immutable field, not null
    */
-  public static ImmutableFudgeField of(FudgeFieldType type, Object value, String name) {
-    return new ImmutableFudgeField(type, value, name, null);
+  public static UnmodifiableFudgeField of(FudgeFieldType type, Object value, String name) {
+    return new UnmodifiableFudgeField(type, value, name, null);
   }
 
   /**
@@ -91,8 +91,8 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
    * @param ordinal  the optional field ordinal, null if no ordinal
    * @return the created immutable field, not null
    */
-  public static ImmutableFudgeField of(FudgeFieldType type, Object value, Integer ordinal) {
-    return new ImmutableFudgeField(type, value, null, ordinal);
+  public static UnmodifiableFudgeField of(FudgeFieldType type, Object value, Integer ordinal) {
+    return new UnmodifiableFudgeField(type, value, null, ordinal);
   }
 
   /**
@@ -104,8 +104,8 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
    * @param ordinal  the optional field ordinal, null if no ordinal
    * @return the created immutable field, not null
    */
-  public static ImmutableFudgeField of(FudgeFieldType type, Object value, String name, Integer ordinal) {
-    return new ImmutableFudgeField(type, value, name, ordinal);
+  public static UnmodifiableFudgeField of(FudgeFieldType type, Object value, String name, Integer ordinal) {
+    return new UnmodifiableFudgeField(type, value, name, ordinal);
   }
 
   //-------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
    * @param name  the optional field name, null if no name
    * @param ordinal  the optional field ordinal, null if no ordinal
    */
-  private ImmutableFudgeField(FudgeFieldType type, Object value, String name, Integer ordinal) {
+  private UnmodifiableFudgeField(FudgeFieldType type, Object value, String name, Integer ordinal) {
     if (type == null) {
       throw new NullPointerException("Type must not be null");
     }
@@ -162,8 +162,8 @@ public final class ImmutableFudgeField implements FudgeField, Serializable {
     if (obj == this) {
       return true;
     }
-    if (obj instanceof ImmutableFudgeField) {
-      ImmutableFudgeField other = (ImmutableFudgeField) obj;
+    if (obj instanceof UnmodifiableFudgeField) {
+      UnmodifiableFudgeField other = (UnmodifiableFudgeField) obj;
       return getType().equals(other.getType()) &&
           equal(getOrdinal(), other.getOrdinal()) &&
           equal(getName(), other.getName()) &&

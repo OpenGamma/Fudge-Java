@@ -77,8 +77,8 @@ public class DuplicateFieldNameTest {
     return msg;
   }
   
-  private static ImmutableFudgeMsg createImmutableFudgeMsg () {
-    return new ImmutableFudgeMsg (createFudgeMsg ());
+  private static UnmodifiableFudgeMsg createImmutableFudgeMsg () {
+    return new UnmodifiableFudgeMsg (createFudgeMsg ());
   }
   
   private final FudgeMsg _message;

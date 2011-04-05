@@ -110,33 +110,33 @@ public final class StandardFudgeMessages {
   public static MutableFudgeMsg createMessageNoNamesNoOrdinals(FudgeContext context) {
     MutableFudgeMsg msg = context.newMessage();
     
-    msg.add(ImmutableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.BOOLEAN, new Boolean(false)));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.BYTE, (byte)5));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.BYTE, new Byte((byte)5)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, new Boolean(false)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.BYTE, (byte)5));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.BYTE, new Byte((byte)5)));
     
     short shortValue = ((short)Byte.MAX_VALUE) + 5;
-    msg.add(ImmutableFudgeField.of(FudgeWireType.SHORT, shortValue));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.SHORT, new Short(shortValue)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.SHORT, shortValue));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.SHORT, new Short(shortValue)));
     
     int intValue = ((int)Short.MAX_VALUE) + 5;
-    msg.add(ImmutableFudgeField.of(FudgeWireType.INT, intValue));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.INT, new Integer(intValue)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.INT, intValue));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.INT, new Integer(intValue)));
     
     long longValue = ((long)Integer.MAX_VALUE) + 5;
-    msg.add(ImmutableFudgeField.of(FudgeWireType.LONG, longValue));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.LONG, new Long(longValue)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.LONG, longValue));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.LONG, new Long(longValue)));
     
-    msg.add(ImmutableFudgeField.of(FudgeWireType.FLOAT, 0.5f));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.FLOAT, new Float(0.5f)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.FLOAT, 0.5f));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.FLOAT, new Float(0.5f)));
     
-    msg.add(ImmutableFudgeField.of(FudgeWireType.DOUBLE, 0.27362));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.DOUBLE, new Double(0.27362)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.DOUBLE, 0.27362));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.DOUBLE, new Double(0.27362)));
     
-    msg.add(ImmutableFudgeField.of(FudgeWireType.STRING, "kirk Wylie"));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.STRING, "kirk Wylie"));
     
-    msg.add(ImmutableFudgeField.of(FudgeWireType.FLOAT_ARRAY, new float[24]));
-    msg.add(ImmutableFudgeField.of(FudgeWireType.DOUBLE_ARRAY, new double[273]));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.FLOAT_ARRAY, new float[24]));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.DOUBLE_ARRAY, new double[273]));
     return msg;
   }
   

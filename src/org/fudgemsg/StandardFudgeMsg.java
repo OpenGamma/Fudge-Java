@@ -65,7 +65,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     super(fudgeContext);
     if (fieldsToCopy != null) {
       for (FudgeField field : fieldsToCopy) {
-        _fields.add(ImmutableFudgeField.of(field));
+        _fields.add(UnmodifiableFudgeField.of(field));
       }
     }
   }
@@ -99,7 +99,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     if (field == null) {
       throw new NullPointerException("FudgeField must not be null");
     }
-    getFields().add(ImmutableFudgeField.of(field));
+    getFields().add(UnmodifiableFudgeField.of(field));
   }
 
   @Override
@@ -160,7 +160,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
         break;
     }
     
-    ImmutableFudgeField field = ImmutableFudgeField.of(type, value, name, ordinal);
+    UnmodifiableFudgeField field = UnmodifiableFudgeField.of(type, value, name, ordinal);
     getFields().add(field);
   }
 
@@ -200,7 +200,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
       if ((field.getOrdinal() != null) && (field.getName() == null)) {
         String nameFromTaxonomy = taxonomy.getFieldName(field.getOrdinal());
         if (nameFromTaxonomy != null) {
-          field = ImmutableFudgeField.of(field.getType(), field.getValue(), nameFromTaxonomy, field.getOrdinal());
+          field = UnmodifiableFudgeField.of(field.getType(), field.getValue(), nameFromTaxonomy, field.getOrdinal());
           getFields().set(i, field);
         }
       }
@@ -210,7 +210,7 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
       } else if (field.getValue() instanceof FudgeMsg) {
         StandardFudgeMsg subMsg = new StandardFudgeMsg(getFudgeContext(), (FudgeMsg) field.getValue());
         subMsg.setNamesFromTaxonomy(taxonomy);
-        field = ImmutableFudgeField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
+        field = UnmodifiableFudgeField.of(field.getType(), subMsg, field.getName(), field.getOrdinal());
         getFields().set(i, field);
       }
     }

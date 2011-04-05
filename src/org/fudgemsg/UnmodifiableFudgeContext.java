@@ -20,13 +20,13 @@ import org.fudgemsg.mapping.ImmutableFudgeObjectDictionary;
 import org.fudgemsg.taxon.TaxonomyResolver;
 
 /**
- * An immutable wrapper for {@code FudgeContext}.
+ * An unmodifiable wrapper for {@code FudgeContext}.
  * <p>
  * This is a simple wrapper for a context that blocks the mutable methods.
  * This does not fully secure the context from editing, being intended simply
  * to stop common programming errors.
  */
-public class ImmutableFudgeContext extends FudgeContext {
+public class UnmodifiableFudgeContext extends FudgeContext {
 
   /**
    * Creates an immutable version of an existing {@link FudgeContext}. Immutable copies of the type and object dictionaries
@@ -34,9 +34,9 @@ public class ImmutableFudgeContext extends FudgeContext {
    * 
    * @param context the {@code FudgeContext} to base this on
    */
-  public ImmutableFudgeContext(final FudgeContext context) {
+  public UnmodifiableFudgeContext(final FudgeContext context) {
     super.setTaxonomyResolver(context.getTaxonomyResolver());
-    super.setTypeDictionary(new ImmutableFudgeTypeDictionary(context.getTypeDictionary()));
+    super.setTypeDictionary(new UnmodifiableFudgeTypeDictionary(context.getTypeDictionary()));
     super.setObjectDictionary(new ImmutableFudgeObjectDictionary(context.getObjectDictionary()));
   }
 

@@ -37,14 +37,17 @@ The wire protocol is unchanged.
    FudgeMsgBase to AbstractFudgeMsg
    FudgeFieldContainer to FudgeMsg
    MutableFudgeFieldContainer to MutableFudgeMsg
-   FudgeMsgField to ImmutableFudgeField
+   FudgeMsgField to UnmodifiableFudgeField
+   ImmutableFudgeMsg to UnmodifiableFudgeMsg
+   ImmutableFudgeContext to UnmodifiableFudgeContext
+   ImmutableFudgeTypeDictionary to UnmodifiableFudgeTypeDictionary
 
 - Remove classes
    ImmutableFudgeFieldContainer
 
 - Change constructors
-   ImmutableFudgeMsg (parameter order)
-   ImmutableFudgeField (use factories)
+   UnmodifiableFudgeMsg (parameter order)
+   UnmodifiableFudgeField (use factories)
 
 - Rename methods
    FudgeSerializationContext.objectToFudgeMsg* -> addToMessage*
