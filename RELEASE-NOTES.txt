@@ -60,3 +60,6 @@ The wire protocol is unchanged.
 - FudgeStreamWriter
   Changed to accept an Iterable of FudgeField rather than just a Fudge message
 
+- FudgeXMLStreamWriter
+  Constructor changed to have settings at the end
+

@@ -66,17 +66,17 @@ public class FudgeXMLStreamWriter extends EventBasedFudgeStreamWriter {
    * @param writer  the underlying writer, not null
    */
   public FudgeXMLStreamWriter(final FudgeContext fudgeContext, final XMLStreamWriter writer) {
-    this(new FudgeXMLSettings(), fudgeContext, writer);
+    this(fudgeContext, writer, new FudgeXMLSettings());
   }
 
   /**
    * Creates a new instance for writing a Fudge stream to an XML writer.
    * 
-   * @param settings  the XML settings to fine tune the output, not null
    * @param fudgeContext  the Fudge context, not null
    * @param writer  the underlying writer, not null
+   * @param settings  the XML settings to fine tune the output, not null
    */
-  public FudgeXMLStreamWriter(final FudgeXMLSettings settings, final FudgeContext fudgeContext, final XMLStreamWriter writer) {
+  public FudgeXMLStreamWriter(final FudgeContext fudgeContext, final XMLStreamWriter writer, final FudgeXMLSettings settings) {
     super(fudgeContext);
     if (writer == null) {
       throw new NullPointerException("XMLStreamWriter must not be null");
@@ -101,12 +101,12 @@ public class FudgeXMLStreamWriter extends EventBasedFudgeStreamWriter {
   /**
    * Creates a new instance for writing a Fudge stream to a writer.
    * 
-   * @param settings  the XML settings to fine tune the output, not null
    * @param fudgeContext  the Fudge context, not null
    * @param writer  the underlying writer, not null
+   * @param settings  the XML settings to fine tune the output, not null
    */
-  public FudgeXMLStreamWriter(final FudgeXMLSettings settings, final FudgeContext fudgeContext, final Writer writer) {
-    this(settings, fudgeContext, createXMLStreamWriter(writer));
+  public FudgeXMLStreamWriter(final FudgeContext fudgeContext, final Writer writer, final FudgeXMLSettings settings) {
+    this(fudgeContext, createXMLStreamWriter(writer), settings);
   }
 
   /**
