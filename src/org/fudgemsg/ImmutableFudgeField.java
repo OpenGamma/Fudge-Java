@@ -22,10 +22,10 @@ import java.io.Serializable;
  * <p>
  * This is the standard immutable implementation of {@link FudgeField}.
  * <p>
- * This class is immutable and thread-safe but is not final.
+ * This class makes no guarantees about the immutability or thread-safety of its
+ * content, although it holds the references in an immutable and thread-safe way.
  */
-public class FudgeMsgField implements FudgeField, Serializable {
-  // TODO make final, rename to ImmutableFudgeField
+public final class ImmutableFudgeField implements FudgeField, Serializable {
 
   /**
    * The optional field name.
@@ -53,11 +53,11 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param field  the field to obtain data from, not null
    * @return the equivalent immutable field, not null
    */
-  public static FudgeMsgField of(FudgeField field) {
-    if (field instanceof FudgeMsgField) {
-      return (FudgeMsgField) field;
+  public static ImmutableFudgeField of(FudgeField field) {
+    if (field instanceof ImmutableFudgeField) {
+      return (ImmutableFudgeField) field;
     }
-    return FudgeMsgField.of(field.getType(), field.getValue(), field.getName(), field.getOrdinal());
+    return ImmutableFudgeField.of(field.getType(), field.getValue(), field.getName(), field.getOrdinal());
   }
 
   /**
@@ -67,8 +67,8 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param value  the payload value, may be null
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType type, Object value) {
-    return new FudgeMsgField(type, value, null, null);
+  public static ImmutableFudgeField of(FudgeFieldType type, Object value) {
+    return new ImmutableFudgeField(type, value, null, null);
   }
 
   /**
@@ -79,8 +79,8 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param name  the optional field name, null if no name
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType type, Object value, String name) {
-    return new FudgeMsgField(type, value, name, null);
+  public static ImmutableFudgeField of(FudgeFieldType type, Object value, String name) {
+    return new ImmutableFudgeField(type, value, name, null);
   }
 
   /**
@@ -91,8 +91,8 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param ordinal  the optional field ordinal, null if no ordinal
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType type, Object value, Integer ordinal) {
-    return new FudgeMsgField(type, value, null, ordinal);
+  public static ImmutableFudgeField of(FudgeFieldType type, Object value, Integer ordinal) {
+    return new ImmutableFudgeField(type, value, null, ordinal);
   }
 
   /**
@@ -104,8 +104,8 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param ordinal  the optional field ordinal, null if no ordinal
    * @return the created immutable field, not null
    */
-  public static FudgeMsgField of(FudgeFieldType type, Object value, String name, Integer ordinal) {
-    return new FudgeMsgField(type, value, name, ordinal);
+  public static ImmutableFudgeField of(FudgeFieldType type, Object value, String name, Integer ordinal) {
+    return new ImmutableFudgeField(type, value, name, ordinal);
   }
 
   //-------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public class FudgeMsgField implements FudgeField, Serializable {
    * @param name  the optional field name, null if no name
    * @param ordinal  the optional field ordinal, null if no ordinal
    */
-  public FudgeMsgField(FudgeFieldType type, Object value, String name, Integer ordinal) {
+  private ImmutableFudgeField(FudgeFieldType type, Object value, String name, Integer ordinal) {
     if (type == null) {
       throw new NullPointerException("Type must not be null");
     }
@@ -125,15 +125,6 @@ public class FudgeMsgField implements FudgeField, Serializable {
     _value = value;
     _name = name;
     _ordinal = ordinal;
-  }
-
-  /**
-   * Constructs a field as a copy of another.
-   * 
-   * @param field the {@code FudgeMsgField} to copy.
-   */
-  public FudgeMsgField(FudgeField field) {
-    this(field.getType(), field.getValue(), field.getName(), field.getOrdinal());
   }
 
   //-------------------------------------------------------------------------
@@ -168,14 +159,11 @@ public class FudgeMsgField implements FudgeField, Serializable {
    */
   @Override
   public boolean equals(final Object obj) {
-    if (obj == null) {
-      return false;
-    }
     if (obj == this) {
       return true;
     }
-    if (obj instanceof FudgeMsgField) {
-      FudgeMsgField other = (FudgeMsgField) obj;
+    if (obj instanceof ImmutableFudgeField) {
+      ImmutableFudgeField other = (ImmutableFudgeField) obj;
       return getType().equals(other.getType()) &&
           equal(getOrdinal(), other.getOrdinal()) &&
           equal(getName(), other.getName()) &&
@@ -189,6 +177,19 @@ public class FudgeMsgField implements FudgeField, Serializable {
   }
 
   /**
+   * Returns a suitable hash code.
+   * 
+   * @return the hash code
+   */
+  @Override
+  public int hashCode() {
+    return getType().hashCode() ^
+          (getValue() == null ? 0 : getValue().hashCode()) ^
+          (getName() == null ? 0 : getName().hashCode()) ^
+          (getOrdinal() == null ? 0 : getOrdinal().hashCode());
+  }
+
+  /**
    * Gets a string description of the field.
    * 
    * @return the description, not null
@@ -197,20 +198,20 @@ public class FudgeMsgField implements FudgeField, Serializable {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Field[");
-    if (_name != null) {
-      sb.append(_name);
-      if (_ordinal == null) {
+    if (getName() != null) {
+      sb.append(getName());
+      if (getOrdinal() == null) {
         sb.append(":");
       } else {
         sb.append(",");
       }
     }
-    if (_ordinal != null) {
-      sb.append(_ordinal).append(":");
+    if (getOrdinal() != null) {
+      sb.append(getOrdinal()).append(":");
     }
 
-    sb.append(_type);
-    sb.append("-").append(_value);
+    sb.append(getType());
+    sb.append("-").append(getValue());
     sb.append("]");
     return sb.toString();
   }

@@ -26,7 +26,7 @@ import org.fudgemsg.AbstractFudgeMsg;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeMsgField;
+import org.fudgemsg.ImmutableFudgeField;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxon.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
@@ -144,11 +144,11 @@ public class EncodedFudgeMsg extends AbstractFudgeMsg implements FudgeEncoded {
     FudgeField field = null;
     switch (element) {
       case SIMPLE_FIELD: {
-        field = FudgeMsgField.of(reader.getFieldType(), reader.getFieldValue(), reader.getFieldName(), reader.getFieldOrdinal());
+        field = ImmutableFudgeField.of(reader.getFieldType(), reader.getFieldValue(), reader.getFieldName(), reader.getFieldOrdinal());
         break;
       }
       case SUBMESSAGE_FIELD_START: {
-        field = FudgeMsgField.of(FudgeWireType.SUB_MESSAGE, new EncodedFudgeMsg(
+        field = ImmutableFudgeField.of(FudgeWireType.SUB_MESSAGE, new EncodedFudgeMsg(
             reader.skipMessageField()), reader.getFieldName(), reader.getFieldOrdinal());
         break;
       }

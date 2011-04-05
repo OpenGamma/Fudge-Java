@@ -38,9 +38,10 @@ import java.util.List;
  * Message fields are copied at one level deep only.
  * Any sub-messages, or referenced objects may be still be mutable.
  * <p>
- * This class is intended to be immutable but not all contents will necessarily be immutable.
+ * This class makes no guarantees about the immutability or thread-safety of its
+ * content, although it holds the references in an immutable and thread-safe way.
  */
-public class ImmutableFudgeMsg extends AbstractFudgeMsg {
+public final class ImmutableFudgeMsg extends AbstractFudgeMsg {
 
   /**
    * The unmodifiable list of fields.
@@ -83,7 +84,7 @@ public class ImmutableFudgeMsg extends AbstractFudgeMsg {
     if (fieldsToCopy != null) {
       List<FudgeField> fields = new ArrayList<FudgeField>();
       for (FudgeField field : fieldsToCopy) {
-        fields.add(FudgeMsgField.of(field));
+        fields.add(ImmutableFudgeField.of(field));
       }
       _fields = Collections.unmodifiableList(fields);
     } else {

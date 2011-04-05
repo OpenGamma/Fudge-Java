@@ -11,18 +11,17 @@ this distribution.
 
 Version 0.4
 ===========
-Compatibility:
-- Not Source or Binary compatible
-  Wire protocol unchanged
+This release contains major API changes.
+The aim is to get as many breaking changes out of the way now.
+The wire protocol is unchanged.
 
-Changes:
 - Move code to new package structure.
   This minimizes the classes in the top package to avoid overwhelming users with
-  low-level knowledge at first glance.
+  low-level knowledge at first glance
 
-- Create FudgeWireType.
-  Move wire types to new package under new superclass.
-  This allows certain places in the API to specifically require a wire type.
+- Create FudgeWireType
+  Move wire types to new package under new superclass
+  This allows certain places in the API to specifically require a wire type
 
 - Add EncodedFudgeMsg
 
@@ -38,13 +37,15 @@ Changes:
    FudgeMsgBase to AbstractFudgeMsg
    FudgeFieldContainer to FudgeMsg
    MutableFudgeFieldContainer to MutableFudgeMsg
+   FudgeMsgField to ImmutableFudgeField
 
 - Remove classes
    ImmutableFudgeFieldContainer
 
-- Change constructors on ImmutableFudgeMsg
+- Change constructors
+   ImmutableFudgeMsg (parameter order)
+   ImmutableFudgeField (use factories)
 
 - Rename methods
    FudgeSerializationContext.objectToFudgeMsg* -> addToMessage*
-
 
