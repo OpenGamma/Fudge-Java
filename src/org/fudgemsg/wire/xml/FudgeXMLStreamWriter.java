@@ -30,7 +30,7 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
-import org.fudgemsg.wire.AlternativeFudgeStreamWriter;
+import org.fudgemsg.wire.EventBasedFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 
 /**
@@ -48,7 +48,7 @@ import org.fudgemsg.wire.FudgeRuntimeIOException;
  * need to use a suitable {@link XMLStreamWriter} implementation that allows it.
  * For example <a href="http://www.java2s.com/Open-Source/Java-Document/XML/stax-utils/javanet.staxutils.htm">javanet.staxutils</a>.</p>
  */
-public class FudgeXMLStreamWriter extends AlternativeFudgeStreamWriter {
+public class FudgeXMLStreamWriter extends EventBasedFudgeStreamWriter {
 
   /**
    * The XML settings.

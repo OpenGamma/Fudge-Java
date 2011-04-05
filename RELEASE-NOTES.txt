@@ -45,6 +45,7 @@ The wire protocol is unchanged.
    ImmutableFudgeTypeDictionary to UnmodifiableFudgeTypeDictionary
    ImmutableFudgeBuilderFactory to UnmodifiableFudgeBuilderFactory
    ImmutableFudgeObjectDictionary to UnmodifiableFudgeObjectDictionary
+   AlternativeFudgeStreamWriter to EventBasedFudgeStreamWriter
 
 - Remove classes
    ImmutableFudgeFieldContainer

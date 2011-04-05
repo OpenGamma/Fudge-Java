@@ -23,7 +23,7 @@ import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
-import org.fudgemsg.wire.AlternativeFudgeStreamWriter;
+import org.fudgemsg.wire.EventBasedFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -38,7 +38,7 @@ import org.json.JSONWriter;
  * Please refer to <a href="http://wiki.fudgemsg.org/display/FDG/JSON+Fudge+Messages">JSON Fudge Messages</a>
  * for details on the representation.
  */
-public class FudgeJSONStreamWriter extends AlternativeFudgeStreamWriter {
+public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
 
   /**
    * The JSON settings.

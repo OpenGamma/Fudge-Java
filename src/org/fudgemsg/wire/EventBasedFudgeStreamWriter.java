@@ -29,14 +29,14 @@ import org.fudgemsg.FudgeTypeDictionary;
  * Examples would be XML and JSON formats.
  * The subclass should implement the protected methods and write out data as necessary.
  */
-public abstract class AlternativeFudgeStreamWriter extends AbstractFudgeStreamWriter {
+public abstract class EventBasedFudgeStreamWriter extends AbstractFudgeStreamWriter {
 
   /**
    * Creates a new instance.
    * 
    * @param fudgeContext  the Fudge context to use, not null
    */
-  protected AlternativeFudgeStreamWriter(final FudgeContext fudgeContext) {
+  protected EventBasedFudgeStreamWriter(final FudgeContext fudgeContext) {
     super(fudgeContext);
   }
 
