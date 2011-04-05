@@ -23,7 +23,7 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * Abstract interface for writing Fudge elements to a target. This base can be used

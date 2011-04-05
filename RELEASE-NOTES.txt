@@ -16,8 +16,9 @@ The aim is to get as many breaking changes out of the way now.
 The wire protocol is unchanged.
 
 - Move code to new package structure.
-  This minimizes the classes in the top package to avoid overwhelming users with
-  low-level knowledge at first glance
+  This minimizes the top package to avoid overwhelming users at first glance
+  Creation of wire package structure for lower level detail
+  Rename taxon to taxonomy
 
 - Create FudgeWireType
   Move wire types to new package under new superclass

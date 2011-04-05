@@ -20,8 +20,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.taxon.MapFudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
 import org.junit.Test;
 
 /**

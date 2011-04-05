@@ -28,7 +28,7 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * Implementation of a {@link FudgeStreamWriter} that writes to a {@link DataOutput}.

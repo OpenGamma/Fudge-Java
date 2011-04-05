@@ -20,7 +20,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.fudgemsg.UnknownFudgeFieldValue;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * The type definition for an unknown wire type.

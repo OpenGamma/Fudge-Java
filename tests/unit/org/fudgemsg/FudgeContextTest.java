@@ -22,10 +22,10 @@ import static org.junit.Assert.assertNotSame;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fudgemsg.taxon.FudgeTaxonomy;
-import org.fudgemsg.taxon.ImmutableMapTaxonomyResolver;
-import org.fudgemsg.taxon.MapFudgeTaxonomy;
-import org.fudgemsg.taxon.TaxonomyResolver;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.ImmutableMapTaxonomyResolver;
+import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
+import org.fudgemsg.taxonomy.TaxonomyResolver;
 import org.fudgemsg.test.FudgeUtils;
 import org.fudgemsg.wire.FudgeStreamReader;
 import org.junit.Test;

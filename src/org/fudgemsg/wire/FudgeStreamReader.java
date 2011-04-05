@@ -20,7 +20,7 @@ import java.io.Closeable;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * Abstract interface for reading Fudge elements from a source. This base can be used

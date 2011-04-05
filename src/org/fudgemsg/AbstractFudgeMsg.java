@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * Abstract implementation of {@code FudgeMsg}.

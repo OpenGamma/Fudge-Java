@@ -19,7 +19,7 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsgEnvelope;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * Utility for calculating the size of a Fudge message.

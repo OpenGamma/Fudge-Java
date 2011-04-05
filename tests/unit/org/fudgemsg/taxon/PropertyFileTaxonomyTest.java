@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.PropertyFileTaxonomy;
 import org.junit.Test;
 
 /**

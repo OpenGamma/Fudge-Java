@@ -10,4 +10,4 @@
  * For more details, please see <a href="http://www.fudgemsg.org/display/FDG/Taxonomy">the Taxonomy page</a>
  * on the Fudge web site.
  */
-package org.fudgemsg.taxon;
+package org.fudgemsg.taxonomy;

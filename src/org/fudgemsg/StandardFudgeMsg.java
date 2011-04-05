@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;

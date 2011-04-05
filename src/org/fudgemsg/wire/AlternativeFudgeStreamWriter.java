@@ -21,7 +21,7 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * Abstract implementation of a {@code FudgeStreamWriter} that detects major state changes and invokes

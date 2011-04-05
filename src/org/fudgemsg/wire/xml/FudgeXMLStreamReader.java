@@ -32,7 +32,7 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamReader;

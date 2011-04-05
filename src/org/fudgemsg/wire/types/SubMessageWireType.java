@@ -20,7 +20,7 @@ import java.io.DataOutput;
 
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeEncoded;
 import org.fudgemsg.wire.FudgeSize;
 

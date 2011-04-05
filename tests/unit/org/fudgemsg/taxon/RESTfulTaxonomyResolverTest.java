@@ -22,6 +22,8 @@ import static org.junit.Assume.assumeTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.fudgemsg.taxonomy.RESTfulTaxonomyResolver;
+import org.fudgemsg.taxonomy.TaxonomyResolver;
 import org.junit.Test;
 
 /**

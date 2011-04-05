@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**

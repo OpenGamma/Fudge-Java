@@ -17,7 +17,7 @@ package org.fudgemsg;
 
 import org.fudgemsg.mapping.FudgeObjectDictionary;
 import org.fudgemsg.mapping.UnmodifiableFudgeObjectDictionary;
-import org.fudgemsg.taxon.TaxonomyResolver;
+import org.fudgemsg.taxonomy.TaxonomyResolver;
 
 /**
  * An unmodifiable wrapper for {@code FudgeContext}.

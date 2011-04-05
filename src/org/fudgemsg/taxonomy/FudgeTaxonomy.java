@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg.taxon;
+package org.fudgemsg.taxonomy;
 
 /**
  * A Fudge taxonomy providing the connection between a name and an ordinal.

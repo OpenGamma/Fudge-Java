@@ -28,7 +28,7 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.UnmodifiableFudgeField;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
 import org.fudgemsg.wire.types.FudgeWireType;
 

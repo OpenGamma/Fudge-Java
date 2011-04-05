@@ -27,7 +27,7 @@ import java.util.Stack;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeTypeDictionary;
-import org.fudgemsg.taxon.FudgeTaxonomy;
+import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
  * An implementation of {@link FudgeStreamReader} for consuming data from a {@link DataInput}.
