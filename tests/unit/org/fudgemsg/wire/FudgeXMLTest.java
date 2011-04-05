@@ -30,8 +30,6 @@ import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.taxonomy.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
-import org.fudgemsg.wire.FudgeMsgReader;
-import org.fudgemsg.wire.FudgeMsgWriter;
 import org.fudgemsg.wire.xml.FudgeXMLStreamReader;
 import org.fudgemsg.wire.xml.FudgeXMLStreamWriter;
 import org.junit.Test;

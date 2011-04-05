@@ -34,9 +34,6 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.StandardFudgeMessages;
-import org.fudgemsg.wire.EncodedFudgeMsg;
-import org.fudgemsg.wire.FudgeMsgReader;
-import org.fudgemsg.wire.FudgeMsgWriter;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -31,11 +31,6 @@ import java.io.InputStream;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
-import org.fudgemsg.wire.FudgeDataOutputStreamWriter;
-import org.fudgemsg.wire.FudgeMsgReader;
-import org.fudgemsg.wire.FudgeMsgWriter;
-import org.fudgemsg.wire.FudgeStreamReader;
-import org.fudgemsg.wire.FudgeStreamWriter;
 import org.fudgemsg.wire.FudgeStreamReader.FudgeStreamElement;
 import org.junit.Test;
 

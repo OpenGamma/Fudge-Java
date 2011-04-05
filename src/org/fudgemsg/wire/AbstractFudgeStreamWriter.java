@@ -18,7 +18,6 @@ package org.fudgemsg.wire;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**

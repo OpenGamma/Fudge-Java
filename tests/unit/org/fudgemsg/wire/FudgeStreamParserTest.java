@@ -25,7 +25,6 @@ import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgEnvelope;
 import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.test.FudgeUtils;
-import org.fudgemsg.wire.FudgeMsgReader;
 import org.junit.Test;
 
 /**
