@@ -38,7 +38,7 @@ public final class StandardFudgeMessages {
     MutableFudgeMsg msg = context.newMessage();
     
     msg.add("boolean", Boolean.TRUE);
-    msg.add("Boolean", new Boolean(false));
+    msg.add("Boolean", Boolean.FALSE);
     msg.add("byte", (byte)5);
     msg.add("Byte", new Byte((byte)5));
     short shortValue = ((short)Byte.MAX_VALUE) + 5;
@@ -77,7 +77,7 @@ public final class StandardFudgeMessages {
     MutableFudgeMsg msg = context.newMessage();
     
     msg.add(1, Boolean.TRUE);
-    msg.add(2, new Boolean(false));
+    msg.add(2, Boolean.FALSE);
     msg.add(3, (byte)5);
     msg.add(4, new Byte((byte)5));
     short shortValue = ((short)Byte.MAX_VALUE) + 5;
@@ -111,7 +111,7 @@ public final class StandardFudgeMessages {
     MutableFudgeMsg msg = context.newMessage();
     
     msg.add(UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.TRUE));
-    msg.add(UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, new Boolean(false)));
+    msg.add(UnmodifiableFudgeField.of(FudgeWireType.BOOLEAN, Boolean.FALSE));
     msg.add(UnmodifiableFudgeField.of(FudgeWireType.BYTE, (byte)5));
     msg.add(UnmodifiableFudgeField.of(FudgeWireType.BYTE, new Byte((byte)5)));
     

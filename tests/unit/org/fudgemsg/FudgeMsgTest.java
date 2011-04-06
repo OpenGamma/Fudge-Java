@@ -55,7 +55,7 @@ public class FudgeMsgTest {
     field = msg.getByName("Boolean");
     assertNotNull(field);
     assertEquals(FudgeWireType.BOOLEAN, field.getType());
-    assertEquals(new Boolean(false), field.getValue());
+    assertEquals(Boolean.FALSE, field.getValue());
     assertEquals("Boolean", field.getName());
     assertNull(field.getOrdinal());
     
