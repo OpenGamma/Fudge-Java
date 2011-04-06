@@ -17,11 +17,11 @@ package org.fudgemsg;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import org.fudgemsg.mapping.FudgeBuilderFor;
 import org.fudgemsg.types.ClasspathUtilities;
@@ -49,11 +49,7 @@ public class FudgeTypeDictionary {
   /**
    * The types indexed in an array.
    */
-  private volatile FudgeWireType[] _typesById = new FudgeWireType[0];
-  /**
-   * The unknown types indexed in an array.
-   */
-  private volatile FudgeWireType[] _unknownTypesById = new FudgeWireType[0];
+  private AtomicReferenceArray<FudgeWireType> _typesById = new AtomicReferenceArray<FudgeWireType>(256);
   /**
    * The types indexed by Java type.
    */
@@ -115,6 +111,12 @@ public class FudgeTypeDictionary {
     addTypeConverter(StringFieldTypeConverter.INSTANCE, String.class);
     // secondary types
     SecondaryTypeLoader.addTypes(this);
+    // unknown types
+    for (int i = 0; i < _typesById.length(); i++) {
+      if (_typesById.get(i) == null) {
+        _typesById.set(i, FudgeWireType.unknown(i));
+      }
+    }
   }
 
   /**
@@ -123,10 +125,60 @@ public class FudgeTypeDictionary {
    * @param other  the dictionary to copy data from
    */
   protected FudgeTypeDictionary(final FudgeTypeDictionary other) {
-    _typesById = other._typesById;
-    _unknownTypesById = other._unknownTypesById;
+    for (int i = 0; i < _typesById.length(); i++) {
+      _typesById.set(i, other._typesById.get(i));
+    }
     _typesByJavaType = new ConcurrentHashMap<Class<?>, FudgeFieldType>(other._typesByJavaType);
     _convertersByJavaType = new ConcurrentHashMap<Class<?>, FudgeTypeConverter<?, ?>>(other._convertersByJavaType);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Register a new type with the dictionary.
+   * <p>
+   * Custom types that are not part of the Fudge specification should use IDs allocated downwards
+   * from 255 for compatibility with future versions that might include additional standard types.
+   * 
+   * @param type  the {@code FudgeFieldType} definition of the type, not null
+   * @param alternativeTypes  any additional Java classes that are synonymous with this type
+   */
+  public void addType(FudgeFieldType type, Class<?>... alternativeTypes) {
+    if (type == null) {
+      throw new NullPointerException("FudgeFieldType must not be null");
+    }
+    if (type instanceof FudgeWireType) {
+      FudgeWireType oldType;
+      do {
+        oldType = _typesById.get(type.getTypeId());
+        if (oldType != null && oldType.isTypeKnown() && oldType.equals(type) == false) {
+          throw new IllegalArgumentException("FudgeWireType already registered with id " + type.getTypeId());
+        }
+      } while (_typesById.compareAndSet(type.getTypeId(), oldType, (FudgeWireType) type) == false);
+      
+    } else if (type instanceof SecondaryFieldTypeBase<?, ?, ?>) {
+      addTypeConverter((SecondaryFieldTypeBase<?, ?, ?>) type, type.getJavaType());
+      
+    } else {
+      throw new ClassCastException("FudgeFieldType must extend FudgeWireType or SecondaryFieldTypeBase: " + type.getClass());
+    }
+    _typesByJavaType.put(type.getJavaType(), type);
+    for (Class<?> alternativeType : alternativeTypes) {
+      _typesByJavaType.put(alternativeType, type);
+    }
+  }
+
+  /**
+   * Obtain a type by type ID.
+   * <p>
+   * If the type id is not known, a special "unknown" type object will be returned.
+   * This can be checked using {@link FudgeWireType#isTypeUnknown()}.
+   * 
+   * @param typeId  the numeric type identifier, from 0 to 255
+   * @return the type with the specified type identifier, not null
+   * @throws IndexOutOfBoundsException if the id is not in range
+   */
+  public FudgeWireType getByTypeId(int typeId) {
+    return _typesById.get(typeId);
   }
 
   //-------------------------------------------------------------------------
@@ -153,41 +205,6 @@ public class FudgeTypeDictionary {
         }
         type = type.getSuperclass();
       }
-    }
-  }
-
-  /**
-   * Register a new type with the dictionary.
-   * <p>
-   * Custom types that are not part of the Fudge specification should use IDs allocated downwards
-   * from 255 for compatibility with future versions that might include additional standard types.
-   * 
-   * @param type  the {@code FudgeFieldType} definition of the type, not null
-   * @param alternativeTypes  any additional Java classes that are synonymous with this type
-   */
-  public void addType(FudgeFieldType type, Class<?>... alternativeTypes) {
-    if (type == null) {
-      throw new NullPointerException("FudgeFieldType must not be null");
-    }
-    if (type instanceof SecondaryFieldTypeBase<?, ?, ?>) {
-      addTypeConverter((SecondaryFieldTypeBase<?, ?, ?>) type, type.getJavaType());
-    } else if (type instanceof FudgeWireType) {
-      synchronized (this) {
-        int newLength = Math.max(type.getTypeId() + 1, _typesById.length);
-        FudgeWireType[] newArray = Arrays.copyOf(_typesById, newLength);
-        newArray[type.getTypeId()] = (FudgeWireType) type;
-        _typesById = newArray;
-        /*for (int i = 0; i < newArray.length; i++) {
-          System.out.println (i + "=" + newArray[i]);
-        }
-        System.out.println ("\n\n");*/
-      }
-    } else {
-      throw new ClassCastException("Unknown type: " + type.getClass());
-    }
-    _typesByJavaType.put(type.getJavaType(), type);
-    for (Class<?> alternativeType : alternativeTypes) {
-      _typesByJavaType.put(alternativeType, type);
     }
   }
 
@@ -230,47 +247,7 @@ public class FudgeTypeDictionary {
     return (FudgeTypeConverter<Object, T>) _convertersByJavaType.get(javaType);
   }
 
-  /**
-   * Obtain a <em>known</em> type by the type ID specified.
-   * <p>
-   * For processing unhandled variable-width field types, this method will return
-   * {@code null}, and {@link #getUnknownType(int)} should be used if unhandled-type
-   * processing is desired.
-   * 
-   * @param typeId  the numeric type identifier
-   * @return the type with the specified type identifier, null if no type for the id
-   */
-  public FudgeFieldType getByTypeId(int typeId) {
-    if (typeId >= _typesById.length) {
-      return null;
-    }
-    return _typesById[typeId];
-  }
-
-  /**
-   * Obtain an <em>unknown</em> type wrapper for the type ID specified.
-   * <p>
-   * Unknown types allow data to be preserved within a Fudge message even if the
-   * application is unable to process it.
-   * 
-   * @param typeId the numeric type identifier
-   * @return A type representing this identifier
-   */
-  public FudgeWireType getUnknownType(int typeId) {
-    int newLength = Math.max(typeId + 1, _unknownTypesById.length);
-    if (_unknownTypesById.length < newLength || _unknownTypesById[typeId] == null) {
-      synchronized (this) {
-        if (_unknownTypesById.length < newLength || _unknownTypesById[typeId] == null) {
-          FudgeWireType[] newArray = Arrays.copyOf(_unknownTypesById, newLength);
-          newArray[typeId] = FudgeWireType.unknown(typeId);
-          _unknownTypesById = newArray;
-        }
-      }
-    }
-    assert _unknownTypesById[typeId] != null;
-    return _unknownTypesById[typeId];
-  }
-
+  //-------------------------------------------------------------------------
   /**
    * Type conversion for secondary types.
    * 
@@ -392,6 +369,7 @@ public class FudgeTypeDictionary {
     }
   }
 
+  //-------------------------------------------------------------------------
   /**
    * Scans all files available to common classpath loading system heuristics to determine
    * which ones have the {@link FudgeSecondaryType} annotation, and registers those as appropriate
@@ -421,11 +399,11 @@ public class FudgeTypeDictionary {
     Class<?> builderClass = null;
     try {
       builderClass = Class.forName(className);
-    } catch (Exception e) {
+    } catch (Exception ex) {
       // Silently swallow. Can't actually populate it.
       // This should be rare, and you can just stop at this breakpoint
       // (which is why the stack trace is here at all).
-      e.printStackTrace();
+      ex.printStackTrace();
       return;
     }
     
@@ -446,8 +424,8 @@ public class FudgeTypeDictionary {
       FudgeFieldType fudgeType;
       try {
         fudgeType = (FudgeFieldType) field.get(null);
-      } catch (Exception e) {
-        throw new FudgeRuntimeException("Cannot access field " + field.getName() + " on class " + builderClass.getName() + " with @FudgeSecondaryType annotation", e);
+      } catch (Exception ex) {
+        throw new FudgeRuntimeException("Cannot access field " + field.getName() + " on class " + builderClass.getName() + " with @FudgeSecondaryType annotation", ex);
       }
       addType(fudgeType);
     }

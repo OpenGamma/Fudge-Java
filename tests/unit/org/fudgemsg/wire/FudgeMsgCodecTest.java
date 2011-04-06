@@ -28,6 +28,7 @@ import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.UnknownFudgeFieldValue;
 import org.fudgemsg.test.FudgeUtils;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.junit.Test;
 
 /**
@@ -82,7 +83,7 @@ public class FudgeMsgCodecTest {
   @Test
   public void unknown() {
     MutableFudgeMsg inputMsg = s_fudgeContext.newMessage();
-    inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], s_fudgeContext.getTypeDictionary ().getUnknownType(200)));
+    inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], FudgeWireType.unknown(200)));
     FudgeMsg outputMsg = cycleMessage(inputMsg);
     FudgeUtils.assertAllFieldsMatch(inputMsg, outputMsg);
   }

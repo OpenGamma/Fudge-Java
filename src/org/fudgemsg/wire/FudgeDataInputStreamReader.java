@@ -279,12 +279,9 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
       }
     }
     
-    FudgeFieldType type = getFudgeContext().getTypeDictionary().getByTypeId(typeId);
-    if (type == null) {
-      if (fixedWidth) {
-        throw new IOException("Unknown fixed width type " + typeId + " for field " + ordinal + ":" + name + " cannot be handled.");
-      }
-      type = getFudgeContext().getTypeDictionary().getUnknownType(typeId);
+    FudgeWireType type = getFudgeContext().getTypeDictionary().getByTypeId(typeId);
+    if (type.isTypeUnknown() && fixedWidth) {
+      throw new IOException("Unknown fixed width type " + typeId + " for field " + ordinal + ":" + name + " cannot be handled.");
     }
     
     int varSize = 0;

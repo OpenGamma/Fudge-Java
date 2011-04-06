@@ -31,6 +31,7 @@ import org.fudgemsg.types.DateTimeAccuracy;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.FudgeTime;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -96,56 +97,50 @@ public class FudgeInteropTest {
     inputMsg.add("10000", new byte[100000]);
     return inputMsg;
   }
-  
+
   /**
    * @throws IOException [documentation not available]
    */
   @Test
   public void variableWidthColumnSizes() throws IOException {
     FudgeMsg inputMsg = createVariableWidthColumnSizes(s_fudgeContext);
-
     FudgeMsg outputMsg = cycleMessage(inputMsg, "variableWidthColumnSizes.dat");
-    
     assertNotNull(outputMsg);
-    
     FudgeUtils.assertAllFieldsMatch(inputMsg, outputMsg);
   }
-  
+
   /**
    * @throws IOException [documentation not available]
    */
   @Test
   public void subMsg() throws IOException {
     FudgeMsg inputMsg = StandardFudgeMessages.createMessageWithSubMsgs(s_fudgeContext);
-
     FudgeMsg outputMsg = cycleMessage(inputMsg, "subMsg.dat");
-    
     assertNotNull(outputMsg);
-    
     FudgeUtils.assertAllFieldsMatch(inputMsg, outputMsg);
   }
-  
+
   /**
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
    */
   public static FudgeMsg createUnknown(FudgeContext fudgeContext) {
     MutableFudgeMsg inputMsg = fudgeContext.newMessage();
-    inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], fudgeContext.getTypeDictionary ().getUnknownType(200)));
+    inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], FudgeWireType.unknown(200)));
     return inputMsg;
   }
-  
+
   /**
    * @throws IOException [documentation not available]
    */
   @Test
   public void unknown() throws IOException {
     MutableFudgeMsg inputMsg = s_fudgeContext.newMessage();
-    inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], s_fudgeContext.getTypeDictionary ().getUnknownType(200)));
+    inputMsg.add("unknown", new UnknownFudgeFieldValue(new byte[10], FudgeWireType.unknown(200)));
     FudgeMsg outputMsg = cycleMessage(inputMsg, "unknown.dat");
     FudgeUtils.assertAllFieldsMatch(inputMsg, outputMsg);
   }
-  
+
   /**
    * @param length [documentation not available]
    * @return [documentation not available]
@@ -157,7 +152,7 @@ public class FudgeInteropTest {
     }
     return bytes;
   }
-  
+
   /**
    * @param fudgeContext [documentation not available]
    * @return [documentation not available]
