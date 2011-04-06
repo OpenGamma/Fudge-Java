@@ -35,7 +35,7 @@ public abstract class FudgeWireType extends FudgeFieldType implements Serializab
 
   /**
    * Wire type: embedded sub-message.
-   * See {@link FudgeTypeDictionary#FUDGE_MSG_TYPE_ID}.
+   * See {@link FudgeTypeDictionary#SUB_MESSAGE_TYPE_ID}.
    */
   public static final FudgeWireType SUB_MESSAGE = SubMessageWireType.INSTANCE;
   /**

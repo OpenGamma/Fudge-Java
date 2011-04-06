@@ -175,7 +175,7 @@ public class FudgeXMLSettings {
     registerFudgeType(FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID, "float[]");
     registerFudgeType(FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID, "double[]");
     registerFudgeType(FudgeTypeDictionary.STRING_TYPE_ID, "string");
-    registerFudgeType(FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, "message");
+    registerFudgeType(FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID, "message");
     registerFudgeType(FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID, "byte[4]");
     registerFudgeType(FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID, "byte[8]");
     registerFudgeType(FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID, "byte[16]");

@@ -346,7 +346,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
 
   private boolean isMessage(String type) {
     Integer fudgeTypeId = _settings.getIdentifiersToFudgeType().get(type);
-    return FudgeTypeDictionary.FUDGE_MSG_TYPE_ID == fudgeTypeId;
+    return FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID == fudgeTypeId;
   }
 
   private FudgeStreamElement processEnvelopeElement(String element) {

@@ -143,7 +143,7 @@ public class FudgeMongoDBObject implements DBObject {
   }
   
   private static Object convertFudgeToMongoDB(FudgeField field) {
-    if (field.getType().getTypeId() == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
+    if (field.getType().getTypeId() == FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID) {
       // Sub-message.
       return new FudgeMongoDBObject((MutableFudgeMsg) field.getValue());
     } else {

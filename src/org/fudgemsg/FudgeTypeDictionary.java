@@ -522,7 +522,7 @@ public class FudgeTypeDictionary {
   /**
    * Standard Fudge field type: embedded Fudge sub-message. See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
    */
-  public static final byte FUDGE_MSG_TYPE_ID = (byte)15;
+  public static final byte SUB_MESSAGE_TYPE_ID = (byte)15;
   
   // End message indicator type removed as unnecessary, hence no 16
   

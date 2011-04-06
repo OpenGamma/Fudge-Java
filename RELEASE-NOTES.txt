@@ -24,6 +24,8 @@ The wire protocol is unchanged.
   Move wire types to new package under new superclass
   This allows certain places in the API to specifically require a wire type
 
+- Rename FUDGE_MSG_TYPE_ID to SUB_MESSAGE_TYPE_ID
+
 - Add EncodedFudgeMsg
   This allows a Fudge message to be stored and processed while still encoded
 

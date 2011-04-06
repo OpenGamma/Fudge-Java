@@ -62,7 +62,7 @@ public abstract class EventBasedFudgeStreamWriter extends AbstractFudgeStreamWri
   @Override
   public void writeField(String name, Integer ordinal, FudgeFieldType type, Object fieldValue) {
     if (fudgeFieldStart(ordinal, name, type)) {
-      if (type.getTypeId() == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
+      if (type.getTypeId() == FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID) {
         fudgeSubMessageStart();
         writeFields((FudgeMsg) fieldValue);
         fudgeSubMessageEnd();

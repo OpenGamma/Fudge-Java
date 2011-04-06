@@ -31,7 +31,7 @@ class SubMessageWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: embedded sub-message.
-   * See {@link FudgeTypeDictionary#FUDGE_MSG_TYPE_ID}.
+   * See {@link FudgeTypeDictionary#SUB_MESSAGE_TYPE_ID}.
    */
   public static final SubMessageWireType INSTANCE = new SubMessageWireType();
 
@@ -39,7 +39,7 @@ class SubMessageWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private SubMessageWireType() {
-    super(FudgeTypeDictionary.FUDGE_MSG_TYPE_ID, FudgeMsg.class);
+    super(FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID, FudgeMsg.class);
   }
 
   //-------------------------------------------------------------------------

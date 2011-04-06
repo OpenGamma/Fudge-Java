@@ -316,7 +316,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     _fieldType = type;
     MessageProcessingState currMsgProcessingState = _processingStack.peek();
     currMsgProcessingState.consumed += nRead;
-    if (typeId == FudgeTypeDictionary.FUDGE_MSG_TYPE_ID) {
+    if (typeId == FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID) {
       _currentElement = FudgeStreamElement.SUBMESSAGE_FIELD_START;
       _fieldValue = null;
       pushProcessingState(0, varSize);

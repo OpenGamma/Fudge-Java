@@ -397,12 +397,12 @@ public abstract class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>
 
   @Override
   public FudgeMsg getMessage(int ordinal) {
-    return getFirstTypedValue(FudgeMsg.class, ordinal, FudgeTypeDictionary.FUDGE_MSG_TYPE_ID);
+    return getFirstTypedValue(FudgeMsg.class, ordinal, FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID);
   }
 
   @Override
   public FudgeMsg getMessage(String name) {
-    return getFirstTypedValue(FudgeMsg.class, name, FudgeTypeDictionary.FUDGE_MSG_TYPE_ID);
+    return getFirstTypedValue(FudgeMsg.class, name, FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID);
   }
 
   //-------------------------------------------------------------------------
