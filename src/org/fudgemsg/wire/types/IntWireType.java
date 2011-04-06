@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a int.
  */
@@ -28,7 +26,7 @@ final class IntWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: int.
-   * See {@link FudgeTypeDictionary#INT_TYPE_ID}.
+   * See {@link FudgeWireType#INT_TYPE_ID}.
    */
   public static final IntWireType INSTANCE = new IntWireType();
 
@@ -36,7 +34,7 @@ final class IntWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private IntWireType() {
-    super(FudgeTypeDictionary.INT_TYPE_ID, Integer.TYPE, 4);
+    super(FudgeWireType.INT_TYPE_ID, Integer.TYPE, 4);
   }
 
   //-------------------------------------------------------------------------

@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a boolean.
  */
@@ -28,7 +26,7 @@ final class BooleanWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: boolean.
-   * See {@link FudgeTypeDictionary#BOOLEAN_TYPE_ID}.
+   * See {@link FudgeWireType#BOOLEAN_TYPE_ID}.
    */
   public static final BooleanWireType INSTANCE = new BooleanWireType();
 
@@ -36,7 +34,7 @@ final class BooleanWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private BooleanWireType() {
-    super(FudgeTypeDictionary.BOOLEAN_TYPE_ID, Boolean.TYPE, 1);
+    super(FudgeWireType.BOOLEAN_TYPE_ID, Boolean.TYPE, 1);
   }
 
   //-------------------------------------------------------------------------

@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Tunable parameters for the XML encoding/decoding.
@@ -160,34 +160,34 @@ public class FudgeXMLSettings {
     addBooleanFalseAlias(ALIAS_BOOLEAN_FALSE_OFF);
     addBooleanFalseAlias(ALIAS_BOOLEAN_FALSE_F);
     addBooleanFalseAlias(ALIAS_BOOLEAN_FALSE_0);
-    registerFudgeType(FudgeTypeDictionary.INDICATOR_TYPE_ID, "indicator");
-    registerFudgeType(FudgeTypeDictionary.BOOLEAN_TYPE_ID, "boolean", "bool");
-    registerFudgeType(FudgeTypeDictionary.BYTE_TYPE_ID, "byte", "int8");
-    registerFudgeType(FudgeTypeDictionary.SHORT_TYPE_ID, "short", "int16");
-    registerFudgeType(FudgeTypeDictionary.INT_TYPE_ID, "int", "int32");
-    registerFudgeType(FudgeTypeDictionary.LONG_TYPE_ID, "long", "int64");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID, "byte[]");
-    registerFudgeType(FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID, "short[]");
-    registerFudgeType(FudgeTypeDictionary.INT_ARRAY_TYPE_ID, "int[]");
-    registerFudgeType(FudgeTypeDictionary.LONG_ARRAY_TYPE_ID, "long[]");
-    registerFudgeType(FudgeTypeDictionary.FLOAT_TYPE_ID, "float");
-    registerFudgeType(FudgeTypeDictionary.DOUBLE_TYPE_ID, "double");
-    registerFudgeType(FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID, "float[]");
-    registerFudgeType(FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID, "double[]");
-    registerFudgeType(FudgeTypeDictionary.STRING_TYPE_ID, "string");
-    registerFudgeType(FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID, "message");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID, "byte[4]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID, "byte[8]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID, "byte[16]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID, "byte[20]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID, "byte[32]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID, "byte[64]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID, "byte[128]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID, "byte[256]");
-    registerFudgeType(FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID, "byte[512]");
-    registerFudgeType(FudgeTypeDictionary.DATE_TYPE_ID, "date");
-    registerFudgeType(FudgeTypeDictionary.TIME_TYPE_ID, "time");
-    registerFudgeType(FudgeTypeDictionary.DATETIME_TYPE_ID, "datetime");
+    registerFudgeType(FudgeWireType.INDICATOR_TYPE_ID, "indicator");
+    registerFudgeType(FudgeWireType.BOOLEAN_TYPE_ID, "boolean", "bool");
+    registerFudgeType(FudgeWireType.BYTE_TYPE_ID, "byte", "int8");
+    registerFudgeType(FudgeWireType.SHORT_TYPE_ID, "short", "int16");
+    registerFudgeType(FudgeWireType.INT_TYPE_ID, "int", "int32");
+    registerFudgeType(FudgeWireType.LONG_TYPE_ID, "long", "int64");
+    registerFudgeType(FudgeWireType.BYTE_ARRAY_TYPE_ID, "byte[]");
+    registerFudgeType(FudgeWireType.SHORT_ARRAY_TYPE_ID, "short[]");
+    registerFudgeType(FudgeWireType.INT_ARRAY_TYPE_ID, "int[]");
+    registerFudgeType(FudgeWireType.LONG_ARRAY_TYPE_ID, "long[]");
+    registerFudgeType(FudgeWireType.FLOAT_TYPE_ID, "float");
+    registerFudgeType(FudgeWireType.DOUBLE_TYPE_ID, "double");
+    registerFudgeType(FudgeWireType.FLOAT_ARRAY_TYPE_ID, "float[]");
+    registerFudgeType(FudgeWireType.DOUBLE_ARRAY_TYPE_ID, "double[]");
+    registerFudgeType(FudgeWireType.STRING_TYPE_ID, "string");
+    registerFudgeType(FudgeWireType.SUB_MESSAGE_TYPE_ID, "message");
+    registerFudgeType(FudgeWireType.BYTE_ARR_4_TYPE_ID, "byte[4]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_8_TYPE_ID, "byte[8]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_16_TYPE_ID, "byte[16]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_20_TYPE_ID, "byte[20]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_32_TYPE_ID, "byte[32]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_64_TYPE_ID, "byte[64]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_128_TYPE_ID, "byte[128]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_256_TYPE_ID, "byte[256]");
+    registerFudgeType(FudgeWireType.BYTE_ARR_512_TYPE_ID, "byte[512]");
+    registerFudgeType(FudgeWireType.DATE_TYPE_ID, "date");
+    registerFudgeType(FudgeWireType.TIME_TYPE_ID, "time");
+    registerFudgeType(FudgeWireType.DATETIME_TYPE_ID, "datetime");
     setBase64EncodingName(DEFAULT_ENCODING_BASE64);
   }
 

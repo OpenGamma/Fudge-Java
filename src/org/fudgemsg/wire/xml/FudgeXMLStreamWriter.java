@@ -28,10 +28,10 @@ import org.apache.commons.codec.binary.Base64OutputStream;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.wire.EventBasedFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * A Fudge writer that produces XML.
@@ -310,49 +310,49 @@ public class FudgeXMLStreamWriter extends EventBasedFudgeStreamWriter {
       fieldValue = ((SecondaryFieldTypeBase<Object,Object,Object>)type).secondaryToPrimary(fieldValue);
     }
     switch (type.getTypeId()) {
-    case FudgeTypeDictionary.INDICATOR_TYPE_ID :
+    case FudgeWireType.INDICATOR_TYPE_ID :
       // no content
       break;
-    case FudgeTypeDictionary.BOOLEAN_TYPE_ID:
+    case FudgeWireType.BOOLEAN_TYPE_ID:
       getWriter().writeCharacters((Boolean)fieldValue ? getBooleanTrue() : getBooleanFalse());
       break;
-    case FudgeTypeDictionary.BYTE_TYPE_ID:
-    case FudgeTypeDictionary.SHORT_TYPE_ID:
-    case FudgeTypeDictionary.INT_TYPE_ID:
-    case FudgeTypeDictionary.LONG_TYPE_ID:
-    case FudgeTypeDictionary.FLOAT_TYPE_ID:
-    case FudgeTypeDictionary.DOUBLE_TYPE_ID:
-    case FudgeTypeDictionary.STRING_TYPE_ID:
-    case FudgeTypeDictionary.DATE_TYPE_ID:
-    case FudgeTypeDictionary.TIME_TYPE_ID:
-    case FudgeTypeDictionary.DATETIME_TYPE_ID:
+    case FudgeWireType.BYTE_TYPE_ID:
+    case FudgeWireType.SHORT_TYPE_ID:
+    case FudgeWireType.INT_TYPE_ID:
+    case FudgeWireType.LONG_TYPE_ID:
+    case FudgeWireType.FLOAT_TYPE_ID:
+    case FudgeWireType.DOUBLE_TYPE_ID:
+    case FudgeWireType.STRING_TYPE_ID:
+    case FudgeWireType.DATE_TYPE_ID:
+    case FudgeWireType.TIME_TYPE_ID:
+    case FudgeWireType.DATETIME_TYPE_ID:
       getWriter().writeCharacters(fieldValue.toString());
       break;
-    case FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID:
+    case FudgeWireType.BYTE_ARRAY_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_4_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_8_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_16_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_20_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_32_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_64_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_128_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_256_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_512_TYPE_ID:
       writeArray((byte[])fieldValue);
       break;
-    case FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID:
+    case FudgeWireType.SHORT_ARRAY_TYPE_ID:
       writeArray((short[])fieldValue);
       break;
-    case FudgeTypeDictionary.INT_ARRAY_TYPE_ID:
+    case FudgeWireType.INT_ARRAY_TYPE_ID:
       writeArray((int[])fieldValue);
       break;
-    case FudgeTypeDictionary.LONG_ARRAY_TYPE_ID:
+    case FudgeWireType.LONG_ARRAY_TYPE_ID:
       writeArray((long[])fieldValue);
       break;
-    case FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID:
+    case FudgeWireType.FLOAT_ARRAY_TYPE_ID:
       writeArray((float[])fieldValue);
       break;
-    case FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID:
+    case FudgeWireType.DOUBLE_ARRAY_TYPE_ID:
       writeArray((double[])fieldValue);
       break;
     default :

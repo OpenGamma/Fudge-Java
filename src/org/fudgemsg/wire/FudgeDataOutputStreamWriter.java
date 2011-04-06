@@ -26,7 +26,7 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * A Fudge writer that uses a {@code DataOutput} stream.
@@ -235,28 +235,28 @@ public class FudgeDataOutputStreamWriter extends AbstractFudgeStreamWriter {
     // be a massive hot-spot for performance.
     try {
       switch (type.getTypeId()) {
-        case FudgeTypeDictionary.BOOLEAN_TYPE_ID:
+        case FudgeWireType.BOOLEAN_TYPE_ID:
           getDataOutput().writeBoolean((Boolean) value);
           break;
-        case FudgeTypeDictionary.BYTE_TYPE_ID:
+        case FudgeWireType.BYTE_TYPE_ID:
           getDataOutput().writeByte((Byte) value);
           break;
-        case FudgeTypeDictionary.SHORT_TYPE_ID:
+        case FudgeWireType.SHORT_TYPE_ID:
           getDataOutput().writeShort((Short) value);
           break;
-        case FudgeTypeDictionary.INT_TYPE_ID:
+        case FudgeWireType.INT_TYPE_ID:
           getDataOutput().writeInt((Integer) value);
           break;
-        case FudgeTypeDictionary.LONG_TYPE_ID:
+        case FudgeWireType.LONG_TYPE_ID:
           getDataOutput().writeLong((Long) value);
           break;
-        case FudgeTypeDictionary.FLOAT_TYPE_ID:
+        case FudgeWireType.FLOAT_TYPE_ID:
           getDataOutput().writeFloat((Float) value);
           break;
-        case FudgeTypeDictionary.DOUBLE_TYPE_ID:
+        case FudgeWireType.DOUBLE_TYPE_ID:
           getDataOutput().writeDouble((Double) value);
           break;
-        case FudgeTypeDictionary.INDICATOR_TYPE_ID:
+        case FudgeWireType.INDICATOR_TYPE_ID:
           break;
         default:
           if (type.isVariableSize()) {

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Abstract implementation of {@code FudgeMsg}.
@@ -317,92 +318,92 @@ public abstract class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>
 
   @Override
   public Double getDouble(String name) {
-    return getFirstTypedValue(Double.class, name, FudgeTypeDictionary.DOUBLE_TYPE_ID);
+    return getFirstTypedValue(Double.class, name, FudgeWireType.DOUBLE_TYPE_ID);
   }
 
   @Override
   public Double getDouble(int ordinal) {
-    return getFirstTypedValue(Double.class, ordinal, FudgeTypeDictionary.DOUBLE_TYPE_ID);
+    return getFirstTypedValue(Double.class, ordinal, FudgeWireType.DOUBLE_TYPE_ID);
   }
 
   @Override
   public Float getFloat(String name) {
-    return getFirstTypedValue(Float.class, name, FudgeTypeDictionary.FLOAT_TYPE_ID);
+    return getFirstTypedValue(Float.class, name, FudgeWireType.FLOAT_TYPE_ID);
   }
 
   @Override
   public Float getFloat(int ordinal) {
-    return getFirstTypedValue(Float.class, ordinal, FudgeTypeDictionary.FLOAT_TYPE_ID);
+    return getFirstTypedValue(Float.class, ordinal, FudgeWireType.FLOAT_TYPE_ID);
   }
 
   @Override
   public Long getLong(String name) {
-    return getFirstTypedValue(Long.class, name, FudgeTypeDictionary.LONG_TYPE_ID);
+    return getFirstTypedValue(Long.class, name, FudgeWireType.LONG_TYPE_ID);
   }
 
   @Override
   public Long getLong(int ordinal) {
-    return getFirstTypedValue(Long.class, ordinal, FudgeTypeDictionary.LONG_TYPE_ID);
+    return getFirstTypedValue(Long.class, ordinal, FudgeWireType.LONG_TYPE_ID);
   }
 
   @Override
   public Integer getInt(String name) {
-    return getFirstTypedValue(Integer.class, name, FudgeTypeDictionary.INT_TYPE_ID);
+    return getFirstTypedValue(Integer.class, name, FudgeWireType.INT_TYPE_ID);
   }
 
   @Override
   public Integer getInt(int ordinal) {
-    return getFirstTypedValue(Integer.class, ordinal, FudgeTypeDictionary.INT_TYPE_ID);
+    return getFirstTypedValue(Integer.class, ordinal, FudgeWireType.INT_TYPE_ID);
   }
 
   @Override
   public Short getShort(String name) {
-    return getFirstTypedValue(Short.class, name, FudgeTypeDictionary.SHORT_TYPE_ID);
+    return getFirstTypedValue(Short.class, name, FudgeWireType.SHORT_TYPE_ID);
   }
 
   @Override
   public Short getShort(int ordinal) {
-    return getFirstTypedValue(Short.class, ordinal, FudgeTypeDictionary.SHORT_TYPE_ID);
+    return getFirstTypedValue(Short.class, ordinal, FudgeWireType.SHORT_TYPE_ID);
   }
 
   @Override
   public Byte getByte(String name) {
-    return getFirstTypedValue(Byte.class, name, FudgeTypeDictionary.BYTE_TYPE_ID);
+    return getFirstTypedValue(Byte.class, name, FudgeWireType.BYTE_TYPE_ID);
   }
 
   @Override
   public Byte getByte(int ordinal) {
-    return getFirstTypedValue(Byte.class, ordinal, FudgeTypeDictionary.BYTE_TYPE_ID);
+    return getFirstTypedValue(Byte.class, ordinal, FudgeWireType.BYTE_TYPE_ID);
   }
 
   @Override
   public String getString(String name) {
-    return getFirstTypedValue(String.class, name, FudgeTypeDictionary.STRING_TYPE_ID);
+    return getFirstTypedValue(String.class, name, FudgeWireType.STRING_TYPE_ID);
   }
 
   @Override
   public String getString(int ordinal) {
-    return getFirstTypedValue(String.class, ordinal, FudgeTypeDictionary.STRING_TYPE_ID);
+    return getFirstTypedValue(String.class, ordinal, FudgeWireType.STRING_TYPE_ID);
   }
 
   @Override
   public Boolean getBoolean(String name) {
-    return getFirstTypedValue(Boolean.class, name, FudgeTypeDictionary.BOOLEAN_TYPE_ID);
+    return getFirstTypedValue(Boolean.class, name, FudgeWireType.BOOLEAN_TYPE_ID);
   }
 
   @Override
   public Boolean getBoolean(int ordinal) {
-    return getFirstTypedValue(Boolean.class, ordinal, FudgeTypeDictionary.BOOLEAN_TYPE_ID);
+    return getFirstTypedValue(Boolean.class, ordinal, FudgeWireType.BOOLEAN_TYPE_ID);
   }
 
   @Override
   public FudgeMsg getMessage(int ordinal) {
-    return getFirstTypedValue(FudgeMsg.class, ordinal, FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID);
+    return getFirstTypedValue(FudgeMsg.class, ordinal, FudgeWireType.SUB_MESSAGE_TYPE_ID);
   }
 
   @Override
   public FudgeMsg getMessage(String name) {
-    return getFirstTypedValue(FudgeMsg.class, name, FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID);
+    return getFirstTypedValue(FudgeMsg.class, name, FudgeWireType.SUB_MESSAGE_TYPE_ID);
   }
 
   //-------------------------------------------------------------------------

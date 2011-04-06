@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.FudgeTime;
 
 /**
@@ -37,7 +36,7 @@ final class TimeWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: date.
-   * See {@link FudgeTypeDictionary#TIME_TYPE_ID}.
+   * See {@link FudgeWireType#TIME_TYPE_ID}.
    */
   public static final TimeWireType INSTANCE = new TimeWireType();
 
@@ -45,7 +44,7 @@ final class TimeWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private TimeWireType() {
-    super(FudgeTypeDictionary.TIME_TYPE_ID, FudgeTime.class, 8);
+    super(FudgeWireType.TIME_TYPE_ID, FudgeTime.class, 8);
   }
 
   //-------------------------------------------------------------------------

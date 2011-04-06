@@ -19,7 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
@@ -29,7 +28,7 @@ final class ShortArrayWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: array of 16-bit integers.
-   * See {@link FudgeTypeDictionary#SHORT_ARRAY_TYPE_ID}.
+   * See {@link FudgeWireType#SHORT_ARRAY_TYPE_ID}.
    */
   public static final ShortArrayWireType INSTANCE = new ShortArrayWireType();
 
@@ -37,7 +36,7 @@ final class ShortArrayWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private ShortArrayWireType() {
-    super(FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID, short[].class);
+    super(FudgeWireType.SHORT_ARRAY_TYPE_ID, short[].class);
   }
 
   //-------------------------------------------------------------------------

@@ -28,8 +28,8 @@ import org.bson.types.ObjectId;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.MutableFudgeMsg;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 import com.mongodb.DBObject;
 
@@ -143,7 +143,7 @@ public class FudgeMongoDBObject implements DBObject {
   }
   
   private static Object convertFudgeToMongoDB(FudgeField field) {
-    if (field.getType().getTypeId() == FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID) {
+    if (field.getType().getTypeId() == FudgeWireType.SUB_MESSAGE_TYPE_ID) {
       // Sub-message.
       return new FudgeMongoDBObject((MutableFudgeMsg) field.getValue());
     } else {

@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.FudgeDate;
 
 /**
@@ -37,7 +36,7 @@ final class DateWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: date.
-   * See {@link FudgeTypeDictionary#DATE_TYPE_ID}.
+   * See {@link FudgeWireType#DATE_TYPE_ID}.
    */
   public static final DateWireType INSTANCE = new DateWireType();
 
@@ -45,7 +44,7 @@ final class DateWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private DateWireType() {
-    super(FudgeTypeDictionary.DATE_TYPE_ID, FudgeDate.class, 4);
+    super(FudgeWireType.DATE_TYPE_ID, FudgeDate.class, 4);
   }
 
   //-------------------------------------------------------------------------

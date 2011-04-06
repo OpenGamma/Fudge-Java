@@ -34,143 +34,285 @@ import org.fudgemsg.FudgeTypeDictionary;
 public abstract class FudgeWireType extends FudgeFieldType implements Serializable {
 
   /**
+   * Wire type id: indicator.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte INDICATOR_TYPE_ID = (byte) 0;
+  /**
+   * Wire type id: boolean.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BOOLEAN_TYPE_ID = (byte) 1;
+  /**
+   * Wire type id: 8-bit signed integer.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_TYPE_ID = (byte) 2;
+  /**
+   * Wire type id: 16-bit signed integer.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte SHORT_TYPE_ID = (byte) 3;
+  /**
+   * Wire type id: 32-bit signed integer.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte INT_TYPE_ID = (byte) 4;
+  /**
+   * Wire type id: 64-bit signed integer.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte LONG_TYPE_ID = (byte) 5;
+  /**
+   * Wire type id: byte array.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARRAY_TYPE_ID = (byte) 6;
+  /**
+   * Wire type id: array of 16-bit signed integers.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte SHORT_ARRAY_TYPE_ID = (byte) 7;
+  /**
+   * Wire type id: array of 32-bit signed integers.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte INT_ARRAY_TYPE_ID = (byte) 8;
+  /**
+   * Wire type id: array of 64-bit signed integers.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte LONG_ARRAY_TYPE_ID = (byte) 9;
+  /**
+   * Wire type id: 32-bit floating point.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte FLOAT_TYPE_ID = (byte) 10;
+  /**
+   * Wire type id: 64-bit floating point.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte DOUBLE_TYPE_ID = (byte) 11;
+  /**
+   * Wire type id: array of 32-bit floating point.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte FLOAT_ARRAY_TYPE_ID = (byte) 12;
+  /**
+   * Wire type id: array of 64-bit floating point.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte DOUBLE_ARRAY_TYPE_ID = (byte) 13;
+  /**
+   * Wire type id: string.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte STRING_TYPE_ID = (byte) 14;
+  /**
+   * Wire type id: embedded Fudge sub-message.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte SUB_MESSAGE_TYPE_ID = (byte) 15;
+  // End message indicator type removed as unnecessary, hence no 16
+  /**
+   * Wire type id: byte array of length 4.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_4_TYPE_ID = (byte) 17;
+  /**
+   * Wire type id: byte array of length 8.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_8_TYPE_ID = (byte) 18;
+  /**
+   * Wire type id: byte array of length 16.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_16_TYPE_ID = (byte) 19;
+  /**
+   * Wire type id: byte array of length 20.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_20_TYPE_ID = (byte) 20;
+  /**
+   * Wire type id: byte array of length 32.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_32_TYPE_ID = (byte) 21;
+  /**
+   * Wire type id: byte array of length 64.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_64_TYPE_ID = (byte) 22;
+  /**
+   * Wire type id: byte array of length 128.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_128_TYPE_ID = (byte) 23;
+  /**
+   * Wire type id: byte array of length 256.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_256_TYPE_ID = (byte) 24;
+  /**
+   * Wire type id: byte array of length 512.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte BYTE_ARR_512_TYPE_ID = (byte) 25;
+  /**
+   * Wire type id: date.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte DATE_TYPE_ID = (byte) 26;
+  /**
+   * Wire type id: time.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte TIME_TYPE_ID = (byte) 27;
+  /**
+   * Wire type id: combined date and time.
+   * See <a href="http://wiki.fudgemsg.org/display/FDG/Types">Fudge Types</a> for more details.
+   */
+  public static final byte DATETIME_TYPE_ID = (byte) 28;
+
+  /**
    * Wire type: embedded sub-message.
-   * See {@link FudgeTypeDictionary#SUB_MESSAGE_TYPE_ID}.
+   * See {@link #SUB_MESSAGE_TYPE_ID}.
    */
   public static final FudgeWireType SUB_MESSAGE = SubMessageWireType.INSTANCE;
   /**
    * Wire type: indicator.
-   * See {@link FudgeTypeDictionary#INDICATOR_TYPE_ID}.
+   * See {@link #INDICATOR_TYPE_ID}.
    */
   public static final FudgeWireType INDICATOR = IndicatorWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#BOOLEAN_TYPE_ID}.
+   * See {@link #BOOLEAN_TYPE_ID}.
    */
   public static final FudgeWireType BOOLEAN = BooleanWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#BYTE_TYPE_ID}.
+   * See {@link #BYTE_TYPE_ID}.
    */
   public static final FudgeWireType BYTE = ByteWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#SHORT_TYPE_ID}.
+   * See {@link #SHORT_TYPE_ID}.
    */
   public static final FudgeWireType SHORT = ShortWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#INT_TYPE_ID}.
+   * See {@link #INT_TYPE_ID}.
    */
   public static final FudgeWireType INT = IntWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#LONG_TYPE_ID}.
+   * See {@link #LONG_TYPE_ID}.
    */
   public static final FudgeWireType LONG = LongWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#FLOAT_TYPE_ID}.
+   * See {@link #FLOAT_TYPE_ID}.
    */
   public static final FudgeWireType FLOAT = FloatWireType.INSTANCE;
   /**
    * Wire type: boolean.
-   * See {@link FudgeTypeDictionary#DOUBLE_TYPE_ID}.
+   * See {@link #DOUBLE_TYPE_ID}.
    */
   public static final FudgeWireType DOUBLE = DoubleWireType.INSTANCE;
   /**
    * Wire type: string.
-   * See {@link FudgeTypeDictionary#STRING_TYPE_ID}.
+   * See {@link #STRING_TYPE_ID}.
    */
   public static final FudgeWireType STRING = StringWireType.INSTANCE;
   /**
    * Wire type: short array.
-   * See {@link FudgeTypeDictionary#SHORT_ARRAY_TYPE_ID}.
+   * See {@link #SHORT_ARRAY_TYPE_ID}.
    */
   public static final FudgeWireType SHORT_ARRAY = ShortArrayWireType.INSTANCE;
   /**
    * Wire type: int array.
-   * See {@link FudgeTypeDictionary#INT_ARRAY_TYPE_ID}.
+   * See {@link #INT_ARRAY_TYPE_ID}.
    */
   public static final FudgeWireType INT_ARRAY = IntArrayWireType.INSTANCE;
   /**
    * Wire type: long array.
-   * See {@link FudgeTypeDictionary#LONG_ARRAY_TYPE_ID}.
+   * See {@link #LONG_ARRAY_TYPE_ID}.
    */
   public static final FudgeWireType LONG_ARRAY = LongArrayWireType.INSTANCE;
   /**
    * Wire type: float array.
-   * See {@link FudgeTypeDictionary#FLOAT_ARRAY_TYPE_ID}.
+   * See {@link #FLOAT_ARRAY_TYPE_ID}.
    */
   public static final FudgeWireType FLOAT_ARRAY = FloatArrayWireType.INSTANCE;
   /**
    * Wire type: double array.
-   * See {@link FudgeTypeDictionary#DOUBLE_ARRAY_TYPE_ID}.
+   * See {@link #DOUBLE_ARRAY_TYPE_ID}.
    */
   public static final FudgeWireType DOUBLE_ARRAY = DoubleArrayWireType.INSTANCE;
   /**
    * Wire type: arbitrary length byte array.
-   * See {@link FudgeTypeDictionary#BYTE_ARRAY_TYPE_ID}.
+   * See {@link #BYTE_ARRAY_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY = ByteArrayWireTypes.VARIABLE_SIZED_INSTANCE;
   /**
    * Wire type: byte array of length 4.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_4_TYPE_ID}.
+   * See {@link #BYTE_ARR_4_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_4 = ByteArrayWireTypes.LENGTH_4_INSTANCE;
   /**
    * Wire type: byte array of length 8.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_8_TYPE_ID}.
+   * See {@link #BYTE_ARR_8_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_8 = ByteArrayWireTypes.LENGTH_8_INSTANCE;
   /**
    * Wire type: byte array of length 16.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_16_TYPE_ID}.
+   * See {@link #BYTE_ARR_16_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_16 = ByteArrayWireTypes.LENGTH_16_INSTANCE;
   /**
    * Wire type: byte array of length 20.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_20_TYPE_ID}.
+   * See {@link #BYTE_ARR_20_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_20 = ByteArrayWireTypes.LENGTH_20_INSTANCE;
   /**
    * Wire type: byte array of length 32.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_32_TYPE_ID}.
+   * See {@link #BYTE_ARR_32_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_32 = ByteArrayWireTypes.LENGTH_32_INSTANCE;
   /**
    * Wire type: byte array of length 64.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_64_TYPE_ID}.
+   * See {@link #BYTE_ARR_64_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_64 = ByteArrayWireTypes.LENGTH_64_INSTANCE;
   /**
    * Wire type: byte array of length 128.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_128_TYPE_ID}.
+   * See {@link #BYTE_ARR_128_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_128 = ByteArrayWireTypes.LENGTH_128_INSTANCE;
   /**
    * Wire type: byte array of length 256.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_256_TYPE_ID}.
+   * See {@link #BYTE_ARR_256_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_256 = ByteArrayWireTypes.LENGTH_256_INSTANCE;
   /**
    * Wire type: byte array of length 512.
-   * See {@link FudgeTypeDictionary#BYTE_ARR_512_TYPE_ID}.
+   * See {@link #BYTE_ARR_512_TYPE_ID}.
    */
   public static final ByteArrayWireTypes BYTE_ARRAY_512 = ByteArrayWireTypes.LENGTH_512_INSTANCE;
   /**
    * Wire type: date.
-   * See {@link FudgeTypeDictionary#TIME_TYPE_ID}.
+   * See {@link #TIME_TYPE_ID}.
    */
   public static final FudgeWireType DATE = DateWireType.INSTANCE;
   /**
    * Wire type: date.
-   * See {@link FudgeTypeDictionary#TIME_TYPE_ID}.
+   * See {@link #TIME_TYPE_ID}.
    */
   public static final FudgeWireType TIME = TimeWireType.INSTANCE;
   /**
    * Wire type: combined date and time.
-   * See {@link FudgeTypeDictionary#DATETIME_TYPE_ID}.
+   * See {@link #DATETIME_TYPE_ID}.
    */
   public static final FudgeWireType DATETIME = DateTimeWireType.INSTANCE;
 

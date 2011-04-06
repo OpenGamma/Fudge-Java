@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a long.
  */
@@ -28,7 +26,7 @@ final class LongWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: long.
-   * See {@link FudgeTypeDictionary#LONG_TYPE_ID}.
+   * See {@link FudgeWireType#LONG_TYPE_ID}.
    */
   public static final LongWireType INSTANCE = new LongWireType();
 
@@ -36,7 +34,7 @@ final class LongWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private LongWireType() {
-    super(FudgeTypeDictionary.LONG_TYPE_ID, Long.TYPE, 8);
+    super(FudgeWireType.LONG_TYPE_ID, Long.TYPE, 8);
   }
 
   //-------------------------------------------------------------------------

@@ -25,8 +25,8 @@ import java.util.Stack;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * A Fudge reader that uses a {@code DataInput} stream.
@@ -316,7 +316,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     _fieldType = type;
     MessageProcessingState currMsgProcessingState = _processingStack.peek();
     currMsgProcessingState.consumed += nRead;
-    if (typeId == FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID) {
+    if (typeId == FudgeWireType.SUB_MESSAGE_TYPE_ID) {
       _currentElement = FudgeStreamElement.SUBMESSAGE_FIELD_START;
       _fieldValue = null;
       pushProcessingState(0, varSize);
@@ -345,19 +345,19 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     try {
       // Special fast-pass for known field types
       switch (type.getTypeId()) {
-        case FudgeTypeDictionary.BOOLEAN_TYPE_ID:
+        case FudgeWireType.BOOLEAN_TYPE_ID:
           return is.readBoolean();
-        case FudgeTypeDictionary.BYTE_TYPE_ID:
+        case FudgeWireType.BYTE_TYPE_ID:
           return is.readByte();
-        case FudgeTypeDictionary.SHORT_TYPE_ID:
+        case FudgeWireType.SHORT_TYPE_ID:
           return is.readShort();
-        case FudgeTypeDictionary.INT_TYPE_ID:
+        case FudgeWireType.INT_TYPE_ID:
           return is.readInt();
-        case FudgeTypeDictionary.LONG_TYPE_ID:
+        case FudgeWireType.LONG_TYPE_ID:
           return is.readLong();
-        case FudgeTypeDictionary.FLOAT_TYPE_ID:
+        case FudgeWireType.FLOAT_TYPE_ID:
           return is.readFloat();
-        case FudgeTypeDictionary.DOUBLE_TYPE_ID:
+        case FudgeWireType.DOUBLE_TYPE_ID:
           return is.readDouble();
       }
       return type.readValue(is, varSize);

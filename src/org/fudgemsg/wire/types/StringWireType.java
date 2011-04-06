@@ -19,7 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.wire.UTF8;
 
@@ -30,7 +29,7 @@ final class StringWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: string.
-   * See {@link FudgeTypeDictionary#STRING_TYPE_ID}.
+   * See {@link FudgeWireType#STRING_TYPE_ID}.
    */
   public static final StringWireType INSTANCE = new StringWireType();
 
@@ -38,7 +37,7 @@ final class StringWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private StringWireType() {
-    super(FudgeTypeDictionary.STRING_TYPE_ID, String.class);
+    super(FudgeWireType.STRING_TYPE_ID, String.class);
   }
 
   //-------------------------------------------------------------------------

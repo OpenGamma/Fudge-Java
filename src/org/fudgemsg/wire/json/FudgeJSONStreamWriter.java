@@ -21,10 +21,10 @@ import java.io.Writer;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.wire.EventBasedFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
+import org.fudgemsg.wire.types.FudgeWireType;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
@@ -270,34 +270,34 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
         fieldValue = ((SecondaryFieldTypeBase<Object,Object,Object>)type).secondaryToPrimary(fieldValue);
       }
       switch (type.getTypeId ()) {
-      case FudgeTypeDictionary.INDICATOR_TYPE_ID :
+      case FudgeWireType.INDICATOR_TYPE_ID :
         getWriter ().value (null);
         break;
-      case FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID:
+      case FudgeWireType.BYTE_ARRAY_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_4_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_8_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_16_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_20_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_32_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_64_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_128_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_256_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_512_TYPE_ID:
         writeArray ((byte[])fieldValue);
         break;
-      case FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID:
+      case FudgeWireType.SHORT_ARRAY_TYPE_ID:
         writeArray ((short[])fieldValue);
         break;
-      case FudgeTypeDictionary.INT_ARRAY_TYPE_ID:
+      case FudgeWireType.INT_ARRAY_TYPE_ID:
         writeArray ((int[])fieldValue);
         break;
-      case FudgeTypeDictionary.LONG_ARRAY_TYPE_ID:
+      case FudgeWireType.LONG_ARRAY_TYPE_ID:
         writeArray ((long[])fieldValue);
         break;
-      case FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID:
+      case FudgeWireType.FLOAT_ARRAY_TYPE_ID:
         writeArray ((float[])fieldValue);
         break;
-      case FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID:
+      case FudgeWireType.DOUBLE_ARRAY_TYPE_ID:
         writeArray ((double[])fieldValue);
         break;
       default :

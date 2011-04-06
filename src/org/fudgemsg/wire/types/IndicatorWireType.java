@@ -18,7 +18,6 @@ package org.fudgemsg.wire.types;
 import java.io.DataInput;
 import java.io.DataOutput;
 
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.types.IndicatorType;
 
 /**
@@ -28,7 +27,7 @@ final class IndicatorWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: zero length indicator.
-   * See {@link FudgeTypeDictionary#INDICATOR_TYPE_ID}.
+   * See {@link FudgeWireType#INDICATOR_TYPE_ID}.
    */
   public static final IndicatorWireType INSTANCE = new IndicatorWireType();
 
@@ -36,7 +35,7 @@ final class IndicatorWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private IndicatorWireType() {
-    super(FudgeTypeDictionary.INDICATOR_TYPE_ID, IndicatorType.class, 0);
+    super(FudgeWireType.INDICATOR_TYPE_ID, IndicatorType.class, 0);
   }
 
   @Override

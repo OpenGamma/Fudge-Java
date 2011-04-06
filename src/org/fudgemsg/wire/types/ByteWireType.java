@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a byte.
  */
@@ -28,7 +26,7 @@ final class ByteWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: byte.
-   * See {@link FudgeTypeDictionary#BYTE_TYPE_ID}.
+   * See {@link FudgeWireType#BYTE_TYPE_ID}.
    */
   public static final ByteWireType INSTANCE = new ByteWireType();
 
@@ -36,7 +34,7 @@ final class ByteWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private ByteWireType() {
-    super(FudgeTypeDictionary.BYTE_TYPE_ID, Byte.TYPE, 1);
+    super(FudgeWireType.BYTE_TYPE_ID, Byte.TYPE, 1);
   }
 
   //-------------------------------------------------------------------------

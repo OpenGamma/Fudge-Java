@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -78,41 +78,41 @@ import com.mongodb.DBObject;
     }
     
     switch (valueType.getTypeId()) {
-    case FudgeTypeDictionary.INDICATOR_TYPE_ID:
+    case FudgeWireType.INDICATOR_TYPE_ID:
       // REVIEW kirk 2010-08-20 -- Is this the right behavior here?
       return null;
-    case FudgeTypeDictionary.BOOLEAN_TYPE_ID :
-    case FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.BYTE_TYPE_ID:
-    case FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.DOUBLE_TYPE_ID:
-    case FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.FLOAT_TYPE_ID:
-    case FudgeTypeDictionary.INT_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.INT_TYPE_ID:
-    case FudgeTypeDictionary.LONG_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.LONG_TYPE_ID:
-    case FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID:
-    case FudgeTypeDictionary.SHORT_TYPE_ID:
-    case FudgeTypeDictionary.STRING_TYPE_ID:
+    case FudgeWireType.BOOLEAN_TYPE_ID :
+    case FudgeWireType.BYTE_ARR_128_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_16_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_20_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_256_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_32_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_4_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_512_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_64_TYPE_ID:
+    case FudgeWireType.BYTE_ARR_8_TYPE_ID:
+    case FudgeWireType.BYTE_ARRAY_TYPE_ID:
+    case FudgeWireType.BYTE_TYPE_ID:
+    case FudgeWireType.DOUBLE_ARRAY_TYPE_ID:
+    case FudgeWireType.DOUBLE_TYPE_ID:
+    case FudgeWireType.FLOAT_ARRAY_TYPE_ID:
+    case FudgeWireType.FLOAT_TYPE_ID:
+    case FudgeWireType.INT_ARRAY_TYPE_ID:
+    case FudgeWireType.INT_TYPE_ID:
+    case FudgeWireType.LONG_ARRAY_TYPE_ID:
+    case FudgeWireType.LONG_TYPE_ID:
+    case FudgeWireType.SHORT_ARRAY_TYPE_ID:
+    case FudgeWireType.SHORT_TYPE_ID:
+    case FudgeWireType.STRING_TYPE_ID:
       if (valueType instanceof SecondaryFieldTypeBase) {
         SecondaryFieldTypeBase secondaryType = (SecondaryFieldTypeBase) valueType;
         return secondaryType.secondaryToPrimary(fieldValue);
       }
       // Built-in support.
       return fieldValue;
-    case FudgeTypeDictionary.DATE_TYPE_ID:
-    case FudgeTypeDictionary.DATETIME_TYPE_ID:
-    case FudgeTypeDictionary.TIME_TYPE_ID:
+    case FudgeWireType.DATE_TYPE_ID:
+    case FudgeWireType.DATETIME_TYPE_ID:
+    case FudgeWireType.TIME_TYPE_ID:
       // FIXME kirk 2010-08-20 -- This is an insanely gross hack around the rest of the
       // fix for FRJ-83 breaking all dates, exposed by FRJ-84.
       return fieldValue;

@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a short.
  */
@@ -28,7 +26,7 @@ final class ShortWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: short.
-   * See {@link FudgeTypeDictionary#SHORT_TYPE_ID}.
+   * See {@link FudgeWireType#SHORT_TYPE_ID}.
    */
   public static final ShortWireType INSTANCE = new ShortWireType();
 
@@ -36,7 +34,7 @@ final class ShortWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private ShortWireType() {
-    super(FudgeTypeDictionary.SHORT_TYPE_ID, Short.TYPE, 2);
+    super(FudgeWireType.SHORT_TYPE_ID, Short.TYPE, 2);
   }
 
   //-------------------------------------------------------------------------

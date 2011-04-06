@@ -19,7 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 
 /**
@@ -29,7 +28,7 @@ final class FloatArrayWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: arbitrary length 32-bit floating point array.
-   * See {@link FudgeTypeDictionary#FLOAT_ARRAY_TYPE_ID}.
+   * See {@link FudgeWireType#FLOAT_ARRAY_TYPE_ID}.
    */
   public static final FloatArrayWireType INSTANCE = new FloatArrayWireType();
 
@@ -37,7 +36,7 @@ final class FloatArrayWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private FloatArrayWireType() {
-    super(FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID, float[].class);
+    super(FudgeWireType.FLOAT_ARRAY_TYPE_ID, float[].class);
   }
 
   //-------------------------------------------------------------------------

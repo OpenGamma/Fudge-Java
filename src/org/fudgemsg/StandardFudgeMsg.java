@@ -139,9 +139,9 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     
     // adjust integral values to the lowest possible representation
     switch (type.getTypeId()) {
-      case FudgeTypeDictionary.SHORT_TYPE_ID:
-      case FudgeTypeDictionary.INT_TYPE_ID:
-      case FudgeTypeDictionary.LONG_TYPE_ID:
+      case FudgeWireType.SHORT_TYPE_ID:
+      case FudgeWireType.INT_TYPE_ID:
+      case FudgeWireType.LONG_TYPE_ID:
         if (type instanceof SecondaryFieldType<?, ?>) {
           value = ((SecondaryFieldType<Object, ?>) type).secondaryToPrimary(value);
           type = ((SecondaryFieldType<?, ?>) type).getPrimaryType();

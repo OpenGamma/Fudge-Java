@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a float.
  */
@@ -28,7 +26,7 @@ final class FloatWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: float.
-   * See {@link FudgeTypeDictionary#FLOAT_TYPE_ID}.
+   * See {@link FudgeWireType#FLOAT_TYPE_ID}.
    */
   public static final FloatWireType INSTANCE = new FloatWireType();
 
@@ -36,7 +34,7 @@ final class FloatWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private FloatWireType() {
-    super(FudgeTypeDictionary.FLOAT_TYPE_ID, Float.TYPE, 4);
+    super(FudgeWireType.FLOAT_TYPE_ID, Float.TYPE, 4);
   }
 
   //-------------------------------------------------------------------------

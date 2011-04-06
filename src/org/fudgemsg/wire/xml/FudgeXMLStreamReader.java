@@ -30,11 +30,11 @@ import javax.xml.stream.XMLStreamReader;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamReader;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Reader that decodes XML into Fudge messages.
@@ -219,48 +219,48 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
 
   private Object convertFieldValue(FudgeFieldType fudgeType, String elementValue) {
     switch (fudgeType.getTypeId()) {
-      case FudgeTypeDictionary.INDICATOR_TYPE_ID:
+      case FudgeWireType.INDICATOR_TYPE_ID:
         return IndicatorType.INSTANCE;
-      case FudgeTypeDictionary.BOOLEAN_TYPE_ID:
+      case FudgeWireType.BOOLEAN_TYPE_ID:
         return Boolean.valueOf(elementValue);
-      case FudgeTypeDictionary.BYTE_TYPE_ID:
+      case FudgeWireType.BYTE_TYPE_ID:
         return Byte.valueOf(elementValue);
-      case FudgeTypeDictionary.SHORT_TYPE_ID:
+      case FudgeWireType.SHORT_TYPE_ID:
         return Short.valueOf(elementValue);
-      case FudgeTypeDictionary.INT_TYPE_ID:
+      case FudgeWireType.INT_TYPE_ID:
         return Integer.valueOf(elementValue);
-      case FudgeTypeDictionary.LONG_TYPE_ID:
+      case FudgeWireType.LONG_TYPE_ID:
         return Long.valueOf(elementValue);
-      case FudgeTypeDictionary.BYTE_ARRAY_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_4_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_8_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_16_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_20_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_32_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_64_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_128_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_256_TYPE_ID:
-      case FudgeTypeDictionary.BYTE_ARR_512_TYPE_ID:
+      case FudgeWireType.BYTE_ARRAY_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_4_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_8_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_16_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_20_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_32_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_64_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_128_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_256_TYPE_ID:
+      case FudgeWireType.BYTE_ARR_512_TYPE_ID:
         return toByteArray(elementValue);
-      case FudgeTypeDictionary.SHORT_ARRAY_TYPE_ID:
+      case FudgeWireType.SHORT_ARRAY_TYPE_ID:
         return toShortArray(elementValue);
-      case FudgeTypeDictionary.INT_ARRAY_TYPE_ID:
+      case FudgeWireType.INT_ARRAY_TYPE_ID:
         return toIntArray(elementValue);
-      case FudgeTypeDictionary.LONG_ARRAY_TYPE_ID:
+      case FudgeWireType.LONG_ARRAY_TYPE_ID:
         return toLongArray(elementValue);
-      case FudgeTypeDictionary.FLOAT_TYPE_ID:
+      case FudgeWireType.FLOAT_TYPE_ID:
         return Float.valueOf(elementValue);
-      case FudgeTypeDictionary.DOUBLE_TYPE_ID:
+      case FudgeWireType.DOUBLE_TYPE_ID:
         return Double.valueOf(elementValue);
-      case FudgeTypeDictionary.FLOAT_ARRAY_TYPE_ID:
+      case FudgeWireType.FLOAT_ARRAY_TYPE_ID:
         return toFloatArray(elementValue);
-      case FudgeTypeDictionary.DOUBLE_ARRAY_TYPE_ID:
+      case FudgeWireType.DOUBLE_ARRAY_TYPE_ID:
         return toDoubleArray(elementValue);
-      case FudgeTypeDictionary.DATE_TYPE_ID:
+      case FudgeWireType.DATE_TYPE_ID:
         return LocalDate.parse(elementValue);
-      case FudgeTypeDictionary.TIME_TYPE_ID:
+      case FudgeWireType.TIME_TYPE_ID:
         return LocalTime.parse(elementValue);
-      case FudgeTypeDictionary.DATETIME_TYPE_ID:
+      case FudgeWireType.DATETIME_TYPE_ID:
         return LocalDateTime.parse(elementValue);
       default:
         return elementValue;
@@ -346,7 +346,7 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
 
   private boolean isMessage(String type) {
     Integer fudgeTypeId = _settings.getIdentifiersToFudgeType().get(type);
-    return FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID == fudgeTypeId;
+    return FudgeWireType.SUB_MESSAGE_TYPE_ID == fudgeTypeId;
   }
 
   private FudgeStreamElement processEnvelopeElement(String element) {

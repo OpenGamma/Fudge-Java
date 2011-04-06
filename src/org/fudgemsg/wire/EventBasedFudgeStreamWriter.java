@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.wire;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Abstract Fudge writer that supplies events on major state changes.
@@ -62,7 +61,7 @@ public abstract class EventBasedFudgeStreamWriter extends AbstractFudgeStreamWri
   @Override
   public void writeField(String name, Integer ordinal, FudgeFieldType type, Object fieldValue) {
     if (fudgeFieldStart(ordinal, name, type)) {
-      if (type.getTypeId() == FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID) {
+      if (type.getTypeId() == FudgeWireType.SUB_MESSAGE_TYPE_ID) {
         fudgeSubMessageStart();
         writeFields((FudgeMsg) fieldValue);
         fudgeSubMessageEnd();

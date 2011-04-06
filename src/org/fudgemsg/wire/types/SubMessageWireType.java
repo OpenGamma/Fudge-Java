@@ -19,7 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 
 import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.FudgeTypeDictionary;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.wire.FudgeEncoded;
 import org.fudgemsg.wire.FudgeSize;
@@ -31,7 +30,7 @@ class SubMessageWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: embedded sub-message.
-   * See {@link FudgeTypeDictionary#SUB_MESSAGE_TYPE_ID}.
+   * See {@link FudgeWireType#SUB_MESSAGE_TYPE_ID}.
    */
   public static final SubMessageWireType INSTANCE = new SubMessageWireType();
 
@@ -39,7 +38,7 @@ class SubMessageWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private SubMessageWireType() {
-    super(FudgeTypeDictionary.SUB_MESSAGE_TYPE_ID, FudgeMsg.class);
+    super(FudgeWireType.SUB_MESSAGE_TYPE_ID, FudgeMsg.class);
   }
 
   //-------------------------------------------------------------------------

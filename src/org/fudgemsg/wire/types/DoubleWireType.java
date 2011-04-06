@@ -19,8 +19,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.fudgemsg.FudgeTypeDictionary;
-
 /**
  * The wire type definition for a double.
  */
@@ -28,7 +26,7 @@ final class DoubleWireType extends FudgeWireType {
 
   /**
    * Standard Fudge field type: double.
-   * See {@link FudgeTypeDictionary#DOUBLE_TYPE_ID}.
+   * See {@link FudgeWireType#DOUBLE_TYPE_ID}.
    */
   public static final DoubleWireType INSTANCE = new DoubleWireType();
 
@@ -36,7 +34,7 @@ final class DoubleWireType extends FudgeWireType {
    * Restricted constructor.
    */
   private DoubleWireType() {
-    super(FudgeTypeDictionary.DOUBLE_TYPE_ID, Double.TYPE, 8);
+    super(FudgeWireType.DOUBLE_TYPE_ID, Double.TYPE, 8);
   }
 
   //-------------------------------------------------------------------------
