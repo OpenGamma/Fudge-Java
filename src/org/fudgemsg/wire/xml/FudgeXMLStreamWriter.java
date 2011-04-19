@@ -511,4 +511,22 @@ public class FudgeXMLStreamWriter extends EventBasedFudgeStreamWriter {
     return _settings.getEnvelopeAttributeSchemaVersion();
   }
 
+  @Override
+  public void flush() {
+    try {
+      _writer.flush();
+    } catch (XMLStreamException e) {
+      throw wrapException("flush", e);
+    }
+  }
+  
+  @Override
+  public void close () {
+    try {
+      _writer.close ();
+    } catch (XMLStreamException e) {
+      throw wrapException("close", e);
+    }
+  }
+
 }

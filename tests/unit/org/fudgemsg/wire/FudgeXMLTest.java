@@ -59,7 +59,7 @@ public class FudgeXMLTest {
     tr.put ((short)1, getTaxonomy ());
     _fudgeContext.setTaxonomyResolver (new ImmutableMapTaxonomyResolver (tr));
   }
-          
+
   @Test
   public void cycleXMLMessages() {
     System.out.println("cycleXMLMessages:");
