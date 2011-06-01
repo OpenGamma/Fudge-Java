@@ -263,7 +263,7 @@ public class FudgeDataInputStreamReader implements FudgeStreamReader {
     
     Integer ordinal = null;
     if (hasOrdinal) {
-      ordinal = new Integer(getDataInput().readShort());
+      ordinal = Integer.valueOf(getDataInput().readShort());
       nRead += 2;
     }
     

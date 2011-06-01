@@ -145,13 +145,13 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
         }
         long valueAsLong = ((Number) value).longValue();
         if (valueAsLong >= Byte.MIN_VALUE && valueAsLong <= Byte.MAX_VALUE) {
-          value = new Byte((byte) valueAsLong);
+          value = Byte.valueOf((byte) valueAsLong);
           type = FudgeWireType.BYTE;
         } else if (valueAsLong >= Short.MIN_VALUE && valueAsLong <= Short.MAX_VALUE) {
-          value = new Short((short) valueAsLong);
+          value = Short.valueOf((short) valueAsLong);
           type = FudgeWireType.SHORT;
         } else if (valueAsLong >= Integer.MIN_VALUE && valueAsLong <= Integer.MAX_VALUE) {
-          value = new Integer((int) valueAsLong);
+          value = Integer.valueOf((int) valueAsLong);
           type = FudgeWireType.INT;
         }
         break;
