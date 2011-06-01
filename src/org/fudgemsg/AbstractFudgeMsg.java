@@ -209,10 +209,8 @@ public abstract class AbstractFudgeMsg implements FudgeMsg, Iterable<FudgeField>
 
   //-------------------------------------------------------------------------
   @Override
-  public short getNumFields() {
-    int size = getFields().size();
-    assert size <= Short.MAX_VALUE;
-    return (short) size;
+  public int getNumFields() {
+    return getFields().size();
   }
 
   @Override

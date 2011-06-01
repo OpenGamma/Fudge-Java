@@ -130,9 +130,6 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
     if (type == null) {
       throw new NullPointerException("FudgeFieldType must not be null");
     }
-    if (getFields().size() >= Short.MAX_VALUE) {
-      throw new IllegalStateException("Can only add " + Short.MAX_VALUE + " to a single message");
-    }
     if (ordinal != null && (ordinal > Short.MAX_VALUE || ordinal < Short.MIN_VALUE)) {
       throw new IllegalArgumentException("Ordinal must be within signed 16-bit range.");
     }

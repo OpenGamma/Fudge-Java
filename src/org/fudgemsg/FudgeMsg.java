@@ -42,9 +42,9 @@ public interface FudgeMsg extends Iterable<FudgeField> {
    * <p>
    * This returns the total number of fields.
    * 
-   * @return number of fields
+   * @return number of fields, zero or greater
    */
-  short getNumFields();
+  int getNumFields();
 
   /**
    * Checks if the message is empty.
