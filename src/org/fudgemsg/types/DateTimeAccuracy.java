@@ -21,9 +21,9 @@ package org.fudgemsg.types;
 public enum DateTimeAccuracy {
 
   /**
-   * Millenia precision.
+   * Millennium precision.
    */
-  MILLENIUM(0),
+  MILLENNIUM(0),
   /**
    * Century precision.
    */
@@ -107,7 +107,7 @@ public enum DateTimeAccuracy {
       case 3 : return MONTH;
       case 2 : return YEAR;
       case 1 : return CENTURY;
-      case 0 : return MILLENIUM;
+      case 0 : return MILLENNIUM;
       default : return null;
     }
   }
