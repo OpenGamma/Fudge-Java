@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fudgemsg.mapping;
+package org.fudgemsg.mapping.mongo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

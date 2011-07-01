@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fudgemsg.mapping;
+package org.fudgemsg.mapping.mongo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,9 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
+import org.fudgemsg.mapping.FudgeBuilder;
+import org.fudgemsg.mapping.FudgeDeserializationContext;
+import org.fudgemsg.mapping.FudgeSerializationContext;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.wire.types.FudgeWireType;
 
@@ -32,7 +35,7 @@ import com.mongodb.DBObject;
 /**
  * Builder for encoding and decoding MongoDB objects.
  */
-/* package */ class MongoDBFudgeBuilder implements FudgeBuilder<DBObject> {
+public class MongoDBFudgeBuilder implements FudgeBuilder<DBObject> {
   
   /**
    * Singleton instance of the builder.
