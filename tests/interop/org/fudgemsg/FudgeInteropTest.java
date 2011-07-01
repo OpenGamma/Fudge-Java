@@ -197,7 +197,7 @@ public class FudgeInteropTest {
     inputMsg.add ("time-Nano-UTC", new FudgeTime (DateTimeAccuracy.NANOSECOND, 0, 11 * 3600 + 12 * 60 + 13, 987654321));
     inputMsg.add ("time-Nano", new FudgeTime (DateTimeAccuracy.NANOSECOND, -128, 11 * 3600 + 12 * 60 + 13, 987654321));
     inputMsg.add ("time-Nano-+1h", new FudgeTime (DateTimeAccuracy.NANOSECOND, 4, 11 * 3600 + 12 * 60 + 13, 987654321));
-    inputMsg.add ("datetime-Millennium", new FudgeDateTime (new FudgeDate (1000), new FudgeTime (DateTimeAccuracy.MILLENNIUM, -128, 0, 0)));
+    inputMsg.add ("datetime-Millenia", new FudgeDateTime (new FudgeDate (1000), new FudgeTime (DateTimeAccuracy.MILLENIUM, -128, 0, 0)));
     inputMsg.add ("datetime-Century", new FudgeDateTime (new FudgeDate (1900), new FudgeTime (DateTimeAccuracy.CENTURY, -128, 0, 0)));
     inputMsg.add ("datetime-Nano-UTC", new FudgeDateTime (new FudgeDate (2010, 3, 4), new FudgeTime (DateTimeAccuracy.NANOSECOND, 0, 11 * 3600 + 12 * 60 + 13, 987654321)));
     inputMsg.add ("datetime-Nano", new FudgeDateTime (new FudgeDate (2010, 3, 4), new FudgeTime (DateTimeAccuracy.NANOSECOND, -128, 11 * 3600 + 12 * 60 + 13, 987654321)));
