@@ -293,6 +293,7 @@ public class DateTimeTest {
     return getReferenceOffsetDateTime ().toInstant ();
   }
   
+  @SuppressWarnings("unused")
   private InstantProvider getReferenceInstantProvider () {
     return new InstantProvider () {
       @Override
