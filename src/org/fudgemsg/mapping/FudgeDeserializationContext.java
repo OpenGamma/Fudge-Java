@@ -166,7 +166,8 @@ public class FudgeDeserializationContext {
           throw new UnsupportedOperationException("Serialisation framework does not support back/forward references");
         } else if (obj instanceof String) {
           try {
-            FudgeObjectBuilder<?> builder = getFudgeContext().getObjectDictionary().getObjectBuilder(Class.forName((String) obj));
+            Class<?> cls = getFudgeContext().getTypeDictionary().loadClass((String) obj);
+            FudgeObjectBuilder<?> builder = getFudgeContext().getObjectDictionary().getObjectBuilder(cls);
             if (builder != null) {
               return builder.buildObject(this, message);
             }
@@ -211,7 +212,7 @@ public class FudgeDeserializationContext {
           throw new UnsupportedOperationException("Serialisation framework does not support back/forward references");
         } else if (obj instanceof String) {
           try {
-            final Class<?> possibleClazz = Class.forName((String) obj);
+            final Class<?> possibleClazz = getFudgeContext().getTypeDictionary().loadClass((String) obj);
             // System.out.println("Trying " + possibleClazz);
             if (clazz.isAssignableFrom(possibleClazz)) {
               builder = (FudgeObjectBuilder<T>) getFudgeContext().getObjectDictionary().getObjectBuilder(possibleClazz);

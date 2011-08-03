@@ -54,7 +54,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
       throw new IllegalArgumentException("Sub-message doesn't contain a Java class name");
     }
     try {
-      return Class.forName(str);
+      return context.getFudgeContext().getTypeDictionary().loadClass(str);
     } catch (ClassNotFoundException ex) {
       throw new FudgeRuntimeException("Unable to deserialise Java class '" + str + "'", ex);
     }

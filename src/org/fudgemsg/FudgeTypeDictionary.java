@@ -59,6 +59,10 @@ public class FudgeTypeDictionary {
    */
   private final ConcurrentMap<Class<?>, FudgeTypeConverter<?,?>> _convertersByJavaType;
   /**
+   * The map of renamed classes.
+   */
+  private final ConcurrentMap<String, Class<?>> _renames = new ConcurrentHashMap<String, Class<?>>();
+  /**
    * A flag to indicate if the classpath is scanned.
    */
   private final AtomicBoolean _haveScannedClasspath = new AtomicBoolean(false);
@@ -429,6 +433,37 @@ public class FudgeTypeDictionary {
       }
       addType(fudgeType);
     }
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Adds a class rename to the dictionary.
+   * This handles class names that change in refactoring.
+   * 
+   * @param oldClassName  the old fully qualified class name, not null
+   * @param newClass  the new class, not null
+   */
+  public void registerClassRename(String oldClassName, Class<?> newClass) {
+    _renames.putIfAbsent(oldClassName, newClass);
+    Class<?> registered = _renames.get(oldClassName);
+    if (registered.equals(newClass) == false) {
+      throw new IllegalArgumentException("Class name already registered: " + oldClassName + " already mapped to " + registered);
+    }
+  }
+
+  /**
+   * Loads a class from a class name, handling previously registered renames.
+   * 
+   * @param className  the fully qualified class name, not null
+   * @return the loaded class, not null
+   * @throws ClassNotFoundException if unable to load
+   */
+  public Class<?> loadClass(String className) throws ClassNotFoundException {
+    Class<?> rename = _renames.get(className);
+    if (rename != null) {
+      return rename;
+    }
+    return FudgeTypeDictionary.class.getClassLoader().loadClass(className);
   }
 
 }
