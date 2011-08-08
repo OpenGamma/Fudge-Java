@@ -196,4 +196,23 @@ public class FudgeTypeDictionaryTest {
     dictionary.getFieldValue (Bar.class, stringField);
   }
 
+  @Test
+  public void registerRename(){
+    final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
+    dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
+  }
+  
+  @Test
+  public void registerRenameTwiceMatchingNoError(){
+    final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
+    dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
+    dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
+  }
+  
+  @Test(expected=IllegalArgumentException.class)
+  public void registerRenameTwiceNonMatchingError(){
+    final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
+    dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
+    dictionary.registerClassRename("SomeName", FudgeTypeDictionary.class);
+  }
 }

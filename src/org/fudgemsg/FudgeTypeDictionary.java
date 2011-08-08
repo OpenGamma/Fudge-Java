@@ -444,10 +444,10 @@ public class FudgeTypeDictionary {
    * @param newClass  the new class, not null
    */
   public void registerClassRename(String oldClassName, Class<?> newClass) {
-    _renames.putIfAbsent(oldClassName, newClass);
-    Class<?> registered = _renames.get(oldClassName);
-    if (registered.equals(newClass) == false) {
-      throw new IllegalArgumentException("Class name already registered: " + oldClassName + " already mapped to " + registered);
+    Class<?> registered = _renames.putIfAbsent(oldClassName, newClass);
+    if (registered != null && ! newClass.equals(registered))
+    {
+      throw new IllegalArgumentException("Class name already registered: " + oldClassName + " already mapped to " + registered);  
     }
   }
 
