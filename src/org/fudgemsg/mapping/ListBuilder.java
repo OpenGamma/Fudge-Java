@@ -46,26 +46,26 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, List<?> list) {
-    final MutableFudgeMsg msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, List<?> list) {
+    final MutableFudgeMsg msg = serializer.newMessage();
     for (Object entry : list) {
       if (entry == null) {
         msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.addToMessageWithClassHeaders(msg, null, null, entry);
+        serializer.addToMessageWithClassHeaders(msg, null, null, entry);
       }
     }
     return msg;
   }
 
   @Override
-  public List<?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+  public List<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final List<Object> list = new ArrayList<Object>();
     for (FudgeField field : message) {
       if ((field.getOrdinal() != null) && (field.getOrdinal() != 1)) {
         throw new IllegalArgumentException("Sub-message interpretted as a list but found invalid ordinal " + field + ")");
       }
-      Object obj = context.fieldValueToObject(field);
+      Object obj = deserializer.fieldValueToObject(field);
       obj = (obj instanceof IndicatorType) ? null : obj;
       list.add(obj);
     }

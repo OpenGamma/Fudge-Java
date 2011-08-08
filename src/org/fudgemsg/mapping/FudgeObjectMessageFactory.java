@@ -26,7 +26,7 @@ import org.fudgemsg.MutableFudgeMsg;
 
 /**
  * <p>Converts between Java objects and {@link FudgeMsg} messages using the Fudge serialisation
- * framework. This class is provided for convenience, direct use of a {@link FudgeSerializationContext} or {@link FudgeDeserializationContext}
+ * framework. This class is provided for convenience, direct use of a {@link FudgeSerializer} or {@link FudgeDeserializer}
  * will be more efficient.</p>
  * 
  * <p>This has been deprecated since 0.3, to be removed at the 1.0 release; a couple of utility methods have
@@ -45,10 +45,10 @@ public class FudgeObjectMessageFactory {
    */
   @Deprecated
   public static <T> MutableFudgeMsg serializeToMessage(T obj, FudgeContext context) {
-    final FudgeSerializationContext fsc = new FudgeSerializationContext (context);
-    final MutableFudgeMsg message = fsc.objectToFudgeMsg(obj);
+    final FudgeSerializer serializer = new FudgeSerializer (context);
+    final MutableFudgeMsg message = serializer.objectToFudgeMsg(obj);
     if (!(obj instanceof List<?>) && !(obj instanceof Set<?>) && !(obj instanceof Map<?, ?>)) {
-      FudgeSerializationContext.addClassHeader(message, obj.getClass());
+      FudgeSerializer.addClassHeader(message, obj.getClass());
     }
     return message;
   }
@@ -63,8 +63,8 @@ public class FudgeObjectMessageFactory {
    */
   @Deprecated
   public static Object deserializeToObject (FudgeMsg message, FudgeContext context) {
-    final FudgeDeserializationContext fdc = new FudgeDeserializationContext (context);
-    return fdc.fudgeMsgToObject (message);
+    final FudgeDeserializer deserializer = new FudgeDeserializer (context);
+    return deserializer.fudgeMsgToObject (message);
   }
   
   /**
@@ -78,8 +78,8 @@ public class FudgeObjectMessageFactory {
    */
   @Deprecated
   public static <T> T deserializeToObject (Class<T> clazz, FudgeMsg message, FudgeContext context) {
-    final FudgeDeserializationContext fdc = new FudgeDeserializationContext (context);
-    return fdc.fudgeMsgToObject (clazz, message);
+    final FudgeDeserializer deserializer = new FudgeDeserializer (context);
+    return deserializer.fudgeMsgToObject (clazz, message);
   }
   
 }

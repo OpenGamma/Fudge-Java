@@ -49,26 +49,26 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Set<?> set) {
-    final MutableFudgeMsg msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Set<?> set) {
+    final MutableFudgeMsg msg = serializer.newMessage();
     for (Object entry : set) {
       if (entry == null) {
         msg.add(null, 1, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.addToMessageWithClassHeaders(msg, null, ORDINAL, entry);
+        serializer.addToMessageWithClassHeaders(msg, null, ORDINAL, entry);
       }
     }
     return msg;
   }
 
   @Override
-  public Set<?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+  public Set<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final Set<Object> set = new HashSet<Object>();
     for (FudgeField field : message) {
       if ((field.getOrdinal() == null) && (field.getOrdinal() != ORDINAL)) {
         throw new IllegalArgumentException("Sub-message interpretted as a set but found invalid ordinal " + field + ")");
       }
-      Object obj = context.fieldValueToObject(field);
+      Object obj = deserializer.fieldValueToObject(field);
       obj = (obj instanceof IndicatorType) ? null : obj;
       set.add(obj);
     }

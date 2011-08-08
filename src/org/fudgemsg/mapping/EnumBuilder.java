@@ -44,8 +44,8 @@ import org.fudgemsg.MutableFudgeMsg;
   }
 
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Enum<E> enumeration) {
-    final MutableFudgeMsg msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Enum<E> enumeration) {
+    final MutableFudgeMsg msg = serializer.newMessage();
     // REVIEW: jim 2-Jun-2010 -- changed to getDeclaringClass() to fix problem with enums with methods that appear as anon inner classes.
     msg.add(null, 0, enumeration.getDeclaringClass().getName());
     msg.add(null, 1, enumeration.name());
@@ -53,7 +53,7 @@ import org.fudgemsg.MutableFudgeMsg;
   }
 
   @Override
-  public Enum<E> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+  public Enum<E> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     return Enum.valueOf(_clazz, message.getString(1));
   }
 

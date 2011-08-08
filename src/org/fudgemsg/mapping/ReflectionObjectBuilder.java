@@ -67,7 +67,7 @@ import org.fudgemsg.FudgeRuntimeException;
 
   //-------------------------------------------------------------------------
   @Override
-  public T buildObject(final FudgeDeserializationContext context, final FudgeMsg message) {
+  public T buildObject(final FudgeDeserializer deserializer, final FudgeMsg message) {
     try {
       final T base = _constructor.newInstance();
       for (FudgeField field : message.getAllFields()) {
@@ -76,9 +76,9 @@ import org.fudgemsg.FudgeRuntimeException;
           final Class<?>[] params = method.getParameterTypes();
           final Object v;
           if (params[0] == Object.class) {
-            v = context.fieldValueToObject(field);
+            v = deserializer.fieldValueToObject(field);
           } else {
-            v = context.fieldValueToObject(params[0], field);
+            v = deserializer.fieldValueToObject(params[0], field);
           }
           //System.out.println ("m: " + method + " v:" + v);
           method.invoke(base, v);

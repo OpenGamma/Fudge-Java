@@ -40,15 +40,15 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Class<?> object) {
-    final MutableFudgeMsg msg = context.newMessage();
-    FudgeSerializationContext.addClassHeader(msg, object.getClass());
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Class<?> object) {
+    final MutableFudgeMsg msg = serializer.newMessage();
+    FudgeSerializer.addClassHeader(msg, object.getClass());
     msg.add("name", null, FudgeWireType.STRING, object.getName());
     return msg;
   }
 
   @Override
-  public Class<?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+  public Class<?> buildObject(FudgeDeserializer context, FudgeMsg message) {
     final String str = message.getString("name");
     if (str == null) {
       throw new IllegalArgumentException("Sub-message doesn't contain a Java class name");

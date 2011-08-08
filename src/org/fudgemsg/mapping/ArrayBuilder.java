@@ -44,18 +44,18 @@ import org.fudgemsg.MutableFudgeMsg;
   }
 
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Object[] array) {
-    final MutableFudgeMsg msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Object[] array) {
+    final MutableFudgeMsg msg = serializer.newMessage();
     for (Object entry : array) {
-      context.addToMessage(msg, null, null, entry);
+      serializer.addToMessage(msg, null, null, entry);
     }
     return msg;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public E[] buildObject(FudgeDeserializationContext context, FudgeMsg message) {
-    final List<?> list = ListBuilder.INSTANCE.buildObject(context, message);
+  public E[] buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
+    final List<?> list = ListBuilder.INSTANCE.buildObject(deserializer, message);
     return list.toArray((E[]) Array.newInstance(_clazz, list.size()));
   }
 

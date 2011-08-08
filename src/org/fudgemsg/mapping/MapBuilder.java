@@ -57,30 +57,30 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Map<?, ?> map) {
-    final MutableFudgeMsg msg = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Map<?, ?> map) {
+    final MutableFudgeMsg msg = serializer.newMessage();
     for (Map.Entry<?, ?> entry : map.entrySet()) {
       if (entry.getKey() == null) {
         msg.add(null, KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.addToMessageWithClassHeaders(msg, null, KEY_ORDINAL, entry.getKey());
+        serializer.addToMessageWithClassHeaders(msg, null, KEY_ORDINAL, entry.getKey());
       }
       if (entry.getValue() == null) {
         msg.add(null, VALUE_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        context.addToMessageWithClassHeaders(msg, null, VALUE_ORDINAL, entry.getValue());
+        serializer.addToMessageWithClassHeaders(msg, null, VALUE_ORDINAL, entry.getValue());
       }
     }
     return msg;
   }
 
   @Override
-  public Map<?, ?> buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+  public Map<?, ?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final Map<Object, Object> map = new HashMap<Object, Object>();
     final Queue<Object> keys = new LinkedList<Object>();
     final Queue<Object> values = new LinkedList<Object>();
     for (FudgeField field : message) {
-      Object obj = context.fieldValueToObject(field);
+      Object obj = deserializer.fieldValueToObject(field);
       obj = (obj instanceof IndicatorType) ? null : obj;
       if (field.getOrdinal() != null && field.getOrdinal() == KEY_ORDINAL) {
         if (values.isEmpty()) {

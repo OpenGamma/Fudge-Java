@@ -22,11 +22,11 @@ import java.io.DataOutput;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.fudgemsg.mapping.FudgeDeserializationContext;
+import org.fudgemsg.mapping.FudgeDeserializer;
 import org.fudgemsg.mapping.FudgeObjectDictionary;
 import org.fudgemsg.mapping.FudgeObjectReader;
 import org.fudgemsg.mapping.FudgeObjectWriter;
-import org.fudgemsg.mapping.FudgeSerializationContext;
+import org.fudgemsg.mapping.FudgeSerializer;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.taxonomy.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxonomy.TaxonomyResolver;
@@ -452,17 +452,17 @@ public class FudgeContext implements FudgeMsgFactory {
    * Converts a Java object to a {@link FudgeMsgEnvelope} using the Fudge serialization framework.
    * <p>
    * This is a shortcut method for ease-of-use. The recommended approach is to create
-   * a {@link FudgeSerializationContext} instance and use that.
+   * a {@link FudgeSerializer} instance and use that.
    * 
    * @param obj  object to serialize, not null
    * @return the serialized message
    */
   public FudgeMsgEnvelope toFudgeMsg(Object obj) {
-    final FudgeSerializationContext fsc = new FudgeSerializationContext(this);
-    final MutableFudgeMsg message = fsc.objectToFudgeMsg(obj);
+    final FudgeSerializer serializer = new FudgeSerializer(this);
+    final MutableFudgeMsg message = serializer.objectToFudgeMsg(obj);
     final Class<?> clazz = obj.getClass();
     if (!getObjectDictionary().isDefaultObject(clazz)) {
-      FudgeSerializationContext.addClassHeader(message, clazz);
+      FudgeSerializer.addClassHeader(message, clazz);
     }
     return new FudgeMsgEnvelope(message);
   }
@@ -470,22 +470,22 @@ public class FudgeContext implements FudgeMsgFactory {
   /**
    * Deserializes a {@link FudgeMsg} message to a Java object, determining the type of the object automatically.
    * <p>
-   * This is a shortcut method for ease-of-use. The recommended approach is to create
-   * a {@link FudgeDeserializationContext} instance and use that.
+   * This is a shortcut method for ease-of-use.
+   * The recommended approach is to create and use a {@link FudgeDeserializer}.
    * 
    * @param message  the message to process, not null
    * @return the deserialized object
    */
   public Object fromFudgeMsg(FudgeMsg message) {
-    final FudgeDeserializationContext fdc = new FudgeDeserializationContext(this);
-    return fdc.fudgeMsgToObject(message);
+    final FudgeDeserializer deserializer = new FudgeDeserializer(this);
+    return deserializer.fudgeMsgToObject(message);
   }
 
   /**
    * Deserializes a {@link FudgeMsg} message to a Java object of the specified type.
    * <p>
-   * This is a shortcut method for ease-of-use. The recommended approach is to create
-   * a {@link FudgeDeserializationContext} instance and use that.
+   * This is a shortcut method for ease-of-use.
+   * The recommended approach is to create and use a {@link FudgeDeserializer}.
    * 
    * @param <T> Java type
    * @param clazz  the target type to deserialize, not null
@@ -493,8 +493,8 @@ public class FudgeContext implements FudgeMsgFactory {
    * @return the deserialized object
    */
   public <T> T fromFudgeMsg(Class<T> clazz, FudgeMsg message) {
-    final FudgeDeserializationContext fdc = new FudgeDeserializationContext(this);
-    return fdc.fudgeMsgToObject(clazz, message);
+    final FudgeDeserializer deserializer = new FudgeDeserializer(this);
+    return deserializer.fudgeMsgToObject(clazz, message);
   }
 
   //-------------------------------------------------------------------------

@@ -65,9 +65,8 @@ public class CustomBuilderTest {
   private static class CustomBuilder implements FudgeBuilder<CustomClass> {
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context,
-        CustomClass object) {
-      final MutableFudgeMsg msg = context.newMessage ();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, CustomClass object) {
+      final MutableFudgeMsg msg = serializer.newMessage ();
       int a = (object.getAB () - object.getBC () + object.getAC ()) / 2;
       int b = object.getAB () - a;
       int c = object.getAC () - a;
@@ -78,8 +77,7 @@ public class CustomBuilderTest {
     }
 
     @Override
-    public CustomClass buildObject(FudgeDeserializationContext context,
-        FudgeMsg message) {
+    public CustomClass buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return new CustomClass (message.getInt ("a"), message.getInt ("b"), message.getInt ("c"));
     }
     
@@ -90,7 +88,7 @@ public class CustomBuilderTest {
    */
   @Test(expected=FudgeRuntimeException.class)
   public void withoutCustomBuilder () {
-    final FudgeDeserializationContext deserialisationContext = new FudgeDeserializationContext (FudgeContext.GLOBAL_DEFAULT);
+    final FudgeDeserializer deserializer = new FudgeDeserializer (FudgeContext.GLOBAL_DEFAULT);
     final CustomClass object = new CustomClass (2, 3, 5);
     final FudgeMsg msg = FudgeContext.GLOBAL_DEFAULT.toFudgeMsg (object).getMessage ();
     assertEquals ((int)msg.getInt ("AB"), object.getAB ());
@@ -99,7 +97,7 @@ public class CustomBuilderTest {
     assertEquals (msg.getInt ("a"), null);
     assertEquals (msg.getInt ("b"), null);
     assertEquals (msg.getInt ("c"), null);
-    deserialisationContext.fudgeMsgToObject (CustomClass.class, msg);
+    deserializer.fudgeMsgToObject (CustomClass.class, msg);
   }
   
   /**
@@ -108,7 +106,7 @@ public class CustomBuilderTest {
   @Test
   public void withCustomBuilder () {
     final FudgeContext fudgeContext = new FudgeContext ();
-    final FudgeDeserializationContext deserialisationContext = new FudgeDeserializationContext (fudgeContext);
+    final FudgeDeserializer deserializer = new FudgeDeserializer (fudgeContext);
     fudgeContext.getObjectDictionary ().addBuilder (CustomClass.class, new CustomBuilder ());
     final CustomClass object = new CustomClass (2, 3, 5);
     final FudgeMsg msg = fudgeContext.toFudgeMsg (object).getMessage ();
@@ -118,7 +116,7 @@ public class CustomBuilderTest {
     assertEquals ((int)msg.getInt ("a"), 2);
     assertEquals ((int)msg.getInt ("b"), 3);
     assertEquals ((int)msg.getInt ("c"), 5);
-    final CustomClass object2 = deserialisationContext.fudgeMsgToObject (CustomClass.class, msg);
+    final CustomClass object2 = deserializer.fudgeMsgToObject (CustomClass.class, msg);
     assert object.equals (object2);
   }
   
@@ -129,16 +127,14 @@ public class CustomBuilderTest {
   private static class FooHorse implements FooInterface {
     public static class Builder implements FudgeBuilder<FooHorse> {
       @Override
-      public MutableFudgeMsg buildMessage(
-          FudgeSerializationContext context, FooHorse object) {
-        final MutableFudgeMsg msg = context.newMessage ();
+      public MutableFudgeMsg buildMessage(FudgeSerializer serializer, FooHorse object) {
+        final MutableFudgeMsg msg = serializer.newMessage ();
         msg.add (0, FooHorse.class.getName ());
         msg.add (1, "gibberish");
         return msg;
       }
       @Override
-      public FooHorse buildObject(FudgeDeserializationContext context,
-          FudgeMsg message) {
+      public FooHorse buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
         assert message.getString (1).equals ("gibberish");
         return new FooHorse ();
       }
@@ -152,16 +148,14 @@ public class CustomBuilderTest {
   private static class FooCow implements FooInterface {
     public static class Builder implements FudgeBuilder<FooCow> {
       @Override
-      public MutableFudgeMsg buildMessage(
-          FudgeSerializationContext context, FooCow object) {
-        final MutableFudgeMsg msg = context.newMessage ();
+      public MutableFudgeMsg buildMessage(FudgeSerializer serializer, FooCow object) {
+        final MutableFudgeMsg msg = serializer.newMessage ();
         msg.add (0, FooCow.class.getName ());
         msg.add ("gibberish", 1);
         return msg;
       }
       @Override
-      public FooCow buildObject(FudgeDeserializationContext context,
-          FudgeMsg message) {
+      public FooCow buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
         assert message.getInt ("gibberish") == 1;
         return new FooCow ();
       }
@@ -226,25 +220,25 @@ public class CustomBuilderTest {
     }
     
     /**
-     * @param context [documentation not available]
+     * @param serializer [documentation not available]
      * @return [documentation not available]
      */
-    public FudgeMsg toFudgeMsg (FudgeSerializationContext context) {
-      MutableFudgeMsg msg = context.newMessage ();
-      msg.add ("foo", context.objectToFudgeMsg (_foo));
-      msg.add ("bar", context.objectToFudgeMsg (_bar));
+    public FudgeMsg toFudgeMsg (FudgeSerializer serializer) {
+      MutableFudgeMsg msg = serializer.newMessage ();
+      msg.add ("foo", serializer.objectToFudgeMsg (_foo));
+      msg.add ("bar", serializer.objectToFudgeMsg (_bar));
       msg.add ("n", _n);
       return msg;
     }
     
     /**
-     * @param context [documentation not available]
+     * @param deserializer [documentation not available]
      * @param fields [documentation not available]
      * @return [documentation not available]
      */
-    public static ProtoMessage fromFudgeMsg (FudgeDeserializationContext context, FudgeMsg fields) {
-      final FooInterface foo = context.fudgeMsgToObject (FooInterface.class, fields.getMessage ("foo"));
-      final BeanClass bar = context.fudgeMsgToObject (BeanClass.class, fields.getMessage ("bar"));
+    public static ProtoMessage fromFudgeMsg (FudgeDeserializer deserializer, FudgeMsg fields) {
+      final FooInterface foo = deserializer.fudgeMsgToObject (FooInterface.class, fields.getMessage ("foo"));
+      final BeanClass bar = deserializer.fudgeMsgToObject (BeanClass.class, fields.getMessage ("bar"));
       int n = fields.getInt ("n");
       return new ProtoMessage (foo, bar, n);
     }

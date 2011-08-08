@@ -21,8 +21,8 @@ import javax.time.Duration;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.mapping.FudgeBuilder;
-import org.fudgemsg.mapping.FudgeDeserializationContext;
-import org.fudgemsg.mapping.FudgeSerializationContext;
+import org.fudgemsg.mapping.FudgeDeserializer;
+import org.fudgemsg.mapping.FudgeSerializer;
 
 /**
  * Builder for encoding and decoding JSR-310 Duration objects.
@@ -41,18 +41,18 @@ public class JSR310DurationBuilder implements FudgeBuilder<Duration> {
   }
   
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Duration object) {
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Duration object) {
     if (object == null) {
       return null;
     }
-    MutableFudgeMsg msg = context.newMessage();
+    MutableFudgeMsg msg = serializer.newMessage();
     msg.add(SECONDS_FIELD, object.getSeconds());
     msg.add(NANOS_FIELD, object.getNanoOfSecond());
     return msg;
   }
 
   @Override
-  public Duration buildObject(FudgeDeserializationContext context, FudgeMsg msg) {
+  public Duration buildObject(FudgeDeserializer deserializer, FudgeMsg msg) {
     long seconds = msg.getLong(SECONDS_FIELD);
     int nanos = msg.getInt(NANOS_FIELD);
     return Duration.ofSeconds(seconds, nanos);

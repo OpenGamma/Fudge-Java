@@ -36,10 +36,10 @@ public interface FudgeObjectBuilder<T> {
    * This provides the strategy for converting a message to an object to be specified.
    * The input message should not be mutated.
    * 
-   * @param context  the context, not null
+   * @param deserializer  the instance in control of deserialization, not null
    * @param message  the Fudge message to convert, not null
    * @return the created object, not null
    */
-  T buildObject(FudgeDeserializationContext context, FudgeMsg message);
+  T buildObject(FudgeDeserializer deserializer, FudgeMsg message);
 
 }

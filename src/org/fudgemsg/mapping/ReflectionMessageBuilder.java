@@ -70,18 +70,18 @@ import org.fudgemsg.MutableFudgeMsg;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeMsg buildMessage(final FudgeSerializationContext context, final T object) {
+  public MutableFudgeMsg buildMessage(final FudgeSerializer serializer, final T object) {
     //System.out.println ("ReflectionMessageBuilder::buildMessage (" + context + ", " + object + ")");
     final MutableFudgeMsg message;
     if (_baseBuilder != null) {
-      message = _baseBuilder.buildMessage(context, object);
+      message = _baseBuilder.buildMessage(serializer, object);
     } else {
-      message = context.newMessage();
+      message = serializer.newMessage();
     }
     try {
       for (Map.Entry<String, Method> accessor : getMethods().entrySet()) {
         //System.out.println ("\t" + accessor.getValue ());
-        context.addToMessage(message, accessor.getKey(), null, accessor.getValue().invoke(object));
+        serializer.addToMessage(message, accessor.getKey(), null, accessor.getValue().invoke(object));
       }
     } catch (IllegalArgumentException ex) {
       throw new FudgeRuntimeException("Unable to serialise " + object, ex);

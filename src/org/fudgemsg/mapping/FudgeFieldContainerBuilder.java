@@ -41,18 +41,18 @@ import org.fudgemsg.MutableFudgeMsg;
   }
 
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, FudgeMsg fields) {
-    final MutableFudgeMsg msg = context.newMessage(fields);
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, FudgeMsg fields) {
+    final MutableFudgeMsg msg = serializer.newMessage(fields);
     // add the interface name
-    msg.add(null, FudgeSerializationContext.TYPES_HEADER_ORDINAL, FudgeMsg.class.getName());
+    msg.add(null, FudgeSerializer.TYPES_HEADER_ORDINAL, FudgeMsg.class.getName());
     return msg;
   }
 
   @Override
-  public FudgeMsg buildObject(FudgeDeserializationContext context, FudgeMsg message) {
-    final MutableFudgeMsg msg = context.getFudgeContext().newMessage(message);
+  public FudgeMsg buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
+    final MutableFudgeMsg msg = deserializer.getFudgeContext().newMessage(message);
     // remove the class name(s) if added
-    final Integer ordinal = FudgeSerializationContext.TYPES_HEADER_ORDINAL;
+    final Integer ordinal = FudgeSerializer.TYPES_HEADER_ORDINAL;
     final Iterator<FudgeField> fields = msg.iterator();
     while (fields.hasNext()) {
       final FudgeField field = fields.next();

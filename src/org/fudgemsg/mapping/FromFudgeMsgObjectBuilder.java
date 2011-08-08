@@ -48,7 +48,7 @@ import org.fudgemsg.FudgeRuntimeException;
    */
   /* package */static <T> FromFudgeMsgObjectBuilder<T> create(final Class<T> clazz) {
     try {
-      return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeDeserializationContext.class,
+      return new FromFudgeMsgObjectBuilder<T>(clazz.getMethod("fromFudgeMsg", FudgeDeserializer.class,
           FudgeMsg.class), true);
     } catch (SecurityException ex) {
       // ignore
@@ -83,9 +83,9 @@ import org.fudgemsg.FudgeRuntimeException;
   //-------------------------------------------------------------------------
   @SuppressWarnings("unchecked")
   @Override
-  public T buildObject(final FudgeDeserializationContext context, final FudgeMsg message) {
+  public T buildObject(final FudgeDeserializer deserializer, final FudgeMsg message) {
     try {
-      return (T) (_passContext ? _fromFudgeMsg.invoke(null, context, message) : _fromFudgeMsg.invoke(null, message));
+      return (T) (_passContext ? _fromFudgeMsg.invoke(null, deserializer, message) : _fromFudgeMsg.invoke(null, message));
     } catch (IllegalArgumentException ex) {
       throw new FudgeRuntimeException("Unable to call fromFudgeMsg", ex);
     } catch (IllegalAccessException ex) {

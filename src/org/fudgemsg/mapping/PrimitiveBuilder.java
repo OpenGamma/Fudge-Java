@@ -47,14 +47,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Boolean object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Boolean object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, ((boolean) object) ? 1 : 0);
       return message;
     }
 
     @Override
-    public Boolean buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Boolean buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Integer.class, VALUE_KEY) != 0;
     }
   }
@@ -74,14 +74,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Byte object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Byte object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Byte buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Byte buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Byte.class, VALUE_KEY);
     }
   }
@@ -101,8 +101,8 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Double object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Double object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
 
       if (Double.isNaN(object) || Double.isInfinite(object)) {
@@ -113,7 +113,7 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public Double buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Double buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Double.class, VALUE_KEY);
     }
   }
@@ -134,14 +134,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Character object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Character object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object.toString());
       return message;
     }
 
     @Override
-    public Character buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Character buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(String.class, VALUE_KEY).charAt(0);
     }
   }
@@ -161,8 +161,8 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Float object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Float object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
 
       if (Float.isNaN(object) || Float.isInfinite(object)) {
@@ -173,7 +173,7 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public Float buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Float buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Float.class, VALUE_KEY);
     }
   }
@@ -193,14 +193,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Integer object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Integer object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Integer buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Integer buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Integer.class, VALUE_KEY);
     }
   }
@@ -220,14 +220,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Long object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Long object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Long buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Long buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Long.class, VALUE_KEY);
     }
   }
@@ -247,14 +247,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, Short object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Short object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public Short buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public Short buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(Short.class, VALUE_KEY);
     }
   }
@@ -274,14 +274,14 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, String object) {
-      final MutableFudgeMsg message = context.newMessage();
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, String object) {
+      final MutableFudgeMsg message = serializer.newMessage();
       message.add(VALUE_KEY, object);
       return message;
     }
 
     @Override
-    public String buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+    public String buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return message.getValue(String.class, VALUE_KEY);
     }
   }

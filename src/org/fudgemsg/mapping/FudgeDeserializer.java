@@ -26,7 +26,7 @@ import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 
 /**
- * Context used during conversion of a Fudge message to an object structure.
+ * Deserializer used to control the conversion of a Fudge message to an object structure.
  * <p>
  * This is the central point for Fudge message to Java Object deserialization on a given stream.
  * Note that the deserializer cannot process cyclic object graphs at present.
@@ -35,9 +35,9 @@ import org.fudgemsg.FudgeTypeDictionary;
  * deserializer can refer any sub-messages to this for construction if it does not have
  * sufficient information to process them directly.
  * <p>
- * This class is mutable but thread-safe via concurrent collections.
+ * This class is mutable and intended for use by a single thread.
  */
-public class FudgeDeserializationContext {
+public class FudgeDeserializer {
 
   /**
    * The parent Fudge context.
@@ -53,7 +53,7 @@ public class FudgeDeserializationContext {
    * 
    * @param fudgeContext  the parent context to use, not null
    */
-  public FudgeDeserializationContext(final FudgeContext fudgeContext) {
+  public FudgeDeserializer(final FudgeContext fudgeContext) {
     _fudgeContext = fudgeContext;
   }
 
@@ -81,7 +81,7 @@ public class FudgeDeserializationContext {
    * Resets the buffers used for object graph logics.
    * <p>
    * Calling {@code reset()} on this context should match a call to
-   * {@link FudgeSerializationContext#reset()} on the context used by the serializer
+   * {@link FudgeSerializer#reset()} on the context used by the serializer
    * to keep the states of both sender and receiver consistent.
    */
   public void reset() {
@@ -138,7 +138,7 @@ public class FudgeDeserializationContext {
    * @return the deserialized object
    */
   public Object fudgeMsgToObject(final FudgeMsg message) {
-    List<FudgeField> types = message.getAllByOrdinal(FudgeSerializationContext.TYPES_HEADER_ORDINAL);
+    List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);
     if (types.size() == 0) {
       // no types passed in ordinal zero
       int maxOrdinal = 0;
@@ -203,7 +203,7 @@ public class FudgeDeserializationContext {
     /*if (clazz == Object.class) {
       System.out.println(message);
     }*/
-    List<FudgeField> types = message.getAllByOrdinal(FudgeSerializationContext.TYPES_HEADER_ORDINAL);
+    List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);
     if (types.size() != 0) {
       // types passed in ordinal zero - use it if we can
       for (FudgeField type : types) {

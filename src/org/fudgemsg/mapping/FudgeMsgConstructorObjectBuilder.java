@@ -48,7 +48,7 @@ import org.fudgemsg.FudgeRuntimeException;
    */
   /* package */ static <T> FudgeMsgConstructorObjectBuilder<T> create (final Class<T> clazz) {
     try {
-      return new FudgeMsgConstructorObjectBuilder<T> (clazz.getConstructor (FudgeDeserializationContext.class, FudgeMsg.class), true);
+      return new FudgeMsgConstructorObjectBuilder<T> (clazz.getConstructor (FudgeDeserializer.class, FudgeMsg.class), true);
     } catch (SecurityException e) {
       // ignore
     } catch (NoSuchMethodException e) {
@@ -81,9 +81,9 @@ import org.fudgemsg.FudgeRuntimeException;
 
   //-------------------------------------------------------------------------
   @Override
-  public T buildObject(final FudgeDeserializationContext context, final FudgeMsg message) {
+  public T buildObject(final FudgeDeserializer deserializer, final FudgeMsg message) {
     try {
-      return _passContext ? _constructor.newInstance(context, message) : _constructor.newInstance(message);
+      return _passContext ? _constructor.newInstance(deserializer, message) : _constructor.newInstance(message);
     } catch (IllegalArgumentException ex) {
       throw new FudgeRuntimeException("Unable to create " + _constructor.getDeclaringClass() + " object", ex);
     } catch (InstantiationException ex) {

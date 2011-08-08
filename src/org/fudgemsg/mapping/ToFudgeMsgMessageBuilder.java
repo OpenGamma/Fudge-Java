@@ -54,7 +54,7 @@ import org.fudgemsg.MutableFudgeMsg;
    */
   /* package */static <T> ToFudgeMsgMessageBuilder<T> create(final Class<T> clazz) {
     try {
-      return new AddFields<T>(clazz.getMethod("toFudgeMsg", FudgeSerializationContext.class,
+      return new AddFields<T>(clazz.getMethod("toFudgeMsg", FudgeSerializer.class,
           MutableFudgeMsg.class), false);
     } catch (SecurityException ex) {
       // ignore
@@ -70,7 +70,7 @@ import org.fudgemsg.MutableFudgeMsg;
       // ignore
     }
     try {
-      return new CreateMessage<T>(clazz.getMethod("toFudgeMsg", FudgeSerializationContext.class), false);
+      return new CreateMessage<T>(clazz.getMethod("toFudgeMsg", FudgeSerializer.class), false);
     } catch (SecurityException ex) {
       // ignore
     } catch (NoSuchMethodException ex) {
@@ -140,8 +140,8 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object) {
-      return (MutableFudgeMsg) invoke(object, _passContext ? context.getFudgeContext() : context);
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, T object) {
+      return (MutableFudgeMsg) invoke(object, _passContext ? serializer.getFudgeContext() : serializer);
     }
   }
 
@@ -158,9 +158,9 @@ import org.fudgemsg.MutableFudgeMsg;
     }
 
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object) {
-      final MutableFudgeMsg msg = context.newMessage();
-      invoke(object, _passContext ? context.getFudgeContext() : context, msg);
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, T object) {
+      final MutableFudgeMsg msg = serializer.newMessage();
+      invoke(object, _passContext ? serializer.getFudgeContext() : serializer, msg);
       return msg;
     }
   }

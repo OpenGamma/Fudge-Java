@@ -26,29 +26,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PrimitiveBuilderTest {
-  
-  private FudgeSerializationContext _scontext;
-  private FudgeDeserializationContext _dcontext;
+
+  private FudgeSerializer _serializer;
+  private FudgeDeserializer _deserializer;
 
   @Before
   public void createContext() {
-    _scontext = new FudgeSerializationContext(FudgeContext.GLOBAL_DEFAULT);
-    _dcontext = new FudgeDeserializationContext(FudgeContext.GLOBAL_DEFAULT);
+    _serializer = new FudgeSerializer(FudgeContext.GLOBAL_DEFAULT);
+    _deserializer = new FudgeDeserializer(FudgeContext.GLOBAL_DEFAULT);
   }
 
   private FudgeMsg cycle(final FudgeMsg message) {
-    final FudgeContext context = _scontext.getFudgeContext();
+    final FudgeContext context = _serializer.getFudgeContext();
     final byte[] binary = context.toByteArray(message);
     final FudgeMsgEnvelope envelope = context.deserialize(binary);
     return envelope.getMessage();
   }
 
   private <T> void cycle(final Class<T> clazz, final T value) {
-    FudgeMsg message = FudgeSerializationContext.addClassHeader(_scontext.objectToFudgeMsg(value), clazz, Object.class);
+    FudgeMsg message = FudgeSerializer.addClassHeader(_serializer.objectToFudgeMsg(value), clazz, Object.class);
     System.out.println(clazz + ":" + value + " => " + message);
     message = cycle(message);
     System.out.println(clazz + ":" + value + " => " + message);
-    final Object result = _dcontext.fudgeMsgToObject(Object.class, message);
+    final Object result = _deserializer.fudgeMsgToObject(Object.class, message);
     assertNotNull(result);
     assertEquals(value, result);
   }

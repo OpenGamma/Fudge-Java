@@ -31,13 +31,11 @@ public class FudgeDefaultBuilderFactoryTest {
    * Just a test builder. Won't actually build anything.
    */
   public static class SimpleBeanBuilder implements FudgeBuilder<SimpleBean> {
-
     /**
      * 
      */
     @Override
-    public MutableFudgeMsg buildMessage(FudgeSerializationContext context, SimpleBean object) {
-      // TODO Auto-generated method stub
+    public MutableFudgeMsg buildMessage(FudgeSerializer serializer, SimpleBean object) {
       return null;
     }
 
@@ -45,11 +43,9 @@ public class FudgeDefaultBuilderFactoryTest {
      * 
      */
     @Override
-    public SimpleBean buildObject(FudgeDeserializationContext context, FudgeMsg message) {
-      // TODO Auto-generated method stub
+    public SimpleBean buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
       return null;
     }
-    
   }
 
   @HasFudgeBuilder(builder=SimpleBeanBuilder.class)

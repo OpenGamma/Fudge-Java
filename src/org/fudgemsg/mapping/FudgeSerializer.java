@@ -25,15 +25,15 @@ import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
- * Context used during conversion of an object structure to a Fudge message.
+ * Serializer used to control the conversion of an object structure to a Fudge message.
  * <p>
  * This is the central point for Java Object serialization to a Fudge message on a given stream.
- * The object builder framework methods all take a serialization context.
+ * The object builder framework methods all take a serializer.
  * Note that the serializer cannot process cyclic object graphs at present.
  * <p>
- * This class is mutable but thread-safe via concurrent collections.
+ * This class is mutable and intended for use by a single thread.
  */
-public class FudgeSerializationContext implements FudgeMsgFactory {
+public class FudgeSerializer implements FudgeMsgFactory {
 
   /**
    * The field ordinal used to send type information.
@@ -54,7 +54,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * 
    * @param fudgeContext  the parent context to use, not null
    */
-  public FudgeSerializationContext(final FudgeContext fudgeContext) {
+  public FudgeSerializer(final FudgeContext fudgeContext) {
     _fudgeContext = fudgeContext;
   }
 
@@ -82,7 +82,7 @@ public class FudgeSerializationContext implements FudgeMsgFactory {
    * Resets the buffers used for object graph logics.
    * <p>
    * Calling {@code reset()} on this context should match a call to
-   * {@link FudgeSerializationContext#reset()} on the context used by the deserializer
+   * {@link FudgeSerializer#reset()} on the context used by the deserializer
    * to keep the states of both sender and receiver consistent.
    */
   public void reset() {

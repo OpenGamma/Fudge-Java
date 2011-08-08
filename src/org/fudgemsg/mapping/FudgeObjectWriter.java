@@ -30,9 +30,9 @@ public class FudgeObjectWriter {
    */
   private final FudgeMsgWriter _messageWriter;
   /**
-   * The context.
+   * The serializer.
    */
-  private FudgeSerializationContext _serialisationContext;
+  private FudgeSerializer _serializer;
 
   /**
    * Creates a writer around the underlying Fudge stream.
@@ -44,7 +44,7 @@ public class FudgeObjectWriter {
       throw new NullPointerException("messageWriter cannot be null");
     }
     _messageWriter = messageWriter;
-    _serialisationContext = new FudgeSerializationContext(messageWriter.getFudgeContext());
+    _serializer = new FudgeSerializer(messageWriter.getFudgeContext());
   }
 
   //-------------------------------------------------------------------------
@@ -58,13 +58,13 @@ public class FudgeObjectWriter {
   }
 
   /**
-   * Returns the current serialization context.
+   * Returns the current serializer.
    * This is associated with the same {@link FudgeContext} as the target message stream.
    * 
-   * @return the context, not null unless overridden in a subclass
+   * @return the serializer, not null unless overridden in a subclass
    */
-  public FudgeSerializationContext getSerialisationContext() {
-    return _serialisationContext;
+  public FudgeSerializer getSerializer() {
+    return _serializer;
   }
 
   /**
@@ -74,7 +74,7 @@ public class FudgeObjectWriter {
    * @return the {@code FudgeContext}
    */
   public FudgeContext getFudgeContext() {
-    final FudgeSerializationContext context = getSerialisationContext();
+    final FudgeSerializer context = getSerializer();
     if (context == null) {
       return null;
     }
@@ -91,14 +91,14 @@ public class FudgeObjectWriter {
    * @param obj the object to write
    */
   public <T> void write(final T obj) {
-    getSerialisationContext().reset();
+    getSerializer().reset();
     FudgeMsg message;
     if (obj == null) {
       // write an empty message
-      message = getSerialisationContext().newMessage();
+      message = getSerializer().newMessage();
     } else {
       // delegate to a message builder
-      message = getSerialisationContext().objectToFudgeMsg(obj);
+      message = getSerializer().objectToFudgeMsg(obj);
     }
     getMessageWriter().writeMessage(message, 0);
   }

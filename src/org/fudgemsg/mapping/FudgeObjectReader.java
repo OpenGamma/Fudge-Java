@@ -30,9 +30,9 @@ public class FudgeObjectReader {
    */
   private final FudgeMsgReader _messageReader;
   /**
-   * The context.
+   * The deserializer.
    */
-  private FudgeDeserializationContext _deserialisationContext;
+  private FudgeDeserializer _deserializer;
 
   /**
    * Creates a reader around the underlying Fudge stream.
@@ -44,7 +44,7 @@ public class FudgeObjectReader {
       throw new NullPointerException("messageReader cannot be null");
     }
     _messageReader = messageReader;
-    _deserialisationContext = new FudgeDeserializationContext(messageReader.getFudgeContext());
+    _deserializer = new FudgeDeserializer(messageReader.getFudgeContext());
   }
 
   //-------------------------------------------------------------------------
@@ -58,13 +58,13 @@ public class FudgeObjectReader {
   }
 
   /**
-   * Returns the current deserialization context.
+   * Returns the current deserializer.
    * This is associated with the same {@link FudgeContext} as the source message stream.
    * 
-   * @return the context, not null unless overridden in a subclass
+   * @return the deserializer, not null unless overridden in a subclass
    */
-  public FudgeDeserializationContext getDeserialisationContext() {
-    return _deserialisationContext;
+  public FudgeDeserializer getDeserializer() {
+    return _deserializer;
   }
 
   /**
@@ -74,7 +74,7 @@ public class FudgeObjectReader {
    * @return the {@code FudgeContext}
    */
   public FudgeContext getFudgeContext() {
-    final FudgeDeserializationContext context = getDeserialisationContext();
+    final FudgeDeserializer context = getDeserializer();
     if (context == null) {
       return null;
     }
@@ -102,8 +102,8 @@ public class FudgeObjectReader {
    */
   public Object read() {
     FudgeMsg message = getMessageReader().nextMessage();
-    getDeserialisationContext().reset();
-    return getDeserialisationContext().fudgeMsgToObject(message);
+    getDeserializer().reset();
+    return getDeserializer().fudgeMsgToObject(message);
   }
 
   /**
@@ -117,8 +117,8 @@ public class FudgeObjectReader {
    */
   public <T> T read(final Class<T> clazz) {
     FudgeMsg message = getMessageReader().nextMessage();
-    getDeserialisationContext().reset();
-    return getDeserialisationContext().fudgeMsgToObject(clazz, message);
+    getDeserializer().reset();
+    return getDeserializer().fudgeMsgToObject(clazz, message);
   }
 
   /**

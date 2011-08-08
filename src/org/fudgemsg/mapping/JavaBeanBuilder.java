@@ -189,14 +189,14 @@ import org.fudgemsg.MutableFudgeMsg;
 
   //-------------------------------------------------------------------------
   @Override
-  public MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object) {
-    final MutableFudgeMsg message = context.newMessage();
+  public MutableFudgeMsg buildMessage(FudgeSerializer serializer, T object) {
+    final MutableFudgeMsg message = serializer.newMessage();
     try {
       for (JBProperty prop : getProperties()) {
         if (prop.getRead() == null) {
           continue;
         }
-        context.addToMessageWithClassHeaders(
+        serializer.addToMessageWithClassHeaders(
             message, prop.getName(), prop.getOrdinal(), prop.getRead().invoke(object), prop.getType());
       }
     } catch (IllegalArgumentException ex) {
@@ -210,7 +210,7 @@ import org.fudgemsg.MutableFudgeMsg;
   }
 
   @Override
-  public T buildObject(FudgeDeserializationContext context, FudgeMsg message) {
+  public T buildObject(FudgeDeserializer context, FudgeMsg message) {
     final T object;
     try {
       object = newBeanObject();

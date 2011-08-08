@@ -36,10 +36,10 @@ public interface FudgeMessageBuilder<T> {
    * This provides the strategy for converting an object to a message to be specified.
    * The resulting message is mutable to enable efficient implementations.
    * 
-   * @param context  the context, not null
+   * @param serializer  the instance in control of serialization, not null
    * @param object  the object to convert to a Fudge message, not null
    * @return the Fudge message, not null
    */
-  MutableFudgeMsg buildMessage(FudgeSerializationContext context, T object);
+  MutableFudgeMsg buildMessage(FudgeSerializer serializer, T object);
 
 }

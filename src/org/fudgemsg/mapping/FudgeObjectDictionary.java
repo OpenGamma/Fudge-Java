@@ -73,7 +73,7 @@ public class FudgeObjectDictionary {
    */
   private static final FudgeMessageBuilder<?> NULL_MESSAGEBUILDER = new FudgeMessageBuilder<Object> () {
     @Override
-    public MutableFudgeMsg buildMessage (FudgeSerializationContext context, Object object) {
+    public MutableFudgeMsg buildMessage (FudgeSerializer serializer, Object object) {
       return null;
     }
   };
@@ -82,7 +82,7 @@ public class FudgeObjectDictionary {
    */
   private static final FudgeObjectBuilder<?> NULL_OBJECTBUILDER = new FudgeObjectBuilder<Object> () {
     @Override
-    public Object buildObject (FudgeDeserializationContext context, FudgeMsg message) {
+    public Object buildObject (FudgeDeserializer deserializer, FudgeMsg message) {
       return null;
     }
   };

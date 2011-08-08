@@ -48,6 +48,8 @@ The wire protocol is unchanged.
    ImmutableFudgeBuilderFactory to UnmodifiableFudgeBuilderFactory
    ImmutableFudgeObjectDictionary to UnmodifiableFudgeObjectDictionary
    AlternativeFudgeStreamWriter to EventBasedFudgeStreamWriter
+   FudgeSerializationContext to FudgeSerializer
+   FudgeDeserializationContext to FudgeDeserializer
 
 - Remove classes
    ImmutableFudgeFieldContainer
@@ -58,7 +60,7 @@ The wire protocol is unchanged.
    UnmodifiableFudgeField (use factories)
 
 - Rename methods
-   FudgeSerializationContext.objectToFudgeMsg* -> addToMessage*
+   FudgeSerializer.objectToFudgeMsg* -> addToMessage*
 
 - FudgeStreamWriter
   Changed to accept an Iterable of FudgeField rather than just a Fudge message
