@@ -445,9 +445,8 @@ public class FudgeTypeDictionary {
    */
   public void registerClassRename(String oldClassName, Class<?> newClass) {
     Class<?> registered = _renames.putIfAbsent(oldClassName, newClass);
-    if (registered != null && ! newClass.equals(registered))
-    {
-      throw new IllegalArgumentException("Class name already registered: " + oldClassName + " already mapped to " + registered);  
+    if (registered != null && ! newClass.equals(registered)) {
+      throw new IllegalArgumentException("Class name already registered: " + oldClassName + " already mapped to " + registered);
     }
   }
 

@@ -202,18 +202,19 @@ public class FudgeTypeDictionaryTest {
     dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
     assertEquals(FudgeTypeDictionaryTest.class, dictionary.loadClass("SomeName"));
   }
-  
+
   @Test
   public void registerRenameTwiceMatchingNoError(){
     final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
     dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
     dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
   }
-  
+
   @Test(expected=IllegalArgumentException.class)
   public void registerRenameTwiceNonMatchingError(){
     final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
     dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
     dictionary.registerClassRename("SomeName", FudgeTypeDictionary.class);
   }
+
 }
