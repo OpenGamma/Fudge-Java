@@ -197,9 +197,10 @@ public class FudgeTypeDictionaryTest {
   }
 
   @Test
-  public void registerRename(){
+  public void registerRename() throws ClassNotFoundException{
     final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
     dictionary.registerClassRename("SomeName", FudgeTypeDictionaryTest.class);
+    assertEquals(FudgeTypeDictionaryTest.class, dictionary.loadClass("SomeName"));
   }
   
   @Test
