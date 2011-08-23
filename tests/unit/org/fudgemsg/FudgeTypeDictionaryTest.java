@@ -42,10 +42,37 @@ public class FudgeTypeDictionaryTest {
     type = dictionary.getByJavaType(Boolean.TYPE);
     assertNotNull(type);
     assertEquals(FudgeWireType.BOOLEAN.getTypeId(), type.getTypeId());
-
+    
     type = dictionary.getByJavaType(Boolean.class);
     assertNotNull(type);
     assertEquals(FudgeWireType.BOOLEAN.getTypeId(), type.getTypeId());
+  }
+
+  @Test
+  public void lookupByteArray() {
+    FudgeFieldType type = null;
+    final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
+    type = dictionary.getByJavaType(byte[].class);
+    assertNotNull(type);
+    assertEquals(FudgeWireType.BYTE_ARRAY.getTypeId(), type.getTypeId());
+  }
+
+  @Test
+  public void lookupIntArray() {
+    FudgeFieldType type = null;
+    final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
+    type = dictionary.getByJavaType(int[].class);
+    assertNotNull(type);
+    assertEquals(FudgeWireType.INT_ARRAY.getTypeId(), type.getTypeId());
+  }
+
+  @Test
+  public void lookupLongArray() {
+    FudgeFieldType type = null;
+    final FudgeTypeDictionary dictionary = new FudgeTypeDictionary ();
+    type = dictionary.getByJavaType(long[].class);
+    assertNotNull(type);
+    assertEquals(FudgeWireType.LONG_ARRAY.getTypeId(), type.getTypeId());
   }
 
   @Test

@@ -81,7 +81,6 @@ public class FudgeTypeDictionary {
     addType(FudgeWireType.SHORT, Short.class, Short.TYPE);
     addType(FudgeWireType.INT, Integer.class, Integer.TYPE);
     addType(FudgeWireType.LONG, Long.class, Long.TYPE);
-    addType(FudgeWireType.BYTE_ARRAY);
     addType(FudgeWireType.SHORT_ARRAY);
     addType(FudgeWireType.INT_ARRAY);
     addType(FudgeWireType.LONG_ARRAY);
@@ -100,6 +99,7 @@ public class FudgeTypeDictionary {
     addType(FudgeWireType.BYTE_ARRAY_128);
     addType(FudgeWireType.BYTE_ARRAY_256);
     addType(FudgeWireType.BYTE_ARRAY_512);
+    addType(FudgeWireType.BYTE_ARRAY);  // must go after other byte[] elements
     addType(FudgeWireType.DATE);
     addType(FudgeWireType.TIME);
     addType(FudgeWireType.DATETIME);
