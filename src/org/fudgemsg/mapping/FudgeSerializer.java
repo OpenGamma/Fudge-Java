@@ -183,6 +183,38 @@ public class FudgeSerializer implements FudgeMsgFactory {
   }
 
   /**
+   * Adds an arbitrary object to a Fudge message sending class name headers.
+   * <p>
+   * This sends an arbitrary object via Fudge ensuring that Java class name headers are sent.
+   * This differs from {@code addToMessageWithClassHeaders} in that secondary types are not
+   * used with the aim that the deserialized object is an exact match with the sent object.
+   * <p>
+   * Class name headers will only be sent up to the specified type (exclusive).
+   * This handles subclasses of a known type effectively, reducing the message size.
+   * 
+   * @param message  the message to add this object to, not null
+   * @param name  the field name for the field, null if no field name required
+   * @param ordinal  the ordinal for the field, null if no field ordinal required
+   * @param object  the value to add, null ignored
+   * @param receiverTarget  the Java class the receiver will expect, not null
+   */
+  public void addToMessageObject(
+      final MutableFudgeMsg message, final String name,
+      final Integer ordinal, final Object object, final Class<?> receiverTarget) {
+    if (object == null) {
+      return;
+    }
+    final Class<?> clazz = object.getClass();
+    final MutableFudgeMsg submsg = objectToFudgeMsg(object);
+    if (!getFudgeContext().getObjectDictionary().isDefaultObject(clazz)) {
+      if (submsg.getByOrdinal(TYPES_HEADER_ORDINAL) == null) {
+        addClassHeader(submsg, clazz, receiverTarget);
+      }
+    }
+    message.add(name, ordinal, FudgeWireType.SUB_MESSAGE, submsg);
+  }
+
+  /**
    * Checks if the object is in the correct native format to send.
    * 
    * @param fieldType  the Fudge type, may be null
