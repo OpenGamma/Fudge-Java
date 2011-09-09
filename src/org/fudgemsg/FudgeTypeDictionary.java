@@ -17,6 +17,7 @@ package org.fudgemsg;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -450,6 +451,9 @@ public class FudgeTypeDictionary {
     }
   }
 
+  final ClassLoader s_classLoader = FudgeTypeDictionary.class.getClassLoader(); //NOTE: for a given instance this is constant
+  final Map<String, Class<?>> s_loadedClasses = new ConcurrentHashMap<String, Class<?>>(); //TODO: This should be expired at some point, but it's an insignificant leak at the moment
+  
   /**
    * Loads a class from a class name, handling previously registered renames.
    * 
@@ -462,7 +466,15 @@ public class FudgeTypeDictionary {
     if (rename != null) {
       return rename;
     }
-    return FudgeTypeDictionary.class.getClassLoader().loadClass(className);
+    
+    Class<?> loaded = s_loadedClasses.get(className);
+    if (loaded != null)
+    {
+      return loaded;
+    }
+    loaded = s_classLoader.loadClass(className); //Must always return the same key, so can be cached happily
+    s_loadedClasses.put(className, loaded);
+    return s_classLoader.loadClass(className);
   }
 
 }
