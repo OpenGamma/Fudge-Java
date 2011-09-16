@@ -170,6 +170,7 @@ public class FudgeTypeDictionary {
     for (Class<?> alternativeType : alternativeTypes) {
       _typesByJavaType.put(alternativeType, type);
     }
+    _fftByJavaTypeCache.clear(); //results could have changed now
   }
 
   /**
@@ -213,7 +214,11 @@ public class FudgeTypeDictionary {
     }
   }
 
-  /**
+  private final static FudgeFieldType s_noFftMarker = new FudgeFieldType(0, FudgeTypeDictionary.class, false, 0);
+  private final ConcurrentHashMap<Class<?>, FudgeFieldType> _fftByJavaTypeCache = new ConcurrentHashMap<Class<?>, FudgeFieldType>();
+
+  /*
+   * 
    * Resolves a Java class to a {@link FudgeFieldType} registered with this dictionary.
    * 
    * @param javaType the class to resolve
@@ -223,17 +228,27 @@ public class FudgeTypeDictionary {
     if (javaType == null) {
       return null;
     }
+    FudgeFieldType fft = _fftByJavaTypeCache.get(javaType);
+    if (fft != null)
+    {
+      return fft == s_noFftMarker ? null : fft;
+    }
+    
     FudgeFieldType fieldType = _typesByJavaType.get(javaType);
     if (fieldType != null) {
+      _fftByJavaTypeCache.putIfAbsent(javaType, fieldType);
       return fieldType;
     }
     for (Class<?> cls : javaType.getInterfaces()) {
       fieldType = getByJavaType(cls);
       if (fieldType != null) {
+        _fftByJavaTypeCache.putIfAbsent(javaType, fieldType);
         return fieldType;
       }
     }
-    return getByJavaType(javaType.getSuperclass());
+    fft = getByJavaType(javaType.getSuperclass());
+    _fftByJavaTypeCache.putIfAbsent(javaType, fft == null ? s_noFftMarker : fft);
+    return fft;
   }
 
   /**
