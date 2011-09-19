@@ -29,6 +29,7 @@ import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.taxonomy.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
+import org.fudgemsg.test.FudgeUtils;
 import org.fudgemsg.wire.json.FudgeJSONStreamReader;
 import org.fudgemsg.wire.json.FudgeJSONStreamWriter;
 import org.junit.Test;
@@ -75,8 +76,10 @@ public class FudgeJSONTest {
     final FudgeMsg[] messages = createMessages ();
     for (int i = 0; i < messages.length; i++) {
       fmw.writeMessage (messages[i], 0); // no taxonomy
+      fmw.flush();
       System.out.println ();
       fmw.writeMessage (messages[i], 1); // taxonomy #1
+      fmw.flush();
       System.out.println ();
     }
   }
@@ -101,12 +104,12 @@ public class FudgeJSONTest {
       FudgeMsg message = fmr.nextMessage ();
       assertNotNull (message);
       System.out.println (message);
-//      assertAllFieldsMatch (messages[i], message, false);
+//      FudgeUtils.assertAllFieldsMatch (messages[i], message, false);
       // second is the taxonomy version
       message = fmr.nextMessage ();
       assertNotNull (message);
       System.out.println (message);
-//      assertAllFieldsMatch (messages[i], message, false);
+//      FudgeUtils.assertAllFieldsMatch (messages[i], message, false);
     }
   }
   

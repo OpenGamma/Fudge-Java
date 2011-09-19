@@ -35,7 +35,10 @@ public class JSONSettings {
    * Default name for the taxonomy field.
    */
   public static final String DEFAULT_TAXONOMY_FIELD = "fudgeTaxonomy";
-
+  /**
+   * Default type field name suffix
+   */
+  public static final String DEFAULT_TYPE_SUFFIX = "~typ";
   /**
    * The processing directives field name.
    */
@@ -49,10 +52,13 @@ public class JSONSettings {
    */
   private String _taxonomyField = DEFAULT_TAXONOMY_FIELD;
   /**
-   * Whether to prefer field names.
+   * Whether to preserve field names.
    */
-  private boolean _preferFieldNames = true;
-
+  private boolean _preserveFieldNames = true;
+  /**
+   * The type field name suffix
+   */
+  private String _typeSuffix = DEFAULT_TYPE_SUFFIX;
   /**
    * Creates a new settings object with the default values.
    */
@@ -129,21 +135,35 @@ public class JSONSettings {
   }
 
   /**
-   * Gets whether to prefer field names.
+   * Gets whether to preserve field names.
    * 
-   * @return true to prefer field names
+   * @return true to preserve field names
    */
-  public boolean getPreferFieldNames() {
-    return _preferFieldNames;
+  public boolean getPreserveFieldNames() {
+    return _preserveFieldNames;
   }
 
   /**
-   * Sets whether to prefer field names.
+   * Sets whether to preserve field names.
    * 
-   * @param preferFieldNames  true to prefer field names
+   * @param preserveFieldNames  true to prefer field names
    */
-  public void setPreferFieldNames(final boolean preferFieldNames) {
-    _preferFieldNames = preferFieldNames;
+  public void setPreserveFieldNames(final boolean preserveFieldNames) {
+    _preserveFieldNames = preserveFieldNames;
   }
 
+  /**
+   * @return the typeSuffix
+   */
+  public String getTypeSuffix() {
+    return _typeSuffix;
+  }
+
+  /**
+   * @param typeSuffix the typeSuffix to set
+   */
+  public void setTypeSuffix(final String typeSuffix) {
+    _typeSuffix = typeSuffix;
+  }
+  
 }

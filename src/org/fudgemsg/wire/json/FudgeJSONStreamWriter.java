@@ -188,7 +188,7 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
   @Override
   protected boolean fudgeFieldStart (Integer ordinal, String name, FudgeFieldType type) {
     try {
-      if (getSettings ().getPreferFieldNames ()) {
+      if (getSettings ().getPreserveFieldNames ()) {
         if (name != null) {
           getWriter ().key (name);
         } else if (ordinal != null) {
