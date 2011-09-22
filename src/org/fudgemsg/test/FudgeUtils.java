@@ -81,7 +81,7 @@ public class FudgeUtils {
         }
       } else if (expectedField.getValue() instanceof FudgeMsg) {
         assertTrue(actualField.getValue() instanceof FudgeMsg);
-        assertAllFieldsMatch((FudgeMsg) expectedField.getValue(), (FudgeMsg) actualField.getValue());
+        assertAllFieldsMatch((FudgeMsg) expectedField.getValue(), (FudgeMsg) actualField.getValue(), fieldOrderMatters);
       } else if (expectedField.getValue() instanceof UnknownFudgeFieldValue) {
         assertTrue(actualField.getValue() instanceof UnknownFudgeFieldValue);
         UnknownFudgeFieldValue expectedValue = (UnknownFudgeFieldValue) expectedField.getValue();

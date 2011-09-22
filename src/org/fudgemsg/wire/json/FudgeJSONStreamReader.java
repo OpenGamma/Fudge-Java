@@ -39,7 +39,7 @@ import org.json.JSONTokener;
  */
 public class FudgeJSONStreamReader implements FudgeStreamReader {
 
-  private final JSONSettings _settings;
+  private final FudgeJSONSettings _settings;
   private final FudgeContext _fudgeContext;
   private final Reader _underlying;
   private final JSONTokener _tokener;
@@ -65,7 +65,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
    * @param reader  the underlying reader, not null
    */
   public FudgeJSONStreamReader(final FudgeContext fudgeContext, final Reader reader) {
-    this(fudgeContext, reader, new JSONSettings());
+    this(fudgeContext, reader, new FudgeJSONSettings());
   }
 
   /**
@@ -75,7 +75,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
    * @param reader  the underlying reader, not null
    * @param settings  the JSON settings to fine tune the read, not null
    */
-  public FudgeJSONStreamReader(final FudgeContext fudgeContext, final Reader reader, final JSONSettings settings) {
+  public FudgeJSONStreamReader(final FudgeContext fudgeContext, final Reader reader, final FudgeJSONSettings settings) {
     _fudgeContext = fudgeContext;
     _underlying = reader;
     _settings = settings;
@@ -371,7 +371,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
     }
   }
 
-  public JSONSettings getSettings() {
+  public FudgeJSONSettings getSettings() {
     return _settings;
   }
 

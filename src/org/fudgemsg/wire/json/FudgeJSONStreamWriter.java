@@ -43,7 +43,7 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
   /**
    * The JSON settings.
    */
-  private final JSONSettings _settings;
+  private final FudgeJSONSettings _settings;
   /**
    * The underlying writer.
    */
@@ -60,7 +60,7 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
    * @param writer  the underlying writer, not null
    */
   public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer) {
-    this(fudgeContext, writer, new JSONSettings());
+    this(fudgeContext, writer, new FudgeJSONSettings());
   }
 
   /**
@@ -71,7 +71,7 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
    * @param writer  the underlying writer, not null
    * @param settings  the JSON settings, not null
    */
-  public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer, final JSONSettings settings) {
+  public FudgeJSONStreamWriter(final FudgeContext fudgeContext, final Writer writer, final FudgeJSONSettings settings) {
     super(fudgeContext);
     if (writer == null) {
       throw new NullPointerException("XMLStreamWriter must not be null");
@@ -89,7 +89,7 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
    * 
    * @return the JSON settings, not null
    */
-  public JSONSettings getSettings() {
+  public FudgeJSONSettings getSettings() {
     return _settings;
   }
 
