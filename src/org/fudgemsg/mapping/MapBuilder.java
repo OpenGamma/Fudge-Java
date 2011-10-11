@@ -104,7 +104,9 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
       if (field.getOrdinal() != null && field.getOrdinal() == KEY_ORDINAL) {
 
-        if (keyBuilder != null && value instanceof FudgeMsg) {
+        if(value instanceof IndicatorType){
+          obj = null;
+        } else if (keyBuilder != null && value instanceof FudgeMsg) {
           obj = keyBuilder.buildObject(deserializer, (FudgeMsg) value);
         } else if (keyTypeConverter != null) {
           obj = keyTypeConverter.primaryToSecondary(value);
@@ -122,7 +124,9 @@ import org.fudgemsg.wire.types.FudgeWireType;
         }
       } else if (field.getOrdinal() != null && field.getOrdinal() == VALUE_ORDINAL) {
 
-        if (valueBuilder != null && value instanceof FudgeMsg) {
+        if(value instanceof IndicatorType){
+          obj = null;
+        } else if (valueBuilder != null && value instanceof FudgeMsg) {
           obj = valueBuilder.buildObject(deserializer, (FudgeMsg) value);
         } else if (valueTypeConverter != null) {
           obj = valueTypeConverter.primaryToSecondary(value);

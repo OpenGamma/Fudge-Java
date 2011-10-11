@@ -20,8 +20,6 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.types.FudgeTypeConverter;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -29,7 +27,7 @@ import java.util.List;
  * <p/>
  * This builder is immutable and thread safe.
  */
-/* package */final class BuilderUtil {
+/* package */final public class BuilderUtil {
 
   private BuilderUtil() {
   }
@@ -47,17 +45,19 @@ import java.util.List;
   static Class getCommonNonAbstractAncestorOfObjects(Iterable<?> collection) {
     Class theCommonNonAbstractAncestor = null;
     for (Object entry : collection) {
-      if (theCommonNonAbstractAncestor == null) {
-        theCommonNonAbstractAncestor = entry.getClass();
-      } else {
-        if (theCommonNonAbstractAncestor.isAssignableFrom(entry.getClass())) {
-          // it is superclass of entry.getClass() so we do not change it.
-        } else if (entry.getClass().isAssignableFrom(theCommonNonAbstractAncestor)) {
+      if (entry != null) {
+        if (theCommonNonAbstractAncestor == null) {
           theCommonNonAbstractAncestor = entry.getClass();
         } else {
-          // we have at least two classes laying on different hierarchy paths
-          theCommonNonAbstractAncestor = null;
-          break;
+          if (theCommonNonAbstractAncestor.isAssignableFrom(entry.getClass())) {
+            // it is superclass of entry.getClass() so we do not change it.
+          } else if (entry.getClass().isAssignableFrom(theCommonNonAbstractAncestor)) {
+            theCommonNonAbstractAncestor = entry.getClass();
+          } else {
+            // we have at least two classes laying on different hierarchy paths
+            theCommonNonAbstractAncestor = null;
+            break;
+          }
         }
       }
     }

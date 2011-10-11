@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -37,7 +38,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
 
   @Before
-  public void createWriter() {
+  public void registerSecondaryType() {
 
     getFudgeContext().getTypeDictionary().addType(MockCurrencySecondaryType.INSTANCE, Currency.class);
     getFudgeContext().getTypeDictionary().addTypeConverter(MockCurrencySecondaryType.INSTANCE, Currency.class);
@@ -53,10 +54,12 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
     isInstanceOf(deserializedObject, HashMap.class);
 
-    Iterator<Map.Entry> mapIterator = deserializedObject.entrySet().iterator();
-    Map.Entry firstEntry = mapIterator.next();
-    isInstanceOf(firstEntry.getKey(), String.class);
-    isInstanceOf(firstEntry.getValue(), Byte.class);
+    for (Object o : deserializedObject.keySet()) {
+      isInstanceOf(o, String.class);
+    }
+
+    isInstanceOf(deserializedObject.get("A"), Byte.class);
+    isInstanceOf(deserializedObject.get("B"), Byte.class);
   }
 
   @Test
@@ -75,19 +78,13 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
     isInstanceOf(deserializedObject, HashMap.class);
 
-    Iterator<Map.Entry> mapIterator = deserializedObject.entrySet().iterator();
-    Map.Entry firstEntry = mapIterator.next();
-    Map.Entry secondEntry = mapIterator.next();
-    Map.Entry thirdEntry = mapIterator.next();
+    for (Object o : deserializedObject.keySet()) {
+      isInstanceOf(o, Currency.class);
+    }
 
-    isInstanceOf(firstEntry.getKey(), Currency.class);
-    isInstanceOf(firstEntry.getValue(), String.class);
-
-    isInstanceOf(secondEntry.getKey(), Currency.class);
-    isInstanceOf(secondEntry.getValue(), String.class);
-
-    isInstanceOf(thirdEntry.getKey(), Currency.class);
-    isInstanceOf(thirdEntry.getValue(), String.class);
+    for (Object o : deserializedObject.values()) {
+      isInstanceOf(o, String.class);
+    }
   }
 
   @Test
@@ -106,21 +103,49 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
     isInstanceOf(deserializedObject, HashMap.class);
 
-    Iterator<Map.Entry> mapIterator = deserializedObject.entrySet().iterator();
-    Map.Entry firstEntry = mapIterator.next();
-    Map.Entry secondEntry = mapIterator.next();
-    Map.Entry thirdEntry = mapIterator.next();
+    for (Object o : deserializedObject.keySet()) {
+      isInstanceOf(o, String.class);
+    }
 
-    isInstanceOf(firstEntry.getKey(), String.class);
-    isInstanceOf(firstEntry.getValue(), Currency.class);
+    for (Object o : deserializedObject.values()) {
+      isInstanceOf(o, Currency.class);
+    }
 
-    isInstanceOf(secondEntry.getKey(), String.class);
-    isInstanceOf(secondEntry.getValue(), Currency.class);
+  }
 
-    isInstanceOf(thirdEntry.getKey(), String.class);
-    isInstanceOf(thirdEntry.getValue(), Currency.class);
+  @Test
+  public void testMapWithCurrencyValuesAndNulls() {
+    Map<String, Currency> map = new HashMap<String, Currency>();
 
+    Currency usd = Currency.getInstance("USD");
+    Currency gbp = Currency.getInstance("GBP");
+    Currency eur = Currency.getInstance("EUR");
 
+    map.put("X", usd);
+    map.put("Y", gbp);
+    map.put("U", null);
+    map.put("W", null);
+    map.put("Z", eur);
+
+    Map deserializedObject = cycleObject(map);
+
+    isInstanceOf(deserializedObject, HashMap.class);
+
+    for (Object o : deserializedObject.keySet()) {
+      isInstanceOf(o, String.class);
+    }
+
+    isInstanceOf(deserializedObject.get("X"), Currency.class);
+    isInstanceOf(deserializedObject.get("Y"), Currency.class);
+    isInstanceOf(deserializedObject.get("Z"), Currency.class);
+
+    assertNull(deserializedObject.get("U"));
+    assertNull(deserializedObject.get("W"));
+
+    assertTrue(deserializedObject.containsKey("U"));
+    assertTrue(deserializedObject.containsKey("W"));
+
+    assertTrue(deserializedObject.size() == 5);
   }
 
   @Test
@@ -133,25 +158,21 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
     map.put("X", usd);
     map.put("Y", gbp);
-    map.put("Z", "Some text");
+    map.put("Z", eur);
+    map.put("T", "Some text");
 
     Map deserializedObject = cycleObject(map);
 
+    for (Object o : deserializedObject.keySet()) {
+      isInstanceOf(o, String.class);
+    }
+
     isInstanceOf(deserializedObject, HashMap.class);
 
-    Iterator<Map.Entry> mapIterator = deserializedObject.entrySet().iterator();
-    Map.Entry firstEntry = mapIterator.next();
-    Map.Entry secondEntry = mapIterator.next();
-    Map.Entry thirdEntry = mapIterator.next();
-
-    isInstanceOf(firstEntry.getKey(), String.class);
-    assertTrue(firstEntry.getValue() instanceof Byte || firstEntry.getValue() instanceof Short || firstEntry.getValue() instanceof Integer || firstEntry.getValue() instanceof String);
-
-    isInstanceOf(secondEntry.getKey(), String.class);
-    assertTrue(secondEntry.getValue() instanceof Byte || secondEntry.getValue() instanceof Short || secondEntry.getValue() instanceof Integer || secondEntry.getValue() instanceof String);
-
-    isInstanceOf(thirdEntry.getKey(), String.class);
-    assertTrue(thirdEntry.getValue() instanceof Byte || thirdEntry.getValue() instanceof Short || thirdEntry.getValue() instanceof Integer || thirdEntry.getValue() instanceof String);
+    isInstanceOf(deserializedObject.get("X"), Byte.class);
+    isInstanceOf(deserializedObject.get("Y"), Short.class);
+    isInstanceOf(deserializedObject.get("Z"), Integer.class);
+    isInstanceOf(deserializedObject.get("T"), String.class);
   }
 
 }

@@ -17,7 +17,6 @@ package org.fudgemsg.mapping;
 
 
 import org.fudgemsg.AbstractFudgeBuilderTestCase;
-import org.fudgemsg.wire.MockIntegerSecondaryType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +34,7 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
 
   @Before
-  public void createWriter() {
+  public void registerSecondaryType() {
 
     getFudgeContext().getTypeDictionary().addType(MockCurrencySecondaryType.INSTANCE, Currency.class);
     getFudgeContext().getTypeDictionary().addTypeConverter(MockCurrencySecondaryType.INSTANCE, Currency.class);
@@ -51,13 +50,15 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
     isInstanceOf(deserializedObject, Set.class);
     isInstanceOf(deserializedObject, HashSet.class);
-    Object[] entries = deserializedObject.toArray();
-    isInstanceOf(entries[0], Currency.class);
+
+    for (Object o : deserializedObject) {
+      isInstanceOf(o, Currency.class);
+    }
 
   }
 
   @Test
-  public void testSetContainingSeveralCurrency() throws IOException {
+  public void testSetContainingSeveralCurrencies() throws IOException {
 
     Set set = new TreeSet<Currency>(new Comparator<Currency>() {
       @Override
@@ -72,15 +73,57 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     Set deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, Set.class);
-    Object[] entries = deserializedObject.toArray();
 
-    isInstanceOf(entries[0], Currency.class);
-    isInstanceOf(entries[1], Currency.class);
-    isInstanceOf(entries[2], Currency.class);
+    for (Object o : deserializedObject) {
+      isInstanceOf(o, Currency.class);
+    }
+
   }
 
   @Test
-  public void testSetContainingSeveralCurrencyAndAString() throws IOException {
+  public void testSetContainingSeveralCurrenciesAndNull() throws IOException {
+
+    Set set = new TreeSet<Currency>(new Comparator<Currency>() {
+      @Override
+      public int compare(Currency o1, Currency o2) {
+        if (o1 == null && o2 == null) {
+          return 0;
+        } else if (o1 == null) {
+          return -1;
+        } else if (o2 == null) {
+          return 1;
+        } else {
+          return o1.getSymbol().compareTo(o2.getSymbol());
+        }
+      }
+    });
+    set.add(Currency.getInstance("USD"));
+    set.add(Currency.getInstance("GBP"));
+    set.add(null);
+    set.add(Currency.getInstance("EUR"));
+
+    Set deserializedObject = cycleObject(set);
+
+    isInstanceOf(deserializedObject, Set.class);
+
+    for (Object o : deserializedObject) {
+      assertTrue(o == null || o instanceof Currency);
+    }
+
+    Set exemplar = new HashSet();
+    exemplar.add(Currency.getInstance("USD"));
+    exemplar.add(Currency.getInstance("GBP"));
+    exemplar.add(null);
+    exemplar.add(Currency.getInstance("EUR"));
+
+    assertTrue(deserializedObject.size() == 4);
+    exemplar.removeAll(deserializedObject);
+    assertTrue(exemplar.size() == 0);
+
+  }
+
+  @Test
+  public void testSetContainingSeveralCurrenciesAndAString() throws IOException {
 
     Set set = new HashSet();
     set.add(Currency.getInstance("USD"));
@@ -91,11 +134,10 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     Set deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, Set.class);
-    Object[] entries = deserializedObject.toArray();
 
-    assertTrue(entries[0] instanceof Byte || entries[0] instanceof Short || entries[0] instanceof Integer || entries[0] instanceof String);
-    assertTrue(entries[1] instanceof Byte || entries[1] instanceof Short || entries[1] instanceof Integer || entries[1] instanceof String);
-    assertTrue(entries[2] instanceof Byte || entries[2] instanceof Short || entries[2] instanceof Integer || entries[2] instanceof String);
+    for (Object o : deserializedObject) {
+      assertTrue(o instanceof Byte || o instanceof Short || o instanceof Integer || o instanceof String);
+    }
 
   }
 

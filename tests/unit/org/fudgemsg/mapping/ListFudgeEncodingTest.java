@@ -26,6 +26,8 @@ import java.util.Currency;
 import java.util.LinkedList;
 import java.util.List;
 
+import static junit.framework.Assert.assertNull;
+
 
 /**
  * Test List Fudge encoding.
@@ -35,7 +37,7 @@ public class ListFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
 
   @Before
-  public void createWriter() {
+  public void registerSecondaryType() {
     getFudgeContext().getTypeDictionary().addType(MockCurrencySecondaryType.INSTANCE, Currency.class);
     getFudgeContext().getTypeDictionary().addTypeConverter(MockCurrencySecondaryType.INSTANCE, Currency.class);
   }
@@ -54,7 +56,7 @@ public class ListFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
   }
 
   @Test
-  public void testListContainingSeveralCurrency() throws IOException {
+  public void testListContainingSeveralCurrencies() throws IOException {
 
     List list = new LinkedList();
     list.add(Currency.getInstance("USD"));
@@ -70,7 +72,27 @@ public class ListFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
   }
 
   @Test
-  public void testListContainingSeveralCurrencyAndAString() throws IOException {
+  public void testListContainingSeveralCurrenciesAndNulls() throws IOException {
+
+    List list = new LinkedList();
+    list.add(Currency.getInstance("USD"));
+    list.add(Currency.getInstance("GBP"));
+    list.add(null);
+    list.add(null);
+    list.add(Currency.getInstance("EUR"));
+
+    List deserializedObject = cycleObject(list);
+
+    isInstanceOf(deserializedObject, List.class);
+    isInstanceOf(deserializedObject.get(0), Currency.class);
+    isInstanceOf(deserializedObject.get(1), Currency.class);
+    assertNull(deserializedObject.get(2));
+    assertNull(deserializedObject.get(3));
+    isInstanceOf(deserializedObject.get(4), Currency.class);
+  }
+
+  @Test
+  public void testListContainingSeveralCurrenciesAndAString() throws IOException {
 
     List list = new LinkedList();
     list.add(Currency.getInstance("USD"));

@@ -86,7 +86,9 @@ import org.fudgemsg.wire.types.FudgeWireType;
       } else {
         final Object value = field.getValue();
         final Object obj;
-        if (entryBuilder != null && value instanceof FudgeMsg) {
+        if(value instanceof IndicatorType){
+          obj = null;
+        } else if (entryBuilder != null && value instanceof FudgeMsg) {
           obj = entryBuilder.buildObject(deserializer, (FudgeMsg) value);
         } else if (typeConverter != null) {
           obj = typeConverter.primaryToSecondary(value);

@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,19 +15,14 @@
  */
 package org.fudgemsg.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.UnknownFudgeFieldValue;
+import org.fudgemsg.mapping.BuilderUtil;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * Utilities for testing.
@@ -36,19 +31,19 @@ public class FudgeUtils {
 
   /**
    * @param expectedMsg [documentation not available]
-   * @param actualMsg [documentation not available]
+   * @param actualMsg   [documentation not available]
    */
   public static void assertAllFieldsMatch(FudgeMsg expectedMsg, FudgeMsg actualMsg) {
     assertAllFieldsMatch(expectedMsg, actualMsg, true);
   }
 
   /**
-   * @param expectedMsg [documentation not available]
-   * @param actualMsg [documentation not available]
+   * @param expectedMsg       [documentation not available]
+   * @param actualMsg         [documentation not available]
    * @param fieldOrderMatters [documentation not available]
    */
   public static void assertAllFieldsMatch(FudgeMsg expectedMsg, FudgeMsg actualMsg,
-      boolean fieldOrderMatters) {
+                                          boolean fieldOrderMatters) {
     List<FudgeField> expectedFields = expectedMsg.getAllFields();
     List<FudgeField> actualFields = actualMsg.getAllFields();
     if (!fieldOrderMatters) {
@@ -93,7 +88,11 @@ public class FudgeUtils {
         assertEquals(expectedField.getValue(), actualField.getValue());
       }
     }
-    assertFalse(actualIter.hasNext());
+    if (actualIter.hasNext()) {
+      FudgeField fudgeField = actualIter.next();
+      assertFalse(fudgeField.getOrdinal() != BuilderUtil.KEY_TYPE_HINT_ORDINAL && fudgeField.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
+    }
+
   }
 
   private static List<FudgeField> order(List<FudgeField> expectedFields) {
@@ -132,8 +131,8 @@ public class FudgeUtils {
   }
 
   /**
-   * @param expected  the expected data
-   * @param actual  the actual data
+   * @param expected the expected data
+   * @param actual   the actual data
    */
   public static void assertArraysMatch(double[] expected, double[] actual) {
     assertEquals(expected.length, actual.length);
@@ -144,8 +143,8 @@ public class FudgeUtils {
   }
 
   /**
-   * @param expected  the expected data
-   * @param actual  the actual data
+   * @param expected the expected data
+   * @param actual   the actual data
    */
   public static void assertArraysMatch(float[] expected, float[] actual) {
     assertEquals(expected.length, actual.length);
@@ -156,8 +155,8 @@ public class FudgeUtils {
   }
 
   /**
-   * @param expected  the expected data
-   * @param actual  the actual data
+   * @param expected the expected data
+   * @param actual   the actual data
    */
   public static void assertArraysMatch(long[] expected, long[] actual) {
     assertEquals(expected.length, actual.length);
@@ -167,8 +166,8 @@ public class FudgeUtils {
   }
 
   /**
-   * @param expected  the expected data
-   * @param actual  the actual data
+   * @param expected the expected data
+   * @param actual   the actual data
    */
   public static void assertArraysMatch(int[] expected, int[] actual) {
     assertEquals(expected.length, actual.length);
@@ -178,8 +177,8 @@ public class FudgeUtils {
   }
 
   /**
-   * @param expected  the expected data
-   * @param actual  the actual data
+   * @param expected the expected data
+   * @param actual   the actual data
    */
   public static void assertArraysMatch(short[] expected, short[] actual) {
     assertEquals(expected.length, actual.length);
@@ -189,8 +188,8 @@ public class FudgeUtils {
   }
 
   /**
-   * @param expected  the expected data
-   * @param actual  the actual data
+   * @param expected the expected data
+   * @param actual   the actual data
    */
   public static void assertArraysMatch(byte[] expected, byte[] actual) {
     assertEquals(expected.length, actual.length);
