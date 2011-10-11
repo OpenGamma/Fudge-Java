@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,20 +16,19 @@
 
 package org.fudgemsg.mapping;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
+import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
+import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Builder for {@code Map} objects.
- * <p>
+ * <p/>
  * This builder is immutable and thread safe.
  */
 /* package */final class MapBuilder implements FudgeBuilder<Map<?, ?>> {
@@ -59,6 +58,15 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @Override
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Map<?, ?> map) {
     final MutableFudgeMsg msg = serializer.newMessage();
+
+    Class theCommonNonAbstractAncestorOfKeys = BuilderUtil.getCommonNonAbstractAncestorOfObjects(map.keySet());
+    Class theCommonNonAbstractAncestorOfValues = BuilderUtil.getCommonNonAbstractAncestorOfObjects(map.values());
+
+    if (theCommonNonAbstractAncestorOfKeys != null && theCommonNonAbstractAncestorOfValues != null) {
+      // we are hinting the Map that all its entries <Key, Value> should have common type
+      msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestorOfKeys.getName());
+      msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestorOfValues.getName());
+    }
     for (Map.Entry<?, ?> entry : map.entrySet()) {
       if (entry.getKey() == null) {
         msg.add(null, KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
@@ -79,10 +87,32 @@ import org.fudgemsg.wire.types.FudgeWireType;
     final Map<Object, Object> map = new HashMap<Object, Object>();
     final Queue<Object> keys = new LinkedList<Object>();
     final Queue<Object> values = new LinkedList<Object>();
+
+    final List<FudgeField> keysTypeHints = message.getAllByOrdinal(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
+    final List<FudgeField> valuesTypeHints = message.getAllByOrdinal(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
+
+    FudgeObjectBuilder<?> keyBuilder = BuilderUtil.findObjectBuilder(deserializer, keysTypeHints);
+    FudgeTypeConverter keyTypeConverter = BuilderUtil.findTypeConverter(deserializer, keysTypeHints);
+    FudgeObjectBuilder<?> valueBuilder = BuilderUtil.findObjectBuilder(deserializer, valuesTypeHints);
+    FudgeTypeConverter valueTypeConverter = BuilderUtil.findTypeConverter(deserializer, valuesTypeHints);
+
+
     for (FudgeField field : message) {
-      Object obj = deserializer.fieldValueToObject(field);
-      obj = (obj instanceof IndicatorType) ? null : obj;
+
+      final Object value = field.getValue();
+      Object obj;
+
       if (field.getOrdinal() != null && field.getOrdinal() == KEY_ORDINAL) {
+
+        if (keyBuilder != null && value instanceof FudgeMsg) {
+          obj = keyBuilder.buildObject(deserializer, (FudgeMsg) value);
+        } else if (keyTypeConverter != null) {
+          obj = keyTypeConverter.primaryToSecondary(value);
+        } else {
+          obj = deserializer.fieldValueToObject(field);
+        }
+        obj = (obj instanceof IndicatorType) ? null : obj;
+
         if (values.isEmpty()) {
           // no values ready, so store the key till next time
           keys.add(obj);
@@ -91,6 +121,16 @@ import org.fudgemsg.wire.types.FudgeWireType;
           map.put(obj, values.remove());
         }
       } else if (field.getOrdinal() != null && field.getOrdinal() == VALUE_ORDINAL) {
+
+        if (valueBuilder != null && value instanceof FudgeMsg) {
+          obj = valueBuilder.buildObject(deserializer, (FudgeMsg) value);
+        } else if (valueTypeConverter != null) {
+          obj = valueTypeConverter.primaryToSecondary(value);
+        } else {
+          obj = deserializer.fieldValueToObject(field);
+        }
+        obj = (obj instanceof IndicatorType) ? null : obj;
+
         if (keys.isEmpty()) {
           // no keys ready, so store the value till next time
           values.add(obj);
@@ -98,6 +138,8 @@ import org.fudgemsg.wire.types.FudgeWireType;
           // store value along with next key
           map.put(keys.remove(), obj);
         }
+      } else if (field.getOrdinal() != null && (field.getOrdinal() == BuilderUtil.KEY_TYPE_HINT_ORDINAL || field.getOrdinal() == BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
+        continue;
       } else {
         throw new IllegalArgumentException("Sub-message interpretted as a map but found invalid ordinal " + field + ")");
       }

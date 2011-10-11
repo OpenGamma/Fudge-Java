@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,15 +19,14 @@ package org.fudgemsg.mapping;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.MutableFudgeMsg;
+import org.fudgemsg.*;
+import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
 /**
  * Builder for {@code List} objects.
- * <p>
+ * <p/>
  * This builder is immutable and thread safe.
  */
 /* package */final class ListBuilder implements FudgeBuilder<List<?>> {
@@ -41,6 +40,11 @@ import org.fudgemsg.wire.types.FudgeWireType;
    */
   /* package */static final FudgeBuilder<List<?>> INSTANCE = new ListBuilder();
 
+  /**
+   * The ordinal to use for the list.
+   */
+  private static final int LIST_ORDINAL = 0;
+
   private ListBuilder() {
   }
 
@@ -48,11 +52,26 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @Override
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, List<?> list) {
     final MutableFudgeMsg msg = serializer.newMessage();
-    for (Object entry : list) {
-      if (entry == null) {
-        msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
-      } else {
-        serializer.addToMessageWithClassHeaders(msg, null, null, entry);
+
+    Class theCommonNonAbstractAncestor = BuilderUtil.getCommonNonAbstractAncestorOfObjects(list);
+    if (theCommonNonAbstractAncestor != null) {
+      // we are hinting the List that all its entries should have common type
+      msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestor.getName());
+      for (Object entry : list) {
+        if (entry == null) {
+          msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
+        } else {
+          serializer.addToMessage(msg, null, null, entry);
+          //serializer.addToMessageWithClassHeaders(msg, null, null, entry);
+        }
+      }
+    } else {
+      for (Object entry : list) {
+        if (entry == null) {
+          msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
+        } else {
+          serializer.addToMessageWithClassHeaders(msg, null, null, entry);
+        }
       }
     }
     return msg;
@@ -61,13 +80,30 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @Override
   public List<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final List<Object> list = new ArrayList<Object>();
+    final List<FudgeField> typeHints = message.getAllByOrdinal(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
+    FudgeObjectBuilder<?> listEntryBuilder = BuilderUtil.findObjectBuilder(deserializer, typeHints);
+    FudgeTypeConverter fudgeTypeConverter = BuilderUtil.findTypeConverter(deserializer, typeHints);
+
     for (FudgeField field : message) {
-      if ((field.getOrdinal() != null) && (field.getOrdinal() != 1)) {
+      if ((field.getOrdinal() != null) && (field.getOrdinal() != LIST_ORDINAL) && (field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
         throw new IllegalArgumentException("Sub-message interpretted as a list but found invalid ordinal " + field + ")");
       }
-      Object obj = deserializer.fieldValueToObject(field);
-      obj = (obj instanceof IndicatorType) ? null : obj;
-      list.add(obj);
+
+      if (field.getOrdinal() != null && field.getOrdinal() == BuilderUtil.VALUE_TYPE_HINT_ORDINAL) {
+        continue;
+      }
+
+      final Object value = field.getValue();
+      final Object obj;
+      if (listEntryBuilder != null && value instanceof FudgeMsg) {
+        obj = listEntryBuilder.buildObject(deserializer, (FudgeMsg) value);
+      } else if (fudgeTypeConverter != null) {
+        obj = fudgeTypeConverter.primaryToSecondary(value);
+      } else {
+        obj = deserializer.fieldValueToObject(field);
+      }
+      list.add((obj instanceof IndicatorType) ? null : obj);
+
     }
     return list;
   }

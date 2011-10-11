@@ -142,6 +142,7 @@ public class FudgeDeserializer {
     if (types.size() == 0) {
       // no types passed in ordinal zero
       int maxOrdinal = 0;
+      boolean typeHinted = false;
       for (FudgeField field : message) {
         if (field.getOrdinal() == null) {
           continue;
@@ -150,7 +151,7 @@ public class FudgeDeserializer {
           // not a list/set/map
           return message;
         }
-        if (field.getOrdinal() > maxOrdinal) {
+        if (field.getOrdinal() != BuilderUtil.KEY_TYPE_HINT_ORDINAL && field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL && field.getOrdinal() > maxOrdinal) {
           maxOrdinal = field.getOrdinal();
         }
       }
