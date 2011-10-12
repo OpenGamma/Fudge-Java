@@ -42,14 +42,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
    * Singleton instance of the builder.
    */
   /* package */static final FudgeBuilder<Map<?, ?>> INSTANCE = new MapBuilder();
-  /**
-   * The ordinal to use for the map key.
-   */
-  private static final int KEY_ORDINAL = 1;
-  /**
-   * The ordinal to use for the map value.
-   */
-  private static final int VALUE_ORDINAL = 2;
 
   private MapBuilder() {
   }
@@ -69,14 +61,14 @@ import org.fudgemsg.wire.types.FudgeWireType;
     }
     for (Map.Entry<?, ?> entry : map.entrySet()) {
       if (entry.getKey() == null) {
-        msg.add(null, KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
+        msg.add(null, BuilderUtil.KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        serializer.addToMessageWithClassHeaders(msg, null, KEY_ORDINAL, entry.getKey());
+        serializer.addToMessageWithClassHeaders(msg, null, BuilderUtil.KEY_ORDINAL, entry.getKey());
       }
       if (entry.getValue() == null) {
-        msg.add(null, VALUE_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
+        msg.add(null, BuilderUtil.VALUE_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        serializer.addToMessageWithClassHeaders(msg, null, VALUE_ORDINAL, entry.getValue());
+        serializer.addToMessageWithClassHeaders(msg, null, BuilderUtil.VALUE_ORDINAL, entry.getValue());
       }
     }
     return msg;
@@ -102,7 +94,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
       final Object value = field.getValue();
       Object obj;
 
-      if (field.getOrdinal() != null && field.getOrdinal() == KEY_ORDINAL) {
+      if (field.getOrdinal() != null && field.getOrdinal() == BuilderUtil.KEY_ORDINAL) {
 
         if(value instanceof IndicatorType){
           obj = null;
@@ -122,7 +114,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
           // store key along with next value
           map.put(obj, values.remove());
         }
-      } else if (field.getOrdinal() != null && field.getOrdinal() == VALUE_ORDINAL) {
+      } else if (field.getOrdinal() != null && field.getOrdinal() == BuilderUtil.VALUE_ORDINAL) {
 
         if(value instanceof IndicatorType){
           obj = null;

@@ -42,10 +42,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
    * Singleton instance of the {@link SetBuilder}.
    */
   /* package */static final FudgeBuilder<Set<?>> INSTANCE = new SetBuilder();
-  /**
-   * The ordinal to use for the set.
-   */
-  private static final int ORDINAL = 1;
 
   private SetBuilder() {
   }
@@ -58,13 +54,13 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
     if (theCommonNonAbstractAncestor != null) {
       // we are hinting the List that all its entries should have common type
-      msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestor.getName());
+      msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestor.getName());
     }
     for (Object entry : set) {
       if (entry == null) {
         msg.add(null, 1, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        serializer.addToMessageWithClassHeaders(msg, null, ORDINAL, entry);
+        serializer.addToMessageWithClassHeaders(msg, null, BuilderUtil.KEY_ORDINAL, entry);
       }
     }
     return msg;
@@ -74,14 +70,14 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public Set<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final Set<Object> set = new HashSet<Object>();
 
-    final List<FudgeField> typeHints = message.getAllByOrdinal(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
+    final List<FudgeField> typeHints = message.getAllByOrdinal(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
     FudgeObjectBuilder<?> entryBuilder = BuilderUtil.findObjectBuilder(deserializer, typeHints);
     FudgeTypeConverter typeConverter = BuilderUtil.findTypeConverter(deserializer, typeHints);
 
     for (FudgeField field : message) {
-      if ((field.getOrdinal() == null) && (field.getOrdinal() != ORDINAL) && (field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
+      if ((field.getOrdinal() == null) && (field.getOrdinal() != BuilderUtil.KEY_ORDINAL) && (field.getOrdinal() != BuilderUtil.KEY_TYPE_HINT_ORDINAL)) {
         throw new IllegalArgumentException("Sub-message interpretted as a set but found invalid ordinal " + field + ")");
-      } else if (field.getOrdinal() == BuilderUtil.VALUE_TYPE_HINT_ORDINAL) {
+      } else if (field.getOrdinal() == BuilderUtil.KEY_TYPE_HINT_ORDINAL) {
         continue;
       } else {
         final Object value = field.getValue();

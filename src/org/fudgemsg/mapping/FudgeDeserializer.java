@@ -16,8 +16,7 @@
 
 package org.fudgemsg.mapping;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
@@ -141,20 +140,31 @@ public class FudgeDeserializer {
     List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);
     if (types.size() == 0) {
       // no types passed in ordinal zero
-      int maxOrdinal = 0;
-      boolean typeHinted = false;
+      HashSet<Integer> ordinals = new HashSet<Integer>();
       for (FudgeField field : message) {
-        if (field.getOrdinal() == null) {
-          continue;
-        }
-        if (field.getOrdinal() < 0) {
-          // not a list/set/map
-          return message;
-        }
-        if (field.getOrdinal() != BuilderUtil.KEY_TYPE_HINT_ORDINAL && field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL && field.getOrdinal() > maxOrdinal) {
-          maxOrdinal = field.getOrdinal();
+        if (field.getOrdinal() != null) {
+          ordinals.add(field.getOrdinal());
         }
       }
+      HashSet<Integer> allowedCollectionOrdinals = new HashSet<Integer>();
+      allowedCollectionOrdinals.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
+      allowedCollectionOrdinals.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
+      allowedCollectionOrdinals.add(BuilderUtil.VALUE_ORDINAL);
+      allowedCollectionOrdinals.add(BuilderUtil.KEY_ORDINAL);
+
+      HashSet<Integer> allButAllowedCollectionOrdinals = new HashSet<Integer>(ordinals);
+      allButAllowedCollectionOrdinals.removeAll(allowedCollectionOrdinals);
+
+      if (allButAllowedCollectionOrdinals.size() > 0
+              || (ordinals.contains(BuilderUtil.KEY_TYPE_HINT_ORDINAL) && !ordinals.contains(BuilderUtil.KEY_ORDINAL))) {
+        // not a list/set/map
+        return message;
+      }
+      int maxOrdinal = 0;
+      for (Integer ordinal : ordinals) {
+        maxOrdinal = (maxOrdinal < ordinal ? ordinal : maxOrdinal);
+      }
+
       final Class<?> defaultClass = getFudgeContext().getObjectDictionary().getDefaultObjectClass(maxOrdinal);
       if (defaultClass != null) {
         return fudgeMsgToObject(defaultClass, message);

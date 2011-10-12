@@ -40,11 +40,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
    */
   /* package */static final FudgeBuilder<List<?>> INSTANCE = new ListBuilder();
 
-  /**
-   * The ordinal to use for the list.
-   */
-  private static final int LIST_ORDINAL = 0;
-
   private ListBuilder() {
   }
 
@@ -85,7 +80,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
     FudgeTypeConverter fudgeTypeConverter = BuilderUtil.findTypeConverter(deserializer, typeHints);
 
     for (FudgeField field : message) {
-      if ((field.getOrdinal() != null) && (field.getOrdinal() != LIST_ORDINAL) && (field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
+      if ((field.getOrdinal() != null) && (field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
         throw new IllegalArgumentException("Sub-message interpretted as a list but found invalid ordinal " + field + ")");
       }
 
