@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,24 +16,26 @@
 
 package org.fudgemsg.mapping;
 
-import java.util.*;
-
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Deserializer used to control the conversion of a Fudge message to an object structure.
- * <p>
+ * <p/>
  * This is the central point for Fudge message to Java Object deserialization on a given stream.
  * Note that the deserializer cannot process cyclic object graphs at present.
- * <p>
+ * <p/>
  * The object builder framework methods all take a deserialization context so that a
  * deserializer can refer any sub-messages to this for construction if it does not have
  * sufficient information to process them directly.
- * <p>
+ * <p/>
  * This class is mutable and intended for use by a single thread.
  */
 public class FudgeDeserializer {
@@ -49,17 +51,18 @@ public class FudgeDeserializer {
 
   /**
    * Creates a new context based on a parent context.
-   * 
-   * @param fudgeContext  the parent context to use, not null
+   *
+   * @param fudgeContext the parent context to use, not null
    */
   public FudgeDeserializer(final FudgeContext fudgeContext) {
     _fudgeContext = fudgeContext;
   }
 
   //-------------------------------------------------------------------------
+
   /**
    * Returns the associated {@link FudgeContext}.
-   * 
+   *
    * @return the {@code FudgeContext}.
    */
   public FudgeContext getFudgeContext() {
@@ -68,7 +71,7 @@ public class FudgeDeserializer {
 
   /**
    * Gets the buffer used to handle object graph cycles.
-   * 
+   *
    * @return the buffer, not null
    */
   private SerializationBuffer getSerialisationBuffer() {
@@ -76,9 +79,10 @@ public class FudgeDeserializer {
   }
 
   //-------------------------------------------------------------------------
+
   /**
    * Resets the buffers used for object graph logics.
-   * <p>
+   * <p/>
    * Calling {@code reset()} on this context should match a call to
    * {@link FudgeSerializer#reset()} on the context used by the serializer
    * to keep the states of both sender and receiver consistent.
@@ -88,13 +92,14 @@ public class FudgeDeserializer {
   }
 
   //-------------------------------------------------------------------------
+
   /**
    * Converts a field value to a Java object.
-   * <p>
+   * <p/>
    * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
    * A sub-message will be expanded through {@link #fudgeMsgToObject(FudgeMsg)}.
-   * 
-   * @param field  the field to convert, not null
+   *
+   * @param field the field to convert, not null
    * @return the deserialized object
    */
   public Object fieldValueToObject(final FudgeField field) {
@@ -108,13 +113,13 @@ public class FudgeDeserializer {
 
   /**
    * Converts a field value to a Java object with a specific type.
-   * <p>
+   * <p/>
    * This may be natively supported or a type known to the {@link FudgeTypeDictionary}.
-   * A sub-message will be expanded through {@link #fudgeMsgToObject(Class,FudgeMsg)}.
-   * 
-   * @param <T> target Java type to decode to
-   * @param clazz  the class of the target Java type to decode to, not null
-   * @param field  the value to convert, not null
+   * A sub-message will be expanded through {@link #fudgeMsgToObject(Class, FudgeMsg)}.
+   *
+   * @param <T>   target Java type to decode to
+   * @param clazz the class of the target Java type to decode to, not null
+   * @param field the value to convert, not null
    * @return the deserialized object
    */
   public <T> T fieldValueToObject(final Class<T> clazz, final FudgeField field) {
@@ -127,13 +132,14 @@ public class FudgeDeserializer {
   }
 
   //-------------------------------------------------------------------------
+
   /**
    * Converts a Fudge message to a best guess Java object.
-   * <p>
+   * <p/>
    * {@link List} and {@link Map} encodings are recognized and inflated.
    * Any other encodings require field ordinal 0 to include possible class names to use.
-   * 
-   * @param message  the message to deserialize, not null
+   *
+   * @param message the message to deserialize, not null
    * @return the deserialized object
    */
   public Object fudgeMsgToObject(final FudgeMsg message) {
@@ -155,17 +161,23 @@ public class FudgeDeserializer {
       HashSet<Integer> allButAllowedCollectionOrdinals = new HashSet<Integer>(ordinals);
       allButAllowedCollectionOrdinals.removeAll(allowedCollectionOrdinals);
 
-      if (allButAllowedCollectionOrdinals.size() > 0
-              || (ordinals.contains(BuilderUtil.KEY_TYPE_HINT_ORDINAL) && !ordinals.contains(BuilderUtil.KEY_ORDINAL))) {
+      if (allButAllowedCollectionOrdinals.size() > 0) {
         // not a list/set/map
         return message;
       }
-      int maxOrdinal = 0;
+      int typeIndicator = 0;
       for (Integer ordinal : ordinals) {
-        maxOrdinal = (maxOrdinal < ordinal ? ordinal : maxOrdinal);
+        typeIndicator = (typeIndicator < ordinal ? ordinal : typeIndicator);
+      }
+      if (typeIndicator == 0 && ordinals.size() > 0) {
+        if (ordinals.contains(BuilderUtil.KEY_TYPE_HINT_ORDINAL) && ordinals.contains(BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
+          typeIndicator = BuilderUtil.VALUE_ORDINAL;
+        } else if (ordinals.contains(BuilderUtil.KEY_TYPE_HINT_ORDINAL)) {
+          typeIndicator = BuilderUtil.KEY_ORDINAL;
+        }
       }
 
-      final Class<?> defaultClass = getFudgeContext().getObjectDictionary().getDefaultObjectClass(maxOrdinal);
+      final Class<?> defaultClass = getFudgeContext().getObjectDictionary().getDefaultObjectClass(typeIndicator);
       if (defaultClass != null) {
         return fudgeMsgToObject(defaultClass, message);
       }
@@ -194,14 +206,14 @@ public class FudgeDeserializer {
 
   /**
    * Converts a Fudge message to a specific Java type.
-   * <p>
+   * <p/>
    * The {@link FudgeObjectDictionary} is used to identify a builder to delegate to.
    * If the message includes class names in ordinal 0, these will be tested for a valid
    * builder and used if they will provide a subclass of the requested class.
-   * 
-   * @param <T> target Java type to decode to
-   * @param clazz  the class of the target Java type to decode to, not null
-   * @param message  the message to deserialize, not null
+   *
+   * @param <T>     target Java type to decode to
+   * @param clazz   the class of the target Java type to decode to, not null
+   * @param message the message to deserialize, not null
    * @return the deserialized object
    */
   @SuppressWarnings("unchecked")

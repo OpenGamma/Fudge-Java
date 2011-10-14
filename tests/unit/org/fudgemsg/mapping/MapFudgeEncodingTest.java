@@ -175,4 +175,13 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     isInstanceOf(deserializedObject.get("T"), String.class);
   }
 
+  @Test
+  public void testEmptyMap() {
+    Map map = new HashMap();
+
+    Object deserializedObject = cycleObject(map);
+
+    isInstanceOf(deserializedObject, HashMap.class);
+  }
+
 }

@@ -21,7 +21,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Currency;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertTrue;
 
@@ -139,6 +143,15 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
       assertTrue(o instanceof Byte || o instanceof Short || o instanceof Integer || o instanceof String);
     }
 
+  }
+
+  @Test
+  public void testEmptySet() {
+    Set set = new TreeSet();
+
+    Object deserializedObject = cycleObject(set);
+
+    isInstanceOf(deserializedObject, HashSet.class);
   }
 
 }

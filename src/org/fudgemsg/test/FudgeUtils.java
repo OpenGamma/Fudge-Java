@@ -52,10 +52,21 @@ public class FudgeUtils {
     }
     Iterator<FudgeField> expectedIter = expectedFields.iterator();
     Iterator<FudgeField> actualIter = actualFields.iterator();
+    FudgeField expectedField;
+    FudgeField actualField;
     while (expectedIter.hasNext()) {
+      expectedField = expectedIter.next();
+      // let's skip negative ordinals
+      while (expectedField.getOrdinal() != null && expectedField.getOrdinal() < 0){
+        expectedField = expectedIter.next();
+      }
       assertTrue(actualIter.hasNext());
-      FudgeField expectedField = expectedIter.next();
-      FudgeField actualField = actualIter.next();
+      actualField = actualIter.next();
+      // let's skip negative ordinals
+      while (actualField.getOrdinal() != null && actualField.getOrdinal() < 0){
+        assertTrue(actualIter.hasNext());
+        actualField = actualIter.next();
+      }
       assertEquals(expectedField.getName(), actualField.getName());
       assertEquals(expectedField.getType(), actualField.getType());
       assertEquals(expectedField.getOrdinal(), actualField.getOrdinal());

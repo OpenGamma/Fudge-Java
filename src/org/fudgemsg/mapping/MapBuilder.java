@@ -54,7 +54,10 @@ import org.fudgemsg.wire.types.FudgeWireType;
     Class theCommonNonAbstractAncestorOfKeys = BuilderUtil.getCommonNonAbstractAncestorOfObjects(map.keySet());
     Class theCommonNonAbstractAncestorOfValues = BuilderUtil.getCommonNonAbstractAncestorOfObjects(map.values());
 
-    if (theCommonNonAbstractAncestorOfKeys != null && theCommonNonAbstractAncestorOfValues != null) {
+    if (map.isEmpty()) {
+      msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
+      msg.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL, null);
+    } else if (theCommonNonAbstractAncestorOfKeys != null && theCommonNonAbstractAncestorOfValues != null) {
       // we are hinting the Map that all its entries <Key, Value> should have common type
       msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestorOfKeys.getName());
       msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestorOfValues.getName());

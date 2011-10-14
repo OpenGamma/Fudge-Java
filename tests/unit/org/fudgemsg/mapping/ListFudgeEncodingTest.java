@@ -17,11 +17,11 @@ package org.fudgemsg.mapping;
 
 
 import org.fudgemsg.AbstractFudgeBuilderTestCase;
-import org.fudgemsg.wire.MockIntegerSecondaryType;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.LinkedList;
 import java.util.List;
@@ -102,11 +102,21 @@ public class ListFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
     List deserializedObject = cycleObject(list);
 
-    isInstanceOf(deserializedObject, List.class);
+    isInstanceOf(deserializedObject, ArrayList.class);
     isInstanceOf(deserializedObject.get(0), Byte.class);
     isInstanceOf(deserializedObject.get(1), Short.class);
     isInstanceOf(deserializedObject.get(2), Integer.class);
     isInstanceOf(deserializedObject.get(3), String.class);
   }
+
+  @Test
+  public void testEmptySet() {
+    List list = new LinkedList();
+
+    Object deserializedObject = cycleObject(list);
+
+    isInstanceOf(deserializedObject, ArrayList.class);
+  }
+
 
 }

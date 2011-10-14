@@ -52,8 +52,10 @@ import org.fudgemsg.wire.types.FudgeWireType;
     Class theCommonNonAbstractAncestor = BuilderUtil.getCommonNonAbstractAncestorOfObjects(set);
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    if (theCommonNonAbstractAncestor != null) {
-      // we are hinting the List that all its entries should have common type
+    if (set.isEmpty()) {
+      msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
+    } else if (theCommonNonAbstractAncestor != null) {
+      // we are hinting the Set that all its entries should have common type
       msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestor.getName());
     }
     for (Object entry : set) {
