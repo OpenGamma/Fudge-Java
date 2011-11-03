@@ -16,15 +16,14 @@
 
 package org.fudgemsg.mapping;
 
+import java.util.List;
+import java.util.Map;
+
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.FudgeTypeDictionary;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Deserializer used to control the conversion of a Fudge message to an object structure.
@@ -146,36 +145,48 @@ public class FudgeDeserializer {
     List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);
     if (types.size() == 0) {
       // no types passed in ordinal zero
-      HashSet<Integer> ordinals = new HashSet<Integer>();
+      
+      
+      //This loop is long, so Set implementations are too slow
+      boolean valueTypeHintPresent = false;
+      boolean keyTypeHintPresent = false;
+      boolean valueOrdinalPresent = false;
+      boolean keyOrdinalPresent = false;
+      
       for (FudgeField field : message) {
         if (field.getOrdinal() != null) {
-          ordinals.add(field.getOrdinal());
+          switch (field.getOrdinal()) {
+            case BuilderUtil.VALUE_TYPE_HINT_ORDINAL:
+              valueTypeHintPresent =true;
+              break;
+            case BuilderUtil.KEY_TYPE_HINT_ORDINAL:
+              keyTypeHintPresent =true;
+              break;
+            case BuilderUtil.VALUE_ORDINAL:
+              valueOrdinalPresent =true;
+              break;
+            case BuilderUtil.KEY_ORDINAL:
+              keyOrdinalPresent =true;
+              break;
+            default:
+              // not a list/set/map
+              return message;
+          }
+         
         }
       }
-      HashSet<Integer> allowedCollectionOrdinals = new HashSet<Integer>();
-      allowedCollectionOrdinals.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
-      allowedCollectionOrdinals.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
-      allowedCollectionOrdinals.add(BuilderUtil.VALUE_ORDINAL);
-      allowedCollectionOrdinals.add(BuilderUtil.KEY_ORDINAL);
-
-      HashSet<Integer> allButAllowedCollectionOrdinals = new HashSet<Integer>(ordinals);
-      allButAllowedCollectionOrdinals.removeAll(allowedCollectionOrdinals);
-
-      if (allButAllowedCollectionOrdinals.size() > 0) {
-        // not a list/set/map
-        return message;
-      }
+      
       int typeIndicator = 0;
-      for (Integer ordinal : ordinals) {
-        typeIndicator = (typeIndicator < ordinal ? ordinal : typeIndicator);
+      if (valueOrdinalPresent) {
+        typeIndicator = BuilderUtil.VALUE_ORDINAL;
+      } else if (keyOrdinalPresent) {
+        typeIndicator = BuilderUtil.KEY_ORDINAL;
+      } else if (keyTypeHintPresent && valueTypeHintPresent) {
+        typeIndicator = BuilderUtil.VALUE_ORDINAL;
+      } else if (keyTypeHintPresent) {
+        typeIndicator = BuilderUtil.KEY_ORDINAL;
       }
-      if (typeIndicator == 0 && ordinals.size() > 0) {
-        if (ordinals.contains(BuilderUtil.KEY_TYPE_HINT_ORDINAL) && ordinals.contains(BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
-          typeIndicator = BuilderUtil.VALUE_ORDINAL;
-        } else if (ordinals.contains(BuilderUtil.KEY_TYPE_HINT_ORDINAL)) {
-          typeIndicator = BuilderUtil.KEY_ORDINAL;
-        }
-      }
+      
 
       final Class<?> defaultClass = getFudgeContext().getObjectDictionary().getDefaultObjectClass(typeIndicator);
       if (defaultClass != null) {
