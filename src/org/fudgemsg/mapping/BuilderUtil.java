@@ -16,11 +16,11 @@
 
 package org.fudgemsg.mapping;
 
+import java.util.List;
+
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.types.FudgeTypeConverter;
-
-import java.util.List;
 
 /**
  * Utility methods for collection builders.
@@ -35,22 +35,22 @@ import java.util.List;
   /**
    * Oridinal dedicated for value type hinting in List, Maps and Sets
    */
-  public static int VALUE_TYPE_HINT_ORDINAL = -2;
+  public final static int VALUE_TYPE_HINT_ORDINAL = -2;
 
   /**
    * Oridinal dedicated for key type hinting in Maps
    */
-  public static int KEY_TYPE_HINT_ORDINAL = -1;
+  public final static int KEY_TYPE_HINT_ORDINAL = -1;
 
   /**
    * Oridinal for storing map's keys or set entries
    */
-  public static int KEY_ORDINAL = 1;
+  public final  static int KEY_ORDINAL = 1;
 
   /**
    * Oridinal for storing map's values
    */
-  public static int VALUE_ORDINAL = 2;
+  public final static int VALUE_ORDINAL = 2;
 
   static Class getCommonNonAbstractAncestorOfObjects(Iterable<?> collection) {
     Class theCommonNonAbstractAncestor = null;
