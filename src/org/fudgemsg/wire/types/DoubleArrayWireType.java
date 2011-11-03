@@ -48,10 +48,15 @@ final class DoubleArrayWireType extends FudgeWireType {
 
   @Override
   public double[] readValue(DataInput input, int dataSize) throws IOException {
+    //Reading this in one go is faster, but increases memory requirement by x2. Should do it in buffered chunks
+    byte[] bytes = new byte[dataSize];
+    input.readFully(bytes);
+    
     int nDoubles = dataSize / 8;
     double[] result = new double[nDoubles];
     for (int i = 0; i < nDoubles; i++) {
-      result[i] = input.readDouble();
+      long l = LongArrayWireType.readLong(bytes, (i*8));
+      result[i] = Double.longBitsToDouble(l);
     }
     return result;
   }

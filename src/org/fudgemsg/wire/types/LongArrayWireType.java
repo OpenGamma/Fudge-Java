@@ -48,13 +48,33 @@ final class LongArrayWireType extends FudgeWireType {
 
   @Override
   public long[] readValue(DataInput input, int dataSize) throws IOException {
-    int nLongs = dataSize / 8;
-    long[] result = new long[nLongs];
-    for (int i = 0; i < nLongs; i++) {
-      result[i] = input.readLong();
+    //Reading this in one go is faster, but increases memory requirement by x2.  Should do it in buffered chunks
+    byte[] bytes = new byte[dataSize];
+    input.readFully(bytes);
+    
+    int nDoubles = dataSize / 8;
+    long[] result = new long[nDoubles];
+    for (int i = 0; i < nDoubles; i++) {
+      long l = readLong(bytes, i*8);
+      result[i] = l;
     }
     return result;
   }
+
+  public static final long readLong(byte[] buff, int offset) {
+    //Fudge spec requires Network Byte Order
+    
+    long a = (long) buff[0 + offset] << 56;
+    long b = (long) (buff[1 + offset] & 255) << 48;
+    long c = (long) (buff[2 + offset] & 255) << 40;
+    long d = (long) (buff[3 + offset] & 255) << 32;
+    long e = (long) (buff[4 + offset] & 255) << 24;
+    long f = (buff[5 + offset] & 255) << 16;
+    long g = ((buff[6 + offset] & 255) << 8);
+    int h = (buff[7 + offset] & 255) << 0;
+    return a + b + c + d + e + f + g + h;
+  }
+
 
   @Override
   public void writeValue(DataOutput output, Object value) throws IOException {
