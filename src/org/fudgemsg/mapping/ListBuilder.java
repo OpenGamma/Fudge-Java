@@ -18,6 +18,7 @@ package org.fudgemsg.mapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.fudgemsg.*;
 import org.fudgemsg.types.FudgeTypeConverter;
@@ -48,27 +49,21 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, List<?> list) {
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    Class theCommonNonAbstractAncestor = BuilderUtil.getCommonNonAbstractAncestorOfObjects(list);
+    Set<Class> topTypesKeys = BuilderUtil.getTopTypes(list);
 
     if (list.isEmpty()) {
       msg.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL, null);
-    } else if (theCommonNonAbstractAncestor != null) {
-      // we are hinting the List that all its entries should have common type
-      msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestor.getName());
+    } else {
+      for (Class topType : topTypesKeys) {
+        // we are hinting the List that all its entries should have common type
+        msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
+      }
+
       for (Object entry : list) {
         if (entry == null) {
           msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
         } else {
           serializer.addToMessage(msg, null, null, entry);
-          //serializer.addToMessageWithClassHeaders(msg, null, null, entry);
-        }
-      }
-    } else {
-      for (Object entry : list) {
-        if (entry == null) {
-          msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
-        } else {
-          serializer.addToMessageWithClassHeaders(msg, null, null, entry);
         }
       }
     }

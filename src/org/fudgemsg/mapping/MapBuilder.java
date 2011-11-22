@@ -51,27 +51,32 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Map<?, ?> map) {
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    Class theCommonNonAbstractAncestorOfKeys = BuilderUtil.getCommonNonAbstractAncestorOfObjects(map.keySet());
-    Class theCommonNonAbstractAncestorOfValues = BuilderUtil.getCommonNonAbstractAncestorOfObjects(map.values());
+    Set<Class> topTypesKeys = BuilderUtil.getTopTypes(map.keySet());
+    Set<Class> topTypesValues = BuilderUtil.getTopTypes(map.values());
 
     if (map.isEmpty()) {
       msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
       msg.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL, null);
-    } else if (theCommonNonAbstractAncestorOfKeys != null && theCommonNonAbstractAncestorOfValues != null) {
+    } else {
       // we are hinting the Map that all its entries <Key, Value> should have common type
-      msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestorOfKeys.getName());
-      msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestorOfValues.getName());
+      for (Class topType : topTypesKeys) {
+        msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
+      }
+      for (Class topType : topTypesValues) {
+        msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
+      }
+
     }
     for (Map.Entry<?, ?> entry : map.entrySet()) {
       if (entry.getKey() == null) {
         msg.add(null, BuilderUtil.KEY_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        serializer.addToMessageWithClassHeaders(msg, null, BuilderUtil.KEY_ORDINAL, entry.getKey());
+        serializer.addToMessage(msg, null, BuilderUtil.KEY_ORDINAL, entry.getKey());
       }
       if (entry.getValue() == null) {
         msg.add(null, BuilderUtil.VALUE_ORDINAL, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        serializer.addToMessageWithClassHeaders(msg, null, BuilderUtil.VALUE_ORDINAL, entry.getValue());
+        serializer.addToMessage(msg, null, BuilderUtil.VALUE_ORDINAL, entry.getValue());
       }
     }
     return msg;

@@ -49,20 +49,23 @@ import org.fudgemsg.wire.types.FudgeWireType;
   //-------------------------------------------------------------------------
   @Override
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Set<?> set) {
-    Class theCommonNonAbstractAncestor = BuilderUtil.getCommonNonAbstractAncestorOfObjects(set);
+
+    Set<Class> topTypesKeys = BuilderUtil.getTopTypes(set);
     final MutableFudgeMsg msg = serializer.newMessage();
 
     if (set.isEmpty()) {
       msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
-    } else if (theCommonNonAbstractAncestor != null) {
+    } else {
       // we are hinting the Set that all its entries should have common type
-      msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, theCommonNonAbstractAncestor.getName());
+      for (Class topType : topTypesKeys) {
+        msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
+      }
     }
     for (Object entry : set) {
       if (entry == null) {
         msg.add(null, 1, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
       } else {
-        serializer.addToMessageWithClassHeaders(msg, null, BuilderUtil.KEY_ORDINAL, entry);
+        serializer.addToMessage(msg, null, BuilderUtil.KEY_ORDINAL, entry);
       }
     }
     return msg;

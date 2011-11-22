@@ -16,14 +16,21 @@
 
 package org.fudgemsg.mapping;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang.ClassUtils;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.types.FudgeTypeConverter;
 
 /**
- * Utility methods for collection builders.
+ * Utility methods for objects builders.
  * <p/>
  * This builder is immutable and thread safe.
  */
@@ -52,28 +59,41 @@ import org.fudgemsg.types.FudgeTypeConverter;
    */
   public final static int VALUE_ORDINAL = 2;
 
-  static Class getCommonNonAbstractAncestorOfObjects(Iterable<?> collection) {
-    Class theCommonNonAbstractAncestor = null;
-    for (Object entry : collection) {
-      if (entry != null) {
-        if (theCommonNonAbstractAncestor == null) {
-          theCommonNonAbstractAncestor = entry.getClass();
-        } else {
-          if (theCommonNonAbstractAncestor.isAssignableFrom(entry.getClass())) {
-            // it is superclass of entry.getClass() so we do not change it.
-          } else if (entry.getClass().isAssignableFrom(theCommonNonAbstractAncestor)) {
-            theCommonNonAbstractAncestor = entry.getClass();
-          } else {
-            // we have at least two classes laying on different hierarchy paths
-            theCommonNonAbstractAncestor = null;
-            break;
+
+  static Set<Class> getTopTypes(Collection<?> objects) {
+    // number of non null objects
+    int size = 0;
+    for (Object o : objects) {
+      if(o != null){
+        size += 1;
+      }
+    }
+    Set<Class> topTypes = new HashSet<Class>();
+    Map<Class, AtomicInteger> allTypes = new HashMap<Class, AtomicInteger>();
+    for (Object o : objects) {
+      if (o != null) {
+        allTypes.put(o.getClass(), new AtomicInteger());
+        for (Class clazz : (List<Class>) ClassUtils.getAllSuperclasses(o.getClass())) {
+          allTypes.put(clazz, new AtomicInteger());
+        }
+        for (Class clazz : (List<Class>) ClassUtils.getAllInterfaces(o.getClass())) {
+          allTypes.put(clazz, new AtomicInteger());
+        }
+      }
+    }
+
+    for (Class allType : allTypes.keySet()) {
+      for (Object o : objects) {
+        if (o != null && allType.isAssignableFrom(o.getClass())) {
+          if (allTypes.get(allType).incrementAndGet() == size) {
+            topTypes.add(allType);
           }
         }
       }
     }
-    return theCommonNonAbstractAncestor;
-  }
 
+    return topTypes;
+  }
 
   static FudgeObjectBuilder findObjectBuilder(FudgeDeserializer deserializer, List<FudgeField> fields) {
     FudgeObjectBuilder<?> objectBuilder = null;
