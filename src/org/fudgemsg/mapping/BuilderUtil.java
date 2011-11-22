@@ -16,18 +16,21 @@
 
 package org.fudgemsg.mapping;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.commons.lang.ClassUtils;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.types.FudgeTypeConverter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Utility methods for objects builders.
@@ -52,7 +55,7 @@ import org.fudgemsg.types.FudgeTypeConverter;
   /**
    * Oridinal for storing map's keys or set entries
    */
-  public final  static int KEY_ORDINAL = 1;
+  public final static int KEY_ORDINAL = 1;
 
   /**
    * Oridinal for storing map's values
@@ -60,11 +63,11 @@ import org.fudgemsg.types.FudgeTypeConverter;
   public final static int VALUE_ORDINAL = 2;
 
 
-  static Set<Class> getTopTypes(Collection<?> objects) {
+  static List<Class> getTopTypes(Collection<?> objects) {
     // number of non null objects
     int size = 0;
     for (Object o : objects) {
-      if(o != null){
+      if (o != null) {
         size += 1;
       }
     }
@@ -92,7 +95,64 @@ import org.fudgemsg.types.FudgeTypeConverter;
       }
     }
 
-    return topTypes;
+    return reverse(topologicalSort(resolveTypeHierarchy(topTypes)));
+  }
+
+  private static <T> List<T> reverse(List<T> list) {
+    LinkedList<T> l = new LinkedList<T>();
+    for (T t : list) {
+      l.addFirst(t);
+    }
+    return l;
+  }
+
+  private static <T> List<T> topologicalSort(final Map<T, Set<T>> entries) {
+    List<T> sortedResult = new ArrayList<T>();
+    Set<T> marked = new HashSet<T>();
+    for (T s : entries.keySet()) {
+      if(!marked.contains(s))
+        topologicalSort(s, entries, marked, sortedResult);
+    }
+    return sortedResult;
+  }
+
+  private static <T> void topologicalSort(final T s, final Map<T, Set<T>> entries, final Set<T> marked, final List<T> sortedResult) {
+    if (!marked.contains(s)) {
+      for (T t : entries.get(s)) {
+        if (!marked.contains(t)) {
+          marked.add(t);
+          topologicalSort(t, entries, marked, sortedResult);
+        }
+      }
+    }
+    sortedResult.add(s);
+  }
+
+  private static Map<Class, Set<Class>> resolveTypeHierarchy(Collection<Class> classes) {
+    Map<Class, Set<Class>> hierarchy = new HashMap<Class, Set<Class>>();
+    Set<Class> addedTypes = resolveTypeHierarchy(classes, hierarchy);
+    while (addedTypes.size() > 0) {
+      addedTypes = resolveTypeHierarchy(addedTypes, hierarchy);
+    }
+    return hierarchy;
+  }
+
+  private static Set<Class> resolveTypeHierarchy(Collection<Class> classes, Map<Class, Set<Class>> hierarchy) {
+    Set<Class> addedTypes = new HashSet<Class>();
+    for (Class cls : classes) {
+      Set<Class> types = hierarchy.get(cls);
+      if (types == null) {
+        types = new HashSet<Class>();
+        hierarchy.put(cls, types);
+      }
+      Collections.addAll(types, cls.getInterfaces());
+      Collections.addAll(addedTypes, cls.getInterfaces());
+      if (cls.getSuperclass() != null) {
+        types.add(cls.getSuperclass());
+        addedTypes.add(cls.getSuperclass());
+      }
+    }
+    return addedTypes;
   }
 
   static FudgeObjectBuilder findObjectBuilder(FudgeDeserializer deserializer, List<FudgeField> fields) {

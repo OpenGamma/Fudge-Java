@@ -50,7 +50,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @Override
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Set<?> set) {
 
-    Set<Class> topTypesKeys = BuilderUtil.getTopTypes(set);
+    List<Class> topTypesKeys = BuilderUtil.getTopTypes(set);
     final MutableFudgeMsg msg = serializer.newMessage();
 
     if (set.isEmpty()) {

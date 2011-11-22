@@ -49,7 +49,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, List<?> list) {
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    Set<Class> topTypesKeys = BuilderUtil.getTopTypes(list);
+    List<Class> topTypesKeys = BuilderUtil.getTopTypes(list);
 
     if (list.isEmpty()) {
       msg.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL, null);

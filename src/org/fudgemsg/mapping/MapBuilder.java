@@ -51,8 +51,8 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Map<?, ?> map) {
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    Set<Class> topTypesKeys = BuilderUtil.getTopTypes(map.keySet());
-    Set<Class> topTypesValues = BuilderUtil.getTopTypes(map.values());
+    List<Class> topTypesKeys = BuilderUtil.getTopTypes(map.keySet());
+    List<Class> topTypesValues = BuilderUtil.getTopTypes(map.values());
 
     if (map.isEmpty()) {
       msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
