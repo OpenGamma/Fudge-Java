@@ -21,6 +21,7 @@ import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.types.FudgeTypeConverter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -94,8 +95,12 @@ import java.util.concurrent.atomic.AtomicInteger;
         }
       }
     }
-
-    return reverse(topologicalSort(resolveTypeHierarchy(topTypes)));
+    Map<Class, Set<Class>> typeHierarchy = resolveTypeHierarchy(topTypes);
+    typeHierarchy.remove(Object.class);
+    typeHierarchy.remove(Serializable.class);
+    typeHierarchy.remove(Comparable.class);
+    typeHierarchy.remove(String.class);
+    return reverse(topologicalSort(typeHierarchy));
   }
 
   private static <T> List<T> reverse(List<T> list) {
@@ -119,12 +124,13 @@ import java.util.concurrent.atomic.AtomicInteger;
   private static <T> void topologicalSort(final T s, final Map<T, Set<T>> entries, final Set<T> marked, final List<T> sortedResult) {
     if (!marked.contains(s)) {
       for (T t : entries.get(s)) {
-        if (!marked.contains(t)) {
+        if (entries.containsKey(t) && !marked.contains(t)) {
           marked.add(t);
           topologicalSort(t, entries, marked, sortedResult);
         }
       }
     }
+    marked.add(s);
     sortedResult.add(s);
   }
 
