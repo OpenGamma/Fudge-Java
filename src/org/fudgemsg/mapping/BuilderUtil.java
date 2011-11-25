@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.fudgemsg.util.TopologicalSort.reverse;
+import static org.fudgemsg.util.TopologicalSort.topologicalSort;
+
 /**
  * Utility methods for objects builders.
  * <p/>
@@ -101,37 +104,6 @@ import java.util.concurrent.atomic.AtomicInteger;
     typeHierarchy.remove(Comparable.class);
     typeHierarchy.remove(String.class);
     return reverse(topologicalSort(typeHierarchy));
-  }
-
-  private static <T> List<T> reverse(List<T> list) {
-    LinkedList<T> l = new LinkedList<T>();
-    for (T t : list) {
-      l.addFirst(t);
-    }
-    return l;
-  }
-
-  private static <T> List<T> topologicalSort(final Map<T, Set<T>> entries) {
-    List<T> sortedResult = new ArrayList<T>();
-    Set<T> marked = new HashSet<T>();
-    for (T s : entries.keySet()) {
-      if(!marked.contains(s))
-        topologicalSort(s, entries, marked, sortedResult);
-    }
-    return sortedResult;
-  }
-
-  private static <T> void topologicalSort(final T s, final Map<T, Set<T>> entries, final Set<T> marked, final List<T> sortedResult) {
-    if (!marked.contains(s)) {
-      for (T t : entries.get(s)) {
-        if (entries.containsKey(t) && !marked.contains(t)) {
-          marked.add(t);
-          topologicalSort(t, entries, marked, sortedResult);
-        }
-      }
-    }
-    marked.add(s);
-    sortedResult.add(s);
   }
 
   private static Map<Class, Set<Class>> resolveTypeHierarchy(Collection<Class> classes) {

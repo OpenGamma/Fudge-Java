@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.util.Currency;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -184,4 +185,15 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     isInstanceOf(deserializedObject, HashMap.class);
   }
 
+  @Test
+  public void testTypesHierarchy() {
+    Map map = new HashMap();
+
+    map.put(1, new HashSet<String>());
+    map.put(2, new HashSet<String>());
+
+    Object deserializedObject = cycleObject(map);
+
+    isInstanceOf(deserializedObject, HashMap.class);
+  }
 }
