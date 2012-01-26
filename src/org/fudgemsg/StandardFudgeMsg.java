@@ -18,6 +18,7 @@ package org.fudgemsg;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.types.IndicatorType;
@@ -180,6 +181,36 @@ public class StandardFudgeMsg extends AbstractFudgeMsg implements MutableFudgeMs
       type = unknownValue.getType();
     }
     return type;
+  }
+
+  //-------------------------------------------------------------------------
+  @Override
+  public MutableFudgeMsg addSubMessage(String name, Integer ordinal) {
+    MutableFudgeMsg subMsg = getFudgeContext().newMessage();
+    UnmodifiableFudgeField field = UnmodifiableFudgeField.of(FudgeWireType.SUB_MESSAGE, subMsg, name, ordinal);
+    getFields().add(field);
+    return subMsg;
+  }
+
+  @Override
+  public MutableFudgeMsg ensureSubMessage(String name, Integer ordinal) {
+    for (ListIterator<FudgeField> it = getFields().listIterator(); it.hasNext(); ) {
+      FudgeField field = (FudgeField) it.next();
+      Object value = field.getValue();
+      if (FudgeWireType.SUB_MESSAGE.equals(field.getType()) && 
+          fieldNameEquals(name, field) && fieldOrdinalEquals(ordinal, field)) {
+        if (value instanceof MutableFudgeMsg) {
+          // already mutable
+          return (MutableFudgeMsg) value;
+        } else if (value instanceof FudgeMsg) {
+          // make it mutable
+          MutableFudgeMsg subMsg = getFudgeContext().newMessage((FudgeMsg) value);
+          it.set(UnmodifiableFudgeField.of(FudgeWireType.SUB_MESSAGE, subMsg, name, ordinal));
+          return subMsg;
+        }
+      }
+    }
+    return addSubMessage(name, ordinal);
   }
 
   //-------------------------------------------------------------------------

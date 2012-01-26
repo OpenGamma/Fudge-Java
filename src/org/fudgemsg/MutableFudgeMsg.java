@@ -78,6 +78,27 @@ public interface MutableFudgeMsg extends FudgeMsg {
 
   //-------------------------------------------------------------------------
   /**
+   * Adds a sub-message with the given name and ordinal.
+   * 
+   * @param name  the name of the field, null for none
+   * @param ordinal  the ordinal index for the field, null for none
+   * @return the created sub-message, not null
+   */
+  public MutableFudgeMsg addSubMessage(String name, Integer ordinal);
+
+  /**
+   * Ensures that a sub-message exists with the given name and ordinal.
+   * <p>
+   * This creates a sub-message if one does not exist already.
+   * 
+   * @param name  the name of the field, null for none
+   * @param ordinal  the ordinal index for the field, null for none
+   * @return the sub-message, either existing or created, not null
+   */
+  public MutableFudgeMsg ensureSubMessage(String name, Integer ordinal);
+
+  //-------------------------------------------------------------------------
+  /**
    * Removes all fields with the given name.
    * 
    * @param name  name of the fields, null matches fields without a name
