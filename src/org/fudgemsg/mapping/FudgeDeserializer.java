@@ -16,14 +16,11 @@
 
 package org.fudgemsg.mapping;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.FudgeRuntimeException;
-import org.fudgemsg.FudgeTypeDictionary;
+import org.fudgemsg.*;
 
 /**
  * Deserializer used to control the conversion of a Fudge message to an object structure.
@@ -233,10 +230,9 @@ public class FudgeDeserializer {
       return (T) message;
     }
     FudgeObjectBuilder<T> builder;
-    Exception lastError = null;
-    /*if (clazz == Object.class) {
-      System.out.println(message);
-    }*/
+    List<Exception> exceptions = new ArrayList<Exception>();
+    Exception lastException = null;
+
     List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);
     if (types.size() != 0) {
       // types passed in ordinal zero - use it if we can
@@ -259,7 +255,8 @@ public class FudgeDeserializer {
             // ignore
           } catch (Exception ex) {
             //e.printStackTrace();
-            lastError = ex;
+            exceptions.add(ex);
+            lastException = ex;
           }
         }
       }
@@ -271,14 +268,15 @@ public class FudgeDeserializer {
       try {
         return builder.buildObject(this, message);
       } catch (Exception ex) {
-        lastError = ex;
+        exceptions.add(ex);
+        lastException = ex;
       }
     }
     // nothing matched
-    if (lastError != null) {
-      throw new FudgeRuntimeException("Unable to create " + clazz + " from " + message, lastError);
+    if (lastException == null) {
+      throw new IllegalArgumentException("Unable to create " + clazz + " from " + message);      
     } else {
-      throw new IllegalArgumentException("Unable to create " + clazz + " from " + message);
+      throw new FudgeRuntimeContextException("Unable to create " + clazz + " from " + message, lastException, exceptions);
     }
   }
 

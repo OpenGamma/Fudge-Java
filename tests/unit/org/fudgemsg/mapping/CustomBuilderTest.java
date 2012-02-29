@@ -16,11 +16,11 @@
 
 package org.fudgemsg.mapping;
 
-import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeMsg;
-import org.fudgemsg.MutableFudgeMsg;
-import org.fudgemsg.FudgeRuntimeException;
+import org.fudgemsg.*;
 import org.junit.Test;
+
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -272,26 +272,30 @@ public class CustomBuilderTest {
     assert pmHorse2.equals (pmHorse);
     assert pmCow2.equals (pmCow);
   }
-  
+
   /**
-   * 
+   *
    */
   @Test
-  public void subclassBuilderTest () {
-    final FudgeContext fc = new FudgeContext ();
+  public void subclassBuilderTest() {
+    final FudgeContext fc = new FudgeContext();
     // the defaults should fail because of the interface
     try {
-      subclassBuilder (fc);
-      fail ("exception should have been raised");
+      subclassBuilder(fc);
+      fail("exception should have been raised");
     } catch (FudgeRuntimeException fre) {
-      fre.printStackTrace ();
-      final String expectedMessage = "Unable to create interface " + FooInterface.class.getName ();
-      assertEquals (expectedMessage, fre.getCause ().getCause ().getCause ().getMessage ().substring (0, expectedMessage.length ()));
+      fre.printStackTrace();
+      final String expectedMessage = "Unable to create interface " + FooInterface.class.getName();
+      List<Exception> exceptions = ((List<Exception>) ((FudgeRuntimeContextException) fre).getContext());
+      Exception lastException = exceptions.get(exceptions.size() - 1);
+      assertEquals(expectedMessage, lastException.getCause().getCause().getMessage().substring(0, expectedMessage.length()));
+      
+      assertEquals(expectedMessage, fre.getCause().getCause().getCause().getMessage().substring(0, expectedMessage.length()));
     }
     // a custom builder for our implementation should fix it
-    fc.getObjectDictionary ().addBuilder (FooHorse.class, new FooHorse.Builder ());
-    fc.getObjectDictionary ().addBuilder (FooCow.class, new FooCow.Builder ());
-    subclassBuilder (fc);
+    fc.getObjectDictionary().addBuilder(FooHorse.class, new FooHorse.Builder());
+    fc.getObjectDictionary().addBuilder(FooCow.class, new FooCow.Builder());
+    subclassBuilder(fc);
   }
   
 }
