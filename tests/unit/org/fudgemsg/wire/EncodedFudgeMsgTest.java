@@ -328,7 +328,16 @@ public class EncodedFudgeMsgTest {
     // Warm up
     testLazySpeedImpl(baos, false);
     // Timing test
-    testLazySpeedImpl(baos, true);
+    AssertionError ex = null;
+    for (int i = 0; i < 3; i++) {
+      try {
+        testLazySpeedImpl(baos, true);
+        return;  // sucess
+      } catch (AssertionError ex2) {
+        ex = ex2;
+      }
+    }
+    throw ex;
   }
 
 }
