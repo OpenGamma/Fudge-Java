@@ -20,7 +20,7 @@
         <dependency org="org.apache.commons" name="commons-lang" rev="2.4"/>
         <dependency org="org.junit" name="junit" rev="4.8.2" conf="core->*" />
         <dependency org="org.apache.commons" name="commons-beanutils" rev="1.8.3" conf="core->core" />
-        <dependency org="org.apache.commons" name="commons-codec" rev="1.5" conf="core->*" />
+        <dependency org="org.apache.commons" name="commons-codec" rev="1.6" conf="core->*" />
         <dependency org="org.mongodb" name="java-driver" rev="2.1" conf="mongodb->*" />
         <dependency org="org.json" name="json" rev="1.0.0.v201011060100" conf="json->*" />
         <dependency org="javax.time" name="jsr-310-ri" rev="0.6.3" conf="core->*" />
