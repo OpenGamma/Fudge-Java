@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
@@ -50,14 +48,14 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @Override
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Set<?> set) {
 
-    List<Class> topTypesKeys = BuilderUtil.getTopTypes(set);
+    List<Class<?>> topTypesKeys = BuilderUtil.getTopTypes(set);
     final MutableFudgeMsg msg = serializer.newMessage();
 
     if (set.isEmpty()) {
       msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
     } else {
       // we are hinting the Set that all its entries should have common type
-      for (Class topType : topTypesKeys) {
+      for (Class<?> topType : topTypesKeys) {
         msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
       }
     }
@@ -71,6 +69,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
     return msg;
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public Set<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final Set<Object> set = new HashSet<Object>();

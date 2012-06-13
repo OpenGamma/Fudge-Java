@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
-import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
@@ -51,18 +53,18 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, Map<?, ?> map) {
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    List<Class> topTypesKeys = BuilderUtil.getTopTypes(map.keySet());
-    List<Class> topTypesValues = BuilderUtil.getTopTypes(map.values());
+    List<Class<?>> topTypesKeys = BuilderUtil.getTopTypes(map.keySet());
+    List<Class<?>> topTypesValues = BuilderUtil.getTopTypes(map.values());
 
     if (map.isEmpty()) {
       msg.add(BuilderUtil.KEY_TYPE_HINT_ORDINAL, null);
       msg.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL, null);
     } else {
       // we are hinting the Map that all its entries <Key, Value> should have common type
-      for (Class topType : topTypesKeys) {
+      for (Class<?> topType : topTypesKeys) {
         msg.add(null, BuilderUtil.KEY_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
       }
-      for (Class topType : topTypesValues) {
+      for (Class<?> topType : topTypesValues) {
         msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
       }
 
@@ -82,6 +84,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
     return msg;
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public Map<?, ?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final Map<Object, Object> map = new HashMap<Object, Object>();
@@ -95,7 +98,6 @@ import org.fudgemsg.wire.types.FudgeWireType;
     FudgeTypeConverter keyTypeConverter = BuilderUtil.findTypeConverter(deserializer, keysTypeHints);
     FudgeObjectBuilder<?> valueBuilder = BuilderUtil.findObjectBuilder(deserializer, valuesTypeHints);
     FudgeTypeConverter valueTypeConverter = BuilderUtil.findTypeConverter(deserializer, valuesTypeHints);
-
 
     for (FudgeField field : message) {
 

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.fudgemsg.*;
+import org.fudgemsg.FudgeField;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
@@ -49,12 +49,12 @@ import org.fudgemsg.wire.types.FudgeWireType;
   public MutableFudgeMsg buildMessage(FudgeSerializer serializer, List<?> list) {
     final MutableFudgeMsg msg = serializer.newMessage();
 
-    List<Class> topTypesKeys = BuilderUtil.getTopTypes(list);
+    List<Class<?>> topTypesKeys = BuilderUtil.getTopTypes(list);
 
     if (list.isEmpty()) {
       msg.add(BuilderUtil.VALUE_TYPE_HINT_ORDINAL, null);
     } else {
-      for (Class topType : topTypesKeys) {
+      for (Class<?> topType : topTypesKeys) {
         // we are hinting the List that all its entries should have common type
         msg.add(null, BuilderUtil.VALUE_TYPE_HINT_ORDINAL, FudgeWireType.STRING, topType.getName());
       }
@@ -70,6 +70,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
     return msg;
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public List<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
     final List<Object> list = new ArrayList<Object>();

@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
-import org.apache.commons.lang.ClassUtils;
-import org.fudgemsg.FudgeField;
-import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.types.FudgeTypeConverter;
+import static org.fudgemsg.util.TopologicalSort.reverse;
+import static org.fudgemsg.util.TopologicalSort.topologicalSort;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fudgemsg.util.TopologicalSort.reverse;
-import static org.fudgemsg.util.TopologicalSort.topologicalSort;
+import org.apache.commons.lang.ClassUtils;
+import org.fudgemsg.FudgeField;
+import org.fudgemsg.FudgeFieldType;
+import org.fudgemsg.types.FudgeTypeConverter;
 
 /**
  * Utility methods for objects builders.
@@ -67,7 +64,7 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
   public final static int VALUE_ORDINAL = 2;
 
 
-  static List<Class> getTopTypes(Collection<?> objects) {
+  static List<Class<?>> getTopTypes(Collection<?> objects) {
     // number of non null objects
     int size = 0;
     for (Object o : objects) {
@@ -75,21 +72,21 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
         size += 1;
       }
     }
-    Set<Class> topTypes = new HashSet<Class>();
-    Map<Class, AtomicInteger> allTypes = new HashMap<Class, AtomicInteger>();
+    Set<Class<?>> topTypes = new HashSet<Class<?>>();
+    Map<Class<?>, AtomicInteger> allTypes = new HashMap<Class<?>, AtomicInteger>();
     for (Object o : objects) {
       if (o != null) {
         allTypes.put(o.getClass(), new AtomicInteger());
-        for (Class clazz : (List<Class>) ClassUtils.getAllSuperclasses(o.getClass())) {
+        for (Class<?> clazz : (List<Class<?>>) ClassUtils.getAllSuperclasses(o.getClass())) {
           allTypes.put(clazz, new AtomicInteger());
         }
-        for (Class clazz : (List<Class>) ClassUtils.getAllInterfaces(o.getClass())) {
+        for (Class<?> clazz : (List<Class<?>>) ClassUtils.getAllInterfaces(o.getClass())) {
           allTypes.put(clazz, new AtomicInteger());
         }
       }
     }
 
-    for (Class allType : allTypes.keySet()) {
+    for (Class<?> allType : allTypes.keySet()) {
       for (Object o : objects) {
         if (o != null && allType.isAssignableFrom(o.getClass())) {
           if (allTypes.get(allType).incrementAndGet() == size) {
@@ -98,7 +95,7 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
         }
       }
     }
-    Map<Class, Set<Class>> typeHierarchy = resolveTypeHierarchy(topTypes);
+    Map<Class<?>, Set<Class<?>>> typeHierarchy = resolveTypeHierarchy(topTypes);
     typeHierarchy.remove(Object.class);
     typeHierarchy.remove(Serializable.class);
     typeHierarchy.remove(Comparable.class);
@@ -106,21 +103,21 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
     return reverse(topologicalSort(typeHierarchy));
   }
 
-  private static Map<Class, Set<Class>> resolveTypeHierarchy(Collection<Class> classes) {
-    Map<Class, Set<Class>> hierarchy = new HashMap<Class, Set<Class>>();
-    Set<Class> addedTypes = resolveTypeHierarchy(classes, hierarchy);
+  private static Map<Class<?>, Set<Class<?>>> resolveTypeHierarchy(Collection<Class<?>> classes) {
+    Map<Class<?>, Set<Class<?>>> hierarchy = new HashMap<Class<?>, Set<Class<?>>>();
+    Set<Class<?>> addedTypes = resolveTypeHierarchy(classes, hierarchy);
     while (addedTypes.size() > 0) {
       addedTypes = resolveTypeHierarchy(addedTypes, hierarchy);
     }
     return hierarchy;
   }
 
-  private static Set<Class> resolveTypeHierarchy(Collection<Class> classes, Map<Class, Set<Class>> hierarchy) {
-    Set<Class> addedTypes = new HashSet<Class>();
-    for (Class cls : classes) {
-      Set<Class> types = hierarchy.get(cls);
+  private static Set<Class<?>> resolveTypeHierarchy(Collection<Class<?>> classes, Map<Class<?>, Set<Class<?>>> hierarchy) {
+    Set<Class<?>> addedTypes = new HashSet<Class<?>>();
+    for (Class<?> cls : classes) {
+      Set<Class<?>> types = hierarchy.get(cls);
       if (types == null) {
-        types = new HashSet<Class>();
+        types = new HashSet<Class<?>>();
         hierarchy.put(cls, types);
       }
       Collections.addAll(types, cls.getInterfaces());
@@ -133,7 +130,7 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
     return addedTypes;
   }
 
-  static FudgeObjectBuilder findObjectBuilder(FudgeDeserializer deserializer, List<FudgeField> fields) {
+  static FudgeObjectBuilder<?> findObjectBuilder(FudgeDeserializer deserializer, List<FudgeField> fields) {
     FudgeObjectBuilder<?> objectBuilder = null;
     for (FudgeField type : fields) {
       final Object obj = type.getValue();
@@ -154,8 +151,7 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
     return null;
   }
 
-  static FudgeTypeConverter findTypeConverter(FudgeDeserializer deserializer, List<FudgeField> fields) {
-    FudgeTypeConverter typeConverter = null;
+  static FudgeTypeConverter<?, ?> findTypeConverter(FudgeDeserializer deserializer, List<FudgeField> fields) {
     for (FudgeField type : fields) {
       final Object obj = type.getValue();
       if (obj instanceof Number) {
@@ -165,7 +161,7 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
           Class<?> cls = deserializer.getFudgeContext().getTypeDictionary().loadClass((String) obj);
           FudgeFieldType fieldType = deserializer.getFudgeContext().getTypeDictionary().getByJavaType(cls);
           if (fieldType != null && (fieldType instanceof FudgeTypeConverter)) {
-            return (FudgeTypeConverter) fieldType;
+            return (FudgeTypeConverter<?, ?>) fieldType;
           }
         } catch (ClassNotFoundException ex) {
           // ignore
