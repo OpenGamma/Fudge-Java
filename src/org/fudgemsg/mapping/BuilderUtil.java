@@ -19,16 +19,17 @@ import static org.fudgemsg.util.TopologicalSort.reverse;
 import static org.fudgemsg.util.TopologicalSort.topologicalSort;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang.ClassUtils;
 import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.types.FudgeTypeConverter;
@@ -77,10 +78,10 @@ import org.fudgemsg.types.FudgeTypeConverter;
     for (Object o : objects) {
       if (o != null) {
         allTypes.put(o.getClass(), new AtomicInteger());
-        for (Class<?> clazz : (List<Class<?>>) ClassUtils.getAllSuperclasses(o.getClass())) {
+        for (Class<?> clazz : getAllSuperclasses(o.getClass())) {
           allTypes.put(clazz, new AtomicInteger());
         }
-        for (Class<?> clazz : (List<Class<?>>) ClassUtils.getAllInterfaces(o.getClass())) {
+        for (Class<?> clazz : getAllInterfaces(o.getClass())) {
           allTypes.put(clazz, new AtomicInteger());
         }
       }
@@ -101,6 +102,28 @@ import org.fudgemsg.types.FudgeTypeConverter;
     typeHierarchy.remove(Comparable.class);
     typeHierarchy.remove(String.class);
     return reverse(topologicalSort(typeHierarchy));
+  }
+
+  static List<Class<?>> getAllSuperclasses(Class<?> cls) {
+    List<Class<?>> result = new ArrayList<Class<?>>();
+    Class<?> sc = cls.getSuperclass();
+    while (sc != null) {
+      result.add(sc);
+      sc = sc.getSuperclass();
+    }
+    return result;
+  }
+
+  static Set<Class<?>> getAllInterfaces(Class<?> cls) {
+    Set<Class<?>> result = new LinkedHashSet<Class<?>>();
+    for (Class<?> iface : cls.getInterfaces()) {
+      result.add(iface);
+      result.addAll(getAllInterfaces(iface));
+    }
+    if (cls.getSuperclass() != null) {
+      result.addAll(getAllInterfaces(cls.getSuperclass()));
+    }
+    return result;
   }
 
   private static Map<Class<?>, Set<Class<?>>> resolveTypeHierarchy(Collection<Class<?>> classes) {
