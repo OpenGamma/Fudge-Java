@@ -12,3 +12,4 @@ tests/*.dat
 
 # NetBeans specific
 nbproject/private
+/target/
