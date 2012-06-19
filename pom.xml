@@ -6,10 +6,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.fudgemsg</groupId>
-  <artifactId>fudgemsg-java</artifactId>
+  <artifactId>fudge-java</artifactId>
   <packaging>jar</packaging>
   <name>Fudge Java</name>
-  <version>0.4</version>
+  <version>0.3.9.1</version>
   <description>A binary messaging system designed to scale from ad-hoc messages to long-term persistence</description>
   <url>http://fudgemsg.org</url>
 
