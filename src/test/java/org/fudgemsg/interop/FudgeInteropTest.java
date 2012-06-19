@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg;
+package org.fudgemsg.interop;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -26,6 +26,12 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.fudgemsg.FudgeContext;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.FudgeMsgEnvelope;
+import org.fudgemsg.MutableFudgeMsg;
+import org.fudgemsg.StandardFudgeMessages;
+import org.fudgemsg.UnknownFudgeFieldValue;
 import org.fudgemsg.test.FudgeUtils;
 import org.fudgemsg.types.DateTimeAccuracy;
 import org.fudgemsg.types.FudgeDate;
@@ -37,10 +43,10 @@ import org.junit.Test;
 
 /**
  * This saves (and subsequently reloads) data files containing the binary fudge representation of the messages.
- *
- * @author Jim Moores
  */
 public class FudgeInteropTest {
+
+  private static final String INTEROP_DIR = "src/test/java/org/fudgemsg/interop/";
   private static final boolean LEAVE_FILES_IN_PLACE = false;
   private static Set<File> s_filesToRemove = new HashSet<File>();
   private static final FudgeContext s_fudgeContext = new FudgeContext();
@@ -234,7 +240,7 @@ public class FudgeInteropTest {
     if (interopDir != null) {
       fullPath = interopDir + File.pathSeparator + filename;
     } else {
-      fullPath = "tests/" + filename; // fall back to tests directory.
+      fullPath = INTEROP_DIR + filename; // fall back to tests directory.
     }
     System.out.println("Creating file " + fullPath);
     s_filesToRemove.add(new File(fullPath));
@@ -254,7 +260,7 @@ public class FudgeInteropTest {
     if (interopDir != null) {
       fullPath = interopDir + File.pathSeparator + filename;
     } else {
-      fullPath = "tests/" + filename; // fall back to current directory.
+      fullPath = INTEROP_DIR + filename; // fall back to current directory.
     }
     FileInputStream stream = new FileInputStream(fullPath);
     DataInputStream dis = new DataInputStream(stream);

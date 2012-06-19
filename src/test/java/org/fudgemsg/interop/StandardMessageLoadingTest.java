@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package org.fudgemsg;
+package org.fudgemsg.interop;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
+import org.fudgemsg.FudgeContext;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.FudgeMsgEnvelope;
+import org.fudgemsg.StandardFudgeMessages;
+import org.fudgemsg.test.FudgeUtils;
+import org.fudgemsg.wire.FudgeMsgReader;
 import org.junit.Test;
 
 /**
- * Writes out messages again and makes sure that we're writing out the same things as before.
- *
- * @author Kirk Wylie
+ * Checks that we can load all the files that correspond to standard messages
+ * and that they match up.
  */
-public class StandardMessageRewritingTest {
-
+public class StandardMessageLoadingTest {
   private static final FudgeContext s_fudgeContext = new FudgeContext();
   
   /**
@@ -90,32 +92,28 @@ public class StandardMessageRewritingTest {
   }
   
   /**
-   * @param msgToWrite [documentation not available]
+   * @param expected [documentation not available]
    * @param fileName [documentation not available]
    */
-  protected static void testFile(FudgeMsg msgToWrite, String fileName) {
-    byte[] actualBytes = s_fudgeContext.toByteArray(msgToWrite);
-    ByteArrayInputStream actualStream = new ByteArrayInputStream(actualBytes);
-    InputStream expectedStream = StandardMessageRewritingTest.class.getResourceAsStream(fileName);
-    try {
-      int iByte = 0;
-      while(true) {
-        int expected = expectedStream.read();
-        int actual = actualStream.read();
-        assertEquals("At position " + iByte + " actual was " + actual + " expected was " + expected, actual, expected);
-        if((expected < 0) || (actual < 0)) {
-          break;
-        }
-        iByte++;
-      }
-    } catch (IOException ioe) {
-      throw new FudgeRuntimeException("Unable to read from streams", ioe);
-    } finally {
-      try {
-        expectedStream.close();
-      } catch (IOException ioe) {
-        // Do nothing.
-      }
-    }
+  protected static void testFile(FudgeMsg expected, String fileName) {
+    FudgeMsgEnvelope envelope = loadMessage(s_fudgeContext, fileName);
+    assertNotNull(envelope);
+    assertNotNull(envelope.getMessage ());
+    FudgeMsg actual = envelope.getMessage ();
+    FudgeUtils.assertAllFieldsMatch(expected, actual);
   }
+  
+  /**
+   * @param context [documentation not available]
+   * @param fileName [documentation not available]
+   * @return [documentation not available]
+   */
+  protected static FudgeMsgEnvelope loadMessage(FudgeContext context, String fileName) {
+    InputStream is = StandardMessageLoadingTest.class.getResourceAsStream(fileName);
+    FudgeMsgReader reader = context.createMessageReader (is);
+    FudgeMsgEnvelope envelope = reader.nextMessageEnvelope ();
+    reader.close ();
+    return envelope;
+  }
+
 }

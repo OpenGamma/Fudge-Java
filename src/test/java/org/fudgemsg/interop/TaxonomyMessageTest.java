@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fudgemsg;
+package org.fudgemsg.interop;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fudgemsg.FudgeContext;
+import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
 import org.junit.Test;

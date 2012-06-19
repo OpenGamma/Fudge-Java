@@ -20,7 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.fudgemsg.*;
+import org.fudgemsg.FudgeContext;
+import org.fudgemsg.FudgeField;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.FudgeRuntimeContextException;
+import org.fudgemsg.FudgeTypeDictionary;
 
 /**
  * Deserializer used to control the conversion of a Fudge message to an object structure.

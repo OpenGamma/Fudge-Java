@@ -16,7 +16,12 @@
 
 package org.fudgemsg.mapping;
 
-import org.fudgemsg.*;
+import org.fudgemsg.FudgeContext;
+import org.fudgemsg.FudgeMsg;
+import org.fudgemsg.FudgeRuntimeContextException;
+import org.fudgemsg.FudgeRuntimeException;
+import org.fudgemsg.MutableFudgeMsg;
+import org.fudgemsg.interop.*;
 import org.junit.Test;
 
 import java.util.List;
