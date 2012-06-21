@@ -70,7 +70,7 @@
       </resource>
       <resource>
         <targetPath>.</targetPath>
-        <directory>src/main/java</directory>
+        <directory>${project.build.sourceDirectory}</directory>
         <includes>
           <include>**/*.properties</include>
         </includes>
@@ -79,7 +79,7 @@
     <testResources>
       <testResource>
         <targetPath>.</targetPath>
-        <directory>src/test/java</directory>
+        <directory>${project.build.testSourceDirectory}</directory>
         <includes>
           <include>**/*.properties</include>
           <include>**/*.dat</include>
