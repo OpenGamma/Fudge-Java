@@ -234,12 +234,12 @@
     </dependency>    
     <dependency>
       <groupId>com.opengamma.json</groupId>
-      <artifactId>json</artifactId>
-      <version>1.0.0.v201011060100</version>
+      <artifactId>og-json</artifactId>
+      <version>1.0.0.v20101106</version>
     </dependency>    
     <dependency>
       <groupId>com.opengamma.threeten</groupId>
-      <artifactId>threeten</artifactId>
+      <artifactId>threeten-core</artifactId>
       <version>0.6.4</version>
     </dependency>    
     <dependency>
