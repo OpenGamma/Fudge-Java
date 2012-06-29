@@ -244,22 +244,17 @@
       <groupId>org.mongodb</groupId>
       <artifactId>mongo-java-driver</artifactId>
       <version>2.7.3</version>
-    </dependency>    
+    </dependency>
     <dependency>
-      <groupId>com.opengamma.json</groupId>
-      <artifactId>og-json</artifactId>
+      <groupId>com.opengamma.external.json</groupId>
+      <artifactId>json</artifactId>
       <version>1.0.0.v20101106</version>
-    </dependency>    
+    </dependency>
     <dependency>
-      <groupId>com.opengamma.threeten</groupId>
+      <groupId>com.opengamma.external.threeten</groupId>
       <artifactId>threeten-core</artifactId>
       <version>0.6.4</version>
-    </dependency>    
-    <dependency>
-      <groupId>com.opengamma.threeten</groupId>
-      <artifactId>threeten-tzdb</artifactId>
-      <version>0.6.4</version>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>net.sf.scannotation</groupId>
       <artifactId>scannotation</artifactId>
