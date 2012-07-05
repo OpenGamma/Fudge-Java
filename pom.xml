@@ -244,6 +244,7 @@
       <groupId>org.mongodb</groupId>
       <artifactId>mongo-java-driver</artifactId>
       <version>2.7.3</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.opengamma.external.json</groupId>
