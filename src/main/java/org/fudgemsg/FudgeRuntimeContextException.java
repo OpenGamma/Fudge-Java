@@ -33,7 +33,7 @@ public class FudgeRuntimeContextException extends FudgeRuntimeException {
    * A standard Java runtime exception should be used where possible.
    *
    * @param message  the description of the error condition, may be null
-   * @param context context to attach to this exception
+   * @param context  context to attach to this exception
    */
   public FudgeRuntimeContextException(String message, Object context) {
     super(message);
@@ -45,7 +45,7 @@ public class FudgeRuntimeContextException extends FudgeRuntimeException {
    *
    * @param message  the description of the error condition, may be null
    * @param cause  the underlying exception, should not be null
-   * @param context context to attach to this exception
+   * @param context  context to attach to this exception
    */
   public FudgeRuntimeContextException(String message, Throwable cause, Object context) {
     super(message, cause);
@@ -53,8 +53,9 @@ public class FudgeRuntimeContextException extends FudgeRuntimeException {
   }
 
   /**
-   * Returns context asociated with this exception
-   * @return
+   * Returns context associated with this exception.
+   * 
+   * @return the context
    */
   public Object getContext() {
     return _context;
@@ -64,4 +65,5 @@ public class FudgeRuntimeContextException extends FudgeRuntimeException {
   public String toString() {
     return super.toString() + " context: " + getContext().toString();
   }
+
 }

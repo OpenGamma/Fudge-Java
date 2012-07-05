@@ -227,7 +227,7 @@ public class FudgeDataOutputStreamWriter extends AbstractFudgeStreamWriter {
    * @param type  the type, not null
    * @param value  the value to write, not null
    * @param valueSize  the size of the value
-   * @returns number of bytes written
+   * @return number of bytes written
    */
   protected void writeFieldValue(FudgeFieldType type, Object value, int valueSize) {
     // Note that we fast-path types for which at compile time we know how to handle
