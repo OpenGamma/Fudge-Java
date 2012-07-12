@@ -73,6 +73,19 @@ public final class StandardFudgeMessages {
    * @param context [documentation not available]
    * @return [documentation not available]
    */
+  public static MutableFudgeMsg createMessageSameNames(FudgeContext context) {
+    MutableFudgeMsg msg = context.newMessage();
+    
+    msg.add("abc", 2.0);
+    msg.add("abc", 3.0);
+    msg.add("abc", 4.0);
+    return msg;
+  }
+
+  /**
+   * @param context [documentation not available]
+   * @return [documentation not available]
+   */
   public static MutableFudgeMsg createMessageAllOrdinals(FudgeContext context) {
     MutableFudgeMsg msg = context.newMessage();
     

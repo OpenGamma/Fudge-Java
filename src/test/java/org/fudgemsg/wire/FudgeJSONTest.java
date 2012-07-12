@@ -60,6 +60,7 @@ public class FudgeJSONTest {
   
   private FudgeMsg[] createMessages () {
     return new FudgeMsg[] {
+        StandardFudgeMessages.createMessageSameNames(_fudgeContext),
         StandardFudgeMessages.createMessageAllNames (_fudgeContext),
         StandardFudgeMessages.createMessageAllOrdinals (_fudgeContext),
         StandardFudgeMessages.createMessageWithSubMsgs (_fudgeContext),

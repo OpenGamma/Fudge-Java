@@ -17,10 +17,9 @@ package org.fudgemsg.wire.json;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
@@ -54,6 +53,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
   private Object _fieldValue = null;
 
   private final Stack<JSONObject> _objectStack = new Stack<JSONObject>();
+  private final Map<String, Object> _meta = new HashMap<String, Object>();
   private final Stack<Iterator<String>> _iteratorStack = new Stack<Iterator<String>>();
   private final Queue<String> _fieldLookahead = new LinkedList<String>();
   private final Queue<Object> _valueLookahead = new LinkedList<Object>();
@@ -196,7 +196,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
 
   @Override
   public boolean hasNext() {
-    if (getCurrentElement() == null) {
+    if (getCurrentElement() == null || getCurrentElement().equals(FudgeStreamElement.SUBMESSAGE_FIELD_END)) {
       // haven't read anything yet (or have read a full message already)
       try {
         return getTokener().more();
@@ -219,13 +219,6 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
       return ((Number) o).intValue();
     } else {
       return 0;
-    }
-  }
-
-  private void checkMessageEnd() {
-    if ((_iteratorStack.size() == 1) && !_iteratorStack.peek().hasNext() && _fieldLookahead.isEmpty()) {
-      _objectStack.pop();
-      _iteratorStack.pop();
     }
   }
 
@@ -281,90 +274,80 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
   @Override
   public FudgeStreamElement next() {
     try {
-      JSONObject o;
+
       if (_objectStack.isEmpty()) {
-        _objectStack.push(o = new JSONObject(getTokener()));
-      } else {
-        o = _objectStack.peek();
-      }
-      Iterator<String> i;
-      if (_iteratorStack.isEmpty()) {
-        _iteratorStack.push(i = (Iterator<String>) o.keys());
-        // Note: the keys collection is sorted and not in the message order, breaking the logic below
-        // File a jira to fix this
-        int processingDirectives = 0;
-        int schemaVersion = 0;
-        int taxonomyId = 0;
-        while (i.hasNext()) {
-          final String fieldName = i.next();
-          if (fieldName.equals(getSettings().getProcessingDirectivesField())) {
-            processingDirectives = integerValue(o.get(fieldName));
-          } else if (fieldName.equals(getSettings().getSchemaVersionField())) {
-            schemaVersion = integerValue(o.get(fieldName));
-          } else if (fieldName.equals(getSettings().getTaxonomyField())) {
-            taxonomyId = integerValue(o.get(fieldName));
-          } else {
-            _fieldLookahead.add(fieldName);
-            break;
-          }
+        JSONArray array = new JSONArray(getTokener());
+
+        JSONObject _envelope = array.getJSONObject(0);
+        Iterator<String> iterator = _envelope.keys();
+        while (iterator.hasNext()) {
+          String key = iterator.next();
+          _meta.put(key, _envelope.get(key));
+        }
+
+        String processingDirectivesField = getSettings().getProcessingDirectivesField();
+        String schemaVersionField = getSettings().getSchemaVersionField();
+        String taxonomyField = getSettings().getTaxonomyField();
+
+        int processingDirectives;
+        int schemaVersion;
+        int taxonomyId;
+        try {
+          processingDirectives = integerValue(_envelope.get(processingDirectivesField));
+        } catch (JSONException e) {
+          processingDirectives = 0;
+        }
+        try {
+          schemaVersion = integerValue(_envelope.get(schemaVersionField));
+        } catch (JSONException e) {
+          schemaVersion = 0;
+        }
+        try {
+          taxonomyId = integerValue(_envelope.get(taxonomyField));
+        } catch (JSONException e) {
+          taxonomyId = 0;
         }
         setEnvelopeFields(processingDirectives, schemaVersion, taxonomyId);
-        checkMessageEnd();
+        _objectStack.push(array.getJSONObject(1));        
         return setCurrentElement(FudgeStreamElement.MESSAGE_ENVELOPE);
       } else {
+        JSONObject o = _objectStack.peek();
+        Iterator<String> i;
+        if (_iteratorStack.isEmpty()) {
+          _iteratorStack.push(i = (Iterator<String>) o.keys());
+        }
         i = _iteratorStack.peek();
-      }
-      if (i.hasNext() || !_fieldLookahead.isEmpty()) {
-        final String fieldName;
-        if (_fieldLookahead.isEmpty()) {
-          fieldName = i.next();
-        } else {
-          fieldName = _fieldLookahead.remove();
-        }
-        setCurrentFieldName(fieldName);
-        final Object value;
-        final boolean isValuelookahead;
-        if (_valueLookahead.isEmpty()) {
-          value = o.get(fieldName);
-          isValuelookahead = false;
-        } else {
-          value = _valueLookahead.remove();
-          isValuelookahead = true;
-        }
-        if (JSONObject.NULL.equals(value)) {
-          setFieldValue(IndicatorType.INSTANCE);
-        } else if (value instanceof JSONArray) {
-          final JSONArray arr = (JSONArray) value;
-          Object primArray = jsonArrayToPrimitiveArray(arr);
-          if (primArray != null) {
-            setFieldValue(primArray);
+        if (i.hasNext()) {
+          String fieldName = i.next();          
+          String duplicateFieldNamePostfix = (String) _meta.get(FudgeJSONSettings.DUPLICATE_FIELD_NAME_POSTFIX_KEY);
+          Pattern duplicateFieldNamePattern = Pattern.compile("(.*)" + duplicateFieldNamePostfix + "\\d+");
+          Matcher m = duplicateFieldNamePattern.matcher(fieldName);
+          if (m.matches()) {
+            setCurrentFieldName(m.group(1));
           } else {
-            if (isValuelookahead) {
-              // we're interpreting the JSON array as a repeated field; the data doesn't match a primitive type
-              setFieldValue(arr.toString());
-            } else {
-              for (int j = 0; j < arr.length(); j++) {
-                _fieldLookahead.add(fieldName);
-                _valueLookahead.add(arr.get(j));
-              }
-              return next();
-            }
+            setCurrentFieldName(fieldName);
           }
-        } else if (value instanceof JSONObject) {
-          o = (JSONObject) value;
-          _objectStack.push(o);
-          _iteratorStack.push(o.keys());
-          return setCurrentElement(FudgeStreamElement.SUBMESSAGE_FIELD_START);
+          final Object value = o.get(fieldName);
+          if (JSONObject.NULL.equals(value)) {
+            setFieldValue(IndicatorType.INSTANCE);
+          } else if (value instanceof JSONArray) {
+            final JSONArray arr = (JSONArray) value;
+            Object primArray = jsonArrayToPrimitiveArray(arr);
+            setFieldValue(primArray);
+          } else if (value instanceof JSONObject) {
+            o = (JSONObject) value;
+            _objectStack.push(o);
+            _iteratorStack.push(o.keys());
+            return setCurrentElement(FudgeStreamElement.SUBMESSAGE_FIELD_START);
+          } else {
+            setFieldValue(value);
+          }
+          return setCurrentElement(FudgeStreamElement.SIMPLE_FIELD);
         } else {
-          setFieldValue(value);
+          _iteratorStack.pop();
+          _objectStack.pop();
+          return setCurrentElement(FudgeStreamElement.SUBMESSAGE_FIELD_END);
         }
-        checkMessageEnd();
-        return setCurrentElement(FudgeStreamElement.SIMPLE_FIELD);
-      } else {
-        _iteratorStack.pop();
-        _objectStack.pop();
-        checkMessageEnd();
-        return setCurrentElement(FudgeStreamElement.SUBMESSAGE_FIELD_END);
       }
     } catch (JSONException e) {
       throw wrapException("reading next element", e);

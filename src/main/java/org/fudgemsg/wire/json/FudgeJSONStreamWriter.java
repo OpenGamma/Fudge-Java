@@ -17,10 +17,11 @@ package org.fudgemsg.wire.json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import org.fudgemsg.FudgeContext;
-import org.fudgemsg.FudgeFieldType;
-import org.fudgemsg.FudgeRuntimeException;
+import org.fudgemsg.*;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.wire.EventBasedFudgeStreamWriter;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
@@ -52,6 +53,9 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
    * The JSON writer.
    */
   private JSONWriter _writer;
+
+  private boolean _headerFinished = false;
+  private String _duplicateFieldPostfix = "_";
 
   /**
    * Creates a new instance for writing a Fudge stream to a JSON writer.
@@ -112,6 +116,8 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
    */
   protected void clearWriter() {
     _writer = null;
+    _headerFinished = false;
+    _duplicateFieldPostfix = "_";
   }
 
   /**
@@ -160,7 +166,8 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
   @Override
   protected void fudgeEnvelopeStart (final int processingDirectives, final int schemaVersion) {
     try {
-      getWriter ().object ();
+      getWriter().array();
+      getWriter().object();
       if ((processingDirectives != 0) && (getSettings ().getProcessingDirectivesField () != null)) getWriter ().key (getSettings ().getProcessingDirectivesField ()).value (processingDirectives);
       if ((schemaVersion != 0) && (getSettings ().getSchemaVersionField () != null)) getWriter ().key (getSettings ().getSchemaVersionField ()).value (schemaVersion);
       if ((getCurrentTaxonomyId () != 0) && (getSettings ().getTaxonomyField () != null)) getWriter ().key (getSettings ().getTaxonomyField ()).value (getCurrentTaxonomyId ());
@@ -168,15 +175,89 @@ public class FudgeJSONStreamWriter extends EventBasedFudgeStreamWriter {
       wrapException ("start of message", e);
     }
   }
-  
+
+  /*
+    Predicate returning true if any of the given strings has matching postfix
+   */
+  private boolean anyEndsWith(Set<String> strings, String postfix) {
+    for (String string : strings) {
+      if (string.matches(".*" + postfix)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /*
+   Predicate returning true if any of the given field name has matching postfix
+  */
+  private boolean anyEndsWith(Iterable<FudgeField> fields, String postfix) {
+    for (FudgeField field : fields) {
+      if (field.getName() != null && field.getName().matches(".*" + postfix)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private String duplicateFieldPostfix(String postfix, Iterable<FudgeField> fields) {
+    while (anyEndsWith(fields, postfix + "\\d*")) {
+      postfix = postfix + "_";
+    }
+    for (FudgeField field : fields) {
+      if (field.getType().equals(FudgeWireType.SUB_MESSAGE)) {
+        FudgeMsg msg = (FudgeMsg) field.getValue();
+        postfix = duplicateFieldPostfix(postfix, msg.getAllFields());
+      }
+    }
+    return postfix;
+  }
+
+  /**
+   * Writes each field.
+   * <p>
+   * This implementation loops around the iterator and writes each field using
+   * {@link #writeField(org.fudgemsg.FudgeField)}.
+   *
+   * @param fields  an iterator over a set of fields, typically a message, not null
+   */
+  protected void writeAllFields(final Iterable<FudgeField> fields) {
+    if (!_headerFinished) {
+      _headerFinished = true;
+      _duplicateFieldPostfix = duplicateFieldPostfix("_", fields);
+      try {
+        // continue with the header            
+        writeField(UnmodifiableFudgeField.of(FudgeWireType.STRING, _duplicateFieldPostfix, FudgeJSONSettings.DUPLICATE_FIELD_NAME_POSTFIX_KEY));
+        // header finished
+        getWriter().endObject();
+        getWriter().object();
+      } catch (JSONException e) {
+        wrapException("write metadata to the header", e);
+      }
+    }
+    Map<String, Integer> duplicateKeys = new HashMap<String, Integer>();
+    for (FudgeField field : fields) {
+      if (duplicateKeys.containsKey(field.getName())) {
+        int idx = duplicateKeys.get(field.getName()) + 1;
+        duplicateKeys.put(field.getName(), idx);
+        String newName = field.getName() + _duplicateFieldPostfix + idx;
+        writeField(UnmodifiableFudgeField.of(field.getType(), field.getValue(), newName));
+      } else {
+        duplicateKeys.put(field.getName(), 0);
+        writeField(field);
+      }
+    }
+  }
+
   /**
    * Ends the JSON object.
    */
   @Override
   protected void fudgeEnvelopeEnd () {
     try {
-      getWriter ().endObject ();
-      clearWriter ();
+      getWriter().endObject();
+      getWriter().endArray();
+      clearWriter();
     } catch (JSONException e) {
       wrapException ("end of message", e);
     }

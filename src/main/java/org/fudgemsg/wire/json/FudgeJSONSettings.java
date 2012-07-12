@@ -29,6 +29,11 @@ import org.fudgemsg.wire.types.FudgeWireType;
 public class FudgeJSONSettings {
 
   /**
+   Default name for the duplicate field name postfix field
+   */
+  public static final String DUPLICATE_FIELD_NAME_POSTFIX_KEY = "dupNamePsfxKey";
+
+  /**
    * Default name for the processing directives field.
    */
   public static final String DEFAULT_PROCESSINGDIRECTIVES_FIELD = "fudgeProcessingDirectives";
