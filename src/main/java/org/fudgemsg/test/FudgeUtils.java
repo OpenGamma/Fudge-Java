@@ -22,8 +22,6 @@ import org.fudgemsg.mapping.BuilderUtil;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
-
 /**
  * Utilities for testing.
  */
@@ -161,7 +159,7 @@ public class FudgeUtils {
     assertEquals(expected.length, actual.length);
     for (int i = 0; i < expected.length; i++) {
       // No tolerance intentionally.
-      assertEquals(expected[i], actual[i], 0.0);
+      assertEquals(expected[i], actual[i], 0.0f);
     }
   }
 
@@ -207,6 +205,50 @@ public class FudgeUtils {
     for (int i = 0; i < expected.length; i++) {
       assertEquals(expected[i], actual[i]);
     }
+  }
+
+  // avoid JUnit being exposed
+  //-------------------------------------------------------------------------
+  private static void assertTrue(boolean actual) {
+    if (actual == true) {
+      return;
+    }
+    throw new AssertionError("Expected: true, Actual false");
+  }
+
+  private static void assertFalse(boolean actual) {
+    if (actual == false) {
+      return;
+    }
+    throw new AssertionError("Expected: false, Actual true");
+  }
+
+  private static void assertEquals(long expected, long actual) {
+    if (actual == expected) {
+      return;
+    }
+    throw new AssertionError("Expected: " + expected + ", Actual: " + actual);
+  }
+
+  private static void assertEquals(double expected, double actual, double diff) {
+    if (Math.abs(actual - expected) <= diff) {
+      return;
+    }
+    throw new AssertionError("Expected: " + expected + ", Actual: " + actual);
+  }
+
+  private static void assertEquals(float expected, float actual, float diff) {
+    if (Math.abs(actual - expected) <= diff) {
+      return;
+    }
+    throw new AssertionError("Expected: " + expected + ", Actual: " + actual);
+  }
+
+  private static void assertEquals(Object expected, Object actual) {
+    if (actual == expected || (actual != null && actual.equals(expected))) {
+      return;
+    }
+    throw new AssertionError("Expected: " + expected + ", Actual: " + actual);
   }
 
 }

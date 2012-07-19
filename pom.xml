@@ -262,16 +262,12 @@
       <artifactId>scannotation</artifactId>
       <version>1.0.2</version>
     </dependency>
-    <!--dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>6.5.2</version>
-    </dependency-->
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
-      <optional>true</optional><!-- only for testing -->
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
