@@ -16,26 +16,22 @@
 package org.fudgemsg.mapping;
 
 
-import org.fudgemsg.AbstractFudgeBuilderTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.junit.Assert.assertTrue;
-
+import org.fudgemsg.AbstractFudgeBuilderTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test Set Fudge encoding.
  */
-
 public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
-
 
   @Before
   public void registerSecondaryType() {
@@ -45,12 +41,16 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
   }
 
   @Test
-  public void testSetContainingSingleCurrency() throws IOException {
-
-    Set set = new TreeSet();
+  public void testSetContainingSingleCurrency() {
+    Set<Currency> set = new TreeSet<Currency>(new Comparator<Currency>() {
+      @Override
+      public int compare(Currency o1, Currency o2) {
+        return o1.getSymbol().compareTo(o2.getSymbol());
+      }
+    });
     set.add(Currency.getInstance("USD"));
 
-    Set deserializedObject = cycleObject(set);
+    Set<Currency> deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, Set.class);
     isInstanceOf(deserializedObject, HashSet.class);
@@ -58,13 +58,11 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     for (Object o : deserializedObject) {
       isInstanceOf(o, Currency.class);
     }
-
   }
 
   @Test
-  public void testSetContainingSeveralCurrencies() throws IOException {
-
-    Set set = new TreeSet<Currency>(new Comparator<Currency>() {
+  public void testSetContainingSeveralCurrencies() {
+    Set<Currency> set = new TreeSet<Currency>(new Comparator<Currency>() {
       @Override
       public int compare(Currency o1, Currency o2) {
         return o1.getSymbol().compareTo(o2.getSymbol());
@@ -74,7 +72,7 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     set.add(Currency.getInstance("GBP"));
     set.add(Currency.getInstance("EUR"));
 
-    Set deserializedObject = cycleObject(set);
+    Set<Currency> deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, Set.class);
 
@@ -85,9 +83,8 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
   }
 
   @Test
-  public void testSetContainingSeveralCurrenciesAndNull() throws IOException {
-
-    Set set = new TreeSet<Currency>(new Comparator<Currency>() {
+  public void testSetContainingSeveralCurrenciesAndNull() {
+    Set<Currency> set = new TreeSet<Currency>(new Comparator<Currency>() {
       @Override
       public int compare(Currency o1, Currency o2) {
         if (o1 == null && o2 == null) {
@@ -106,7 +103,7 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     set.add(null);
     set.add(Currency.getInstance("EUR"));
 
-    Set deserializedObject = cycleObject(set);
+    Set<Currency> deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, Set.class);
 
@@ -114,7 +111,7 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
       assertTrue(o == null || o instanceof Currency);
     }
 
-    Set exemplar = new HashSet();
+    Set<Currency> exemplar = new HashSet<Currency>();
     exemplar.add(Currency.getInstance("USD"));
     exemplar.add(Currency.getInstance("GBP"));
     exemplar.add(null);
@@ -127,27 +124,25 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
   }
 
   @Test
-  public void testSetContainingSeveralCurrenciesAndAString() throws IOException {
-
-    Set set = new HashSet();
+  public void testSetContainingSeveralCurrenciesAndAString() {
+    Set<Object> set = new HashSet<Object>();
     set.add(Currency.getInstance("USD"));
     set.add(Currency.getInstance("GBP"));
     set.add(Currency.getInstance("EUR"));
     set.add("Some String");
 
-    Set deserializedObject = cycleObject(set);
+    Set<Object> deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, Set.class);
 
     for (Object o : deserializedObject) {
       assertTrue(o instanceof Byte || o instanceof Short || o instanceof Integer || o instanceof String);
     }
-
   }
 
   @Test
   public void testEmptySet() {
-    Set set = new TreeSet();
+    Set<Currency> set = new TreeSet<Currency>();
 
     Object deserializedObject = cycleObject(set);
 
