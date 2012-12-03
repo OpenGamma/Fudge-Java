@@ -15,6 +15,8 @@
  */
 package org.fudgemsg.wire;
 
+import java.io.Closeable;
+
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeMsgEnvelope;
@@ -31,7 +33,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
  * possible by working directly with the {@link FudgeStreamReader} to process stream
  * elements as they are decoded.
  */
-public class FudgeMsgReader {
+public class FudgeMsgReader implements Closeable {
 
   /**
    * The underlying source of Fudge elements.

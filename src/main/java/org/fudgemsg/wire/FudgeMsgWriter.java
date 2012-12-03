@@ -15,6 +15,7 @@
  */
 package org.fudgemsg.wire;
 
+import java.io.Closeable;
 import java.io.Flushable;
 
 import org.fudgemsg.FudgeContext;
@@ -29,7 +30,7 @@ import org.fudgemsg.FudgeMsgEnvelope;
  * efficiency may be possible by working directly with a {@link FudgeStreamWriter} to
  * emit Fudge stream elements as they are generated.
  */
-public class FudgeMsgWriter implements Flushable {
+public class FudgeMsgWriter implements Flushable, Closeable {
 
   /**
    * The underlying target for Fudge stream elements.

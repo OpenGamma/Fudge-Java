@@ -16,6 +16,8 @@
 
 package org.fudgemsg.mapping;
 
+import java.io.Closeable;
+
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.wire.FudgeMsgReader;
@@ -23,7 +25,7 @@ import org.fudgemsg.wire.FudgeMsgReader;
 /**
  * Reader to access and deserialize Java objects from an underlying stream of Fudge messages.
  */
-public class FudgeObjectReader {
+public class FudgeObjectReader implements Closeable {
 
   /**
    * The underlying Fudge message reader.
