@@ -1,9 +1,0 @@
-<project name="fudge-java" default="compile">
-
-	<available file="${basedir}/../../common/common.xml" property="common.dir" value="${basedir}/../../common" />
-
-	<property file="build.properties"/>
-
-	<import file="${common.dir}/common.xml"/>
-
-</project>
