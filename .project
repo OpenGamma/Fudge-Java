@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Fudge</name>
-	<comment></comment>
+	<name>fudge-java</name>
+	<comment>A binary messaging system designed to scale from ad-hoc messages to long-term persistence. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
