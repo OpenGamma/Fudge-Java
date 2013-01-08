@@ -172,7 +172,10 @@
             <link>http://download.oracle.com/javase/6/docs/api/</link>
           </links>
           <encoding>UTF-8</encoding>
-          <bottom>Copyright 2009-Present by OpenGamma Inc. and individual contributors, released under the Apache License Version 2.0</bottom>
+          <author>false</author>
+          <windowtitle>Fudge Java Reference Implementation API</windowtitle>
+          <doctitle><![CDATA[<h1>Fudge Java Reference Implementation API</h1>]]></doctitle>
+          <bottom><![CDATA[<i>Copyright 2009-Present by OpenGamma Inc. and individual contributors</i><br/><i>Released under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License</a>, Version 2.0</i>]]></bottom>
         </configuration>
         <executions>
           <execution>
@@ -302,7 +305,10 @@
             <link>http://download.oracle.com/javase/6/docs/api/</link>
           </links>
           <encoding>UTF-8</encoding>
-          <bottom>Copyright 2009-Present by OpenGamma Inc. and individual contributors, released under the Apache License Version 2.0</bottom>
+          <author>false</author>
+          <windowtitle>Fudge Java Reference Implementation API</windowtitle>
+          <doctitle>Fudge Java Reference Implementation API</doctitle>
+          <bottom><![CDATA[<i>Copyright 2009-Present by OpenGamma Inc. and individual contributors</i><br/><i>Released under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License</a>, Version 2.0</i>]]></bottom>
         </configuration>
       </plugin>
       <plugin>
