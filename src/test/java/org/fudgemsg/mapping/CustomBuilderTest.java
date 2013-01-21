@@ -16,18 +16,17 @@
 
 package org.fudgemsg.mapping;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeContextException;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.MutableFudgeMsg;
-import org.fudgemsg.interop.*;
 import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * 
@@ -291,6 +290,7 @@ public class CustomBuilderTest {
     } catch (FudgeRuntimeException fre) {
       fre.printStackTrace();
       final String expectedMessage = "Unable to create interface " + FooInterface.class.getName();
+      @SuppressWarnings("unchecked")
       List<Exception> exceptions = ((List<Exception>) ((FudgeRuntimeContextException) fre).getContext());
       Exception lastException = exceptions.get(exceptions.size() - 1);
       assertEquals(expectedMessage, lastException.getCause().getCause().getMessage().substring(0, expectedMessage.length()));

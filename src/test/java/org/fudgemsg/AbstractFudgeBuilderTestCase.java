@@ -54,6 +54,7 @@ public abstract class AbstractFudgeBuilderTestCase {
   }
 
 
+  @SuppressWarnings("unchecked")
   protected <T> T cycleObject(final T object) {
     ByteArrayOutputStream _output = new ByteArrayOutputStream();
     FudgeObjectWriter _fudgeObjectWriter = getFudgeContext().createObjectWriter(_output);
@@ -67,7 +68,7 @@ public abstract class AbstractFudgeBuilderTestCase {
     return (T) fudgeObjectReader.read();
   }
 
-  public static void isInstanceOf(Object parameter, Class clazz) {
+  public static void isInstanceOf(Object parameter, Class<?> clazz) {
     if (!clazz.isInstance(parameter)) {
       throw new AssertionError("Expected an object to be instance of <" + clazz.getName() + "> but it was instance of <" + parameter.getClass().getName() + "> actually.");
     }

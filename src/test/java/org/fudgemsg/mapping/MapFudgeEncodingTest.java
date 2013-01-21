@@ -15,28 +15,23 @@
  */
 package org.fudgemsg.mapping;
 
-
-import org.fudgemsg.AbstractFudgeBuilderTestCase;
-import org.fudgemsg.wire.MockIntegerSecondaryType;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Currency;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import org.fudgemsg.AbstractFudgeBuilderTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test Map Fudge encoding.
  */
-
 public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
-
 
   @Before
   public void registerSecondaryType() {
@@ -51,7 +46,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     map.put("A", 1);
     map.put("B", 2);
 
-    Map deserializedObject = cycleObject(map);
+    Map<String, Integer> deserializedObject = cycleObject(map);
 
     isInstanceOf(deserializedObject, HashMap.class);
 
@@ -75,7 +70,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     map.put(gbp, "Y");
     map.put(eur, "Z");
 
-    Map deserializedObject = cycleObject(map);
+    Map<Currency, String> deserializedObject = cycleObject(map);
 
     isInstanceOf(deserializedObject, HashMap.class);
 
@@ -100,7 +95,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     map.put("Y", gbp);
     map.put("Z", eur);
 
-    Map deserializedObject = cycleObject(map);
+    Map<String, Currency> deserializedObject = cycleObject(map);
 
     isInstanceOf(deserializedObject, HashMap.class);
 
@@ -128,7 +123,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     map.put("W", null);
     map.put("Z", eur);
 
-    Map deserializedObject = cycleObject(map);
+    Map<String, Currency> deserializedObject = cycleObject(map);
 
     isInstanceOf(deserializedObject, HashMap.class);
 
@@ -151,7 +146,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
   @Test
   public void testMapWithMixedValues() {
-    Map map = new HashMap();
+    Map<String, Serializable> map = new HashMap<String, Serializable>();
 
     Currency usd = Currency.getInstance("USD");
     Currency gbp = Currency.getInstance("GBP");
@@ -162,7 +157,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     map.put("Z", eur);
     map.put("T", "Some text");
 
-    Map deserializedObject = cycleObject(map);
+    Map<String, Serializable> deserializedObject = cycleObject(map);
 
     for (Object o : deserializedObject.keySet()) {
       isInstanceOf(o, String.class);
@@ -178,7 +173,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
   @Test
   public void testEmptyMap() {
-    Map map = new HashMap();
+    Map<String, String> map = new HashMap<String, String>();
 
     Object deserializedObject = cycleObject(map);
 
@@ -187,7 +182,7 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
   @Test
   public void testTypesHierarchy() {
-    Map map = new HashMap();
+    Map<Integer, HashSet<String>> map = new HashMap<Integer, HashSet<String>>();
 
     map.put(1, new HashSet<String>());
     map.put(2, new HashSet<String>());

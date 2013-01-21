@@ -29,7 +29,6 @@ import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.taxonomy.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
-import org.fudgemsg.test.FudgeUtils;
 import org.fudgemsg.wire.json.FudgeJSONStreamReader;
 import org.fudgemsg.wire.json.FudgeJSONStreamWriter;
 import org.junit.Test;
@@ -83,6 +82,7 @@ public class FudgeJSONTest {
       fmw.flush();
       System.out.println ();
     }
+    fmw.close();
   }
   
   /**
@@ -112,6 +112,9 @@ public class FudgeJSONTest {
       System.out.println (message);
 //      FudgeUtils.assertAllFieldsMatch (messages[i], message, false);
     }
+    
+    fmw.close();
+    fmr.close();
   }
   
 }

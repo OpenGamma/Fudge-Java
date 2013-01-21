@@ -36,8 +36,6 @@ import org.junit.Test;
 
 /**
  * 
- *
- * @author Andrew
  */
 public class FudgeXMLTest {
   
@@ -77,6 +75,9 @@ public class FudgeXMLTest {
       
       FudgeMsg nextMessage = fmr.nextMessage();
       assertNull(nextMessage);
+      
+      fmw.close();
+      fmr.close();
     }
     
     for (int i = 0; i < messages.length; i++) {
@@ -92,6 +93,9 @@ public class FudgeXMLTest {
       
       FudgeMsg nextMessage = fmr.nextMessage();
       assertNull(nextMessage);
+      
+      fmw.close();
+      fmr.close();
     }
   }
  
