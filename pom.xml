@@ -9,7 +9,7 @@
   <artifactId>fudge-java</artifactId>
   <packaging>jar</packaging>
   <name>Fudge Java</name>
-  <version>0.3.9.5</version>
+  <version>0.3.9.6</version>
   <description>A binary messaging system designed to scale from ad-hoc messages to long-term persistence</description>
   <url>http://fudgemsg.org</url>
 
@@ -387,7 +387,7 @@
     <repository>
       <id>og-maven-repo-public</id>
       <name>OpenGamma maven repository</name>
-      <url>${og-maven-repo-public.url}</url>
+      <url>${og-maven-repo-public.url}</url><!-- http://ivyrepos.opengamma.com/og-maven/public/ -->
       <layout>default</layout>
     </repository>
   </distributionManagement>
