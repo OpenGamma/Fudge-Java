@@ -19,9 +19,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Stack;
 
-import javax.time.calendar.LocalDate;
-import javax.time.calendar.LocalDateTime;
-import javax.time.calendar.LocalTime;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -35,6 +32,9 @@ import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamReader;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.LocalTime;
 
 /**
  * Reader that decodes XML into Fudge messages.

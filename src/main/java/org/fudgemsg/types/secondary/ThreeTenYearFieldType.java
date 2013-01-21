@@ -15,44 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.DateProvider;
-import javax.time.calendar.LocalDate;
-
 import org.fudgemsg.types.FudgeDate;
-import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.Year;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310LocalDateFieldType extends SecondaryFieldTypeBase<LocalDate, DateProvider, FudgeDate> {
+public class ThreeTenYearFieldType extends SecondaryFieldType<Year, FudgeDate> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310LocalDateFieldType INSTANCE = new JSR310LocalDateFieldType();
+  public static final ThreeTenYearFieldType INSTANCE = new ThreeTenYearFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310LocalDateFieldType() {
-    super(FudgeWireType.DATE, LocalDate.class);
+  private ThreeTenYearFieldType() {
+    super(FudgeWireType.DATE, Year.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeDate secondaryToPrimary(final LocalDate object) {
-    return new FudgeDate(object);
+  public FudgeDate secondaryToPrimary(final Year object) {
+    return new FudgeDate(object.getValue());
   }
 
   @Override
-  public LocalDate primaryToSecondary(final DateProvider object) {
-    return object.toLocalDate();
-  }
-
-  @Override
-  public boolean canConvertPrimary(final Class<? extends DateProvider> clazz) {
-    return DateProvider.class.isAssignableFrom(clazz);
+  public Year primaryToSecondary(final FudgeDate object) {
+    return Year.of(object.getYear());
   }
 
 }

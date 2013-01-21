@@ -15,33 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.TimeProvider;
-
 import org.fudgemsg.types.FudgeTime;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.OffsetTime;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310TimeProviderFieldType extends SecondaryFieldType<TimeProvider, FudgeTime> {
+public class ThreeTenOffsetTimeFieldType extends SecondaryFieldType<OffsetTime, FudgeTime> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310TimeProviderFieldType INSTANCE = new JSR310TimeProviderFieldType();
+  public static final ThreeTenOffsetTimeFieldType INSTANCE = new ThreeTenOffsetTimeFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310TimeProviderFieldType() {
-    super(FudgeWireType.TIME, TimeProvider.class);
+  private ThreeTenOffsetTimeFieldType() {
+    super(FudgeWireType.TIME, OffsetTime.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeTime secondaryToPrimary(final TimeProvider object) {
+  public FudgeTime secondaryToPrimary(final OffsetTime object) {
     return new FudgeTime(object);
+  }
+
+  @Override
+  public OffsetTime primaryToSecondary(final FudgeTime object) {
+    return object.toOffsetTime();
   }
 
 }

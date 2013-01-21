@@ -15,14 +15,15 @@
  */
 package org.fudgemsg.types;
 
+import static org.threeten.bp.temporal.ChronoField.DAY_OF_MONTH;
+import static org.threeten.bp.temporal.ChronoField.MONTH_OF_YEAR;
+import static org.threeten.bp.temporal.ChronoField.YEAR;
+
 import java.util.Calendar;
 
-import javax.time.Instant;
-import javax.time.InstantProvider;
-import javax.time.calendar.DateProvider;
-import javax.time.calendar.LocalDate;
-import javax.time.calendar.TimeZone;
-import javax.time.calendar.ZonedDateTime;
+import org.threeten.bp.DateTimeException;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.temporal.TemporalAccessor;
 
 /**
  * A date at varying precision.
@@ -32,7 +33,7 @@ import javax.time.calendar.ZonedDateTime;
  * <p>
  * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>.
  */
-public class FudgeDate implements DateProvider {
+public class FudgeDate {
 
   /**
    * The year.
@@ -60,7 +61,8 @@ public class FudgeDate implements DateProvider {
    * Constructs a new {@link FudgeDate} object representing a year and a month.
    * 
    * @param year  the year
-   * @param month  the month
+   * @param month  the month, from 1 to 31, or 0 if not set
+   * @throws IllegalArgumentException if the month is invalid
    */
   public FudgeDate(final int year, final int month) {
     this(year, month, 0);
@@ -70,8 +72,9 @@ public class FudgeDate implements DateProvider {
    * Constructs a new {@link FudgeDate} object.
    * 
    * @param year  the year
-   * @param month  the month
-   * @param day  the day
+   * @param month  the month, from 1 to 12, or 0 if not set
+   * @param day  the day, from 1 to 31, or 0 if not set
+   * @throws IllegalArgumentException if the month or day is invalid
    */
   public FudgeDate(final int year, final int month, final int day) {
     if (month < 0) {
@@ -84,8 +87,8 @@ public class FudgeDate implements DateProvider {
       throw new IllegalArgumentException("cannot specify day without month");
     }
     _year = year;
-    _month = month;
-    _day = day;
+    _month = (month == 0 ? 0 : MONTH_OF_YEAR.checkValidIntValue(month));
+    _day = (day == 0 ? 0 : DAY_OF_MONTH.checkValidIntValue(day));
   }
 
   /**
@@ -101,38 +104,27 @@ public class FudgeDate implements DateProvider {
 
   /**
    * Creates a new {@link FudgeDate} object.
+   * <p>
+   * The temporal object will be queried for the year, month and day fields.
+   * The accuracy will be set based on the available fields.
+   * Thus a {@code YearMonth} instance will have month accuracy.
    * 
-   * @param instant  the date corresponding to this instant at UTC will initialize the object
+   * @param temporal  the temporal object to create a date from, not null
+   * @throws DateTimeException if unable to convert
    */
-  protected FudgeDate(final Instant instant) {
-    this((DateProvider) ZonedDateTime.ofInstant(instant, TimeZone.UTC));
-  }
-
-  /**
-   * Creates a new {@link FudgeDate} object.
-   * 
-   * @param localDate  the {@link LocalDate} representation of the date
-   */
-  protected FudgeDate(final LocalDate localDate) {
-    this(localDate.getYear(), localDate.getMonthOfYear().getValue(), localDate.getDayOfMonth());
-  }
-
-  /**
-   * Creates a new {@link FudgeDate} object.
-   * 
-   * @param instantProvider  the date corresponding to the {@link Instant} provided at UTC will initialize the object
-   */
-  public FudgeDate(final InstantProvider instantProvider) {
-    this(instantProvider.toInstant());
-  }
-
-  /**
-   * Creates a new {@link FudgeDate} object.
-   * 
-   * @param dateProvider  provides the {@link LocalDate} representation of the date
-   */
-  public FudgeDate(final DateProvider dateProvider) {
-    this(dateProvider.toLocalDate());
+  public FudgeDate(final TemporalAccessor temporal) {
+    _year = temporal.get(YEAR);
+    if (temporal.isSupported(MONTH_OF_YEAR)) {
+      _month = temporal.get(MONTH_OF_YEAR);
+      if (temporal.isSupported(DAY_OF_MONTH)) {
+        _day = temporal.get(DAY_OF_MONTH);
+      } else {
+        _day = 0;
+      }
+    } else {
+      _month = 0;
+      _day = 0;
+    }
   }
 
   //-------------------------------------------------------------------------
@@ -187,7 +179,6 @@ public class FudgeDate implements DateProvider {
    * 
    * @return a {@code LocalDate} roughly equivalent to this date, not null
    */
-  @Override
   public LocalDate toLocalDate() {
     return LocalDate.of(
         getYear(),

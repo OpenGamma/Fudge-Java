@@ -15,38 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.OffsetDate;
-
-import org.fudgemsg.types.FudgeDateTime;
+import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.YearMonth;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310OffsetDateFieldType extends SecondaryFieldType<OffsetDate, FudgeDateTime> {
+public class ThreeTenYearMonthFieldType extends SecondaryFieldType<YearMonth, FudgeDate> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310OffsetDateFieldType INSTANCE = new JSR310OffsetDateFieldType();
+  public static final ThreeTenYearMonthFieldType INSTANCE = new ThreeTenYearMonthFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310OffsetDateFieldType() {
-    super(FudgeWireType.DATETIME, OffsetDate.class);
+  private ThreeTenYearMonthFieldType() {
+    super(FudgeWireType.DATE, YearMonth.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeDateTime secondaryToPrimary(final OffsetDate object) {
-    return new FudgeDateTime(object);
+  public FudgeDate secondaryToPrimary(final YearMonth object) {
+    return new FudgeDate(object.getYear(), object.getMonth().getValue());
   }
 
   @Override
-  public OffsetDate primaryToSecondary(final FudgeDateTime object) {
-    return object.toOffsetDate();
+  public YearMonth primaryToSecondary(final FudgeDate object) {
+    return YearMonth.of(object.getYear(), object.getMonthOfYear());
   }
 
 }

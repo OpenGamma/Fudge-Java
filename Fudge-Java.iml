@@ -35,8 +35,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.junit/junit/jars/junit-4.10.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-beanutils/jars/commons-beanutils-core-1.8.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-codec/jars/commons-codec-1.6.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/javax.time/jsr-310-ri/jars/threeten-TZDB-all-0.6.4.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/javax.time/jsr-310-ri/jars/threeten-core-0.6.4.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.threeten.bp/threetenbp/jars/threeten-TZDB-all-0.6.4.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.scannotation/scannotation/jars/scannotation-1.0.2.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.mongodb/mongo-java-driver/jars/mongo-java-driver-2.7.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.json/json/jars/org.json-1.0.0.v201011060100.jar!/" />
@@ -45,14 +44,14 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.junit/junit/javadocs/junit-javadoc-4.10.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-beanutils/javadocs/commons-beanutils-javadoc-1.8.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-codec/javadocs/commons-codec-javadoc-1.6.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/javax.time/jsr-310-ri/javadocs/threeten-core-javadoc-0.6.4.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.threeten.bp/threetenbp/javadocs/threeten-core-javadoc-0.6.4.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.mongodb/mongo-java-driver/javadocs/mongo-java-driver-javadoc-2.7.3.jar!/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.ivy2/cache/org.junit/junit/sources/junit-sources-4.10.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-beanutils/sources/commons-beanutils-sources-1.8.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.commons/commons-codec/sources/commons-codec-sources-1.6.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/javax.time/jsr-310-ri/sources/threeten-core-sources-0.6.4.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.threeten.bp/threetenbp/sources/threeten-core-sources-0.6.4.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.mongodb/mongo-java-driver/sources/mongo-java-driver-sources-2.7.3.jar!/" />
         </SOURCES>
       </library>

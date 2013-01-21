@@ -22,24 +22,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import javax.time.Instant;
-import javax.time.InstantProvider;
-import javax.time.calendar.DateProvider;
-import javax.time.calendar.DateTimeProvider;
-import javax.time.calendar.LocalDate;
-import javax.time.calendar.LocalDateTime;
-import javax.time.calendar.LocalTime;
-import javax.time.calendar.OffsetDate;
-import javax.time.calendar.OffsetDateTime;
-import javax.time.calendar.OffsetTime;
-import javax.time.calendar.TimeProvider;
-import javax.time.calendar.ZoneOffset;
-
 import org.fudgemsg.types.DateTimeAccuracy;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.FudgeTime;
 import org.junit.Test;
+import org.threeten.bp.Instant;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.LocalTime;
+import org.threeten.bp.OffsetDate;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.OffsetTime;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZoneOffset;
 
 /**
  * Tests the Date, Time and DateTime implementations
@@ -230,83 +226,38 @@ public class DateTimeTest {
   /**
    * Reference OffsetDateTime for 5 March 2010, 11:12:13.987 +01:00
    */
-  private OffsetDateTime getReferenceOffsetDateTime () {
-    return OffsetDateTime.of (2010, 3, 5, 11, 12, 13, 987000000, ZoneOffset.ofHours (1));
+  private OffsetDateTime getReferenceOffsetDateTime() {
+    return LocalDateTime.of(2010, 3, 5, 11, 12, 13, 987000000).atOffset(ZoneOffset.ofHours(1));
   }
-  
-  private OffsetDate getReferenceOffsetDate () {
-    return getReferenceOffsetDateTime ().toOffsetDate ();
+
+  private OffsetDate getReferenceOffsetDate() {
+    return getReferenceOffsetDateTime().toOffsetDate();
   }
-  
-  private OffsetTime getReferenceOffsetTime () {
-    return getReferenceOffsetDateTime ().toOffsetTime ();
+
+  private OffsetTime getReferenceOffsetTime() {
+    return getReferenceOffsetDateTime().toOffsetTime();
   }
-  
-  private DateProvider getReferenceDateProvider () {
-    return new DateProvider () {
-      @Override
-      public LocalDate toLocalDate() {
-        return getReferenceOffsetDate ().toLocalDate ();
-      }
-    };
+
+  private LocalDate getReferenceLocalDate() {
+    return getReferenceOffsetDateTime().getDate();
   }
-  
-  private TimeProvider getReferenceTimeProvider () {
-    return new TimeProvider () {
-      @Override
-      public LocalTime toLocalTime () {
-        return getReferenceOffsetTime ().toLocalTime ();
-      }
-    };
+
+  private LocalDateTime getReferenceLocalDateTime() {
+    return getReferenceOffsetDateTime().getDateTime();
   }
-  
-  private DateTimeProvider getReferenceDateTimeProvider () {
-    return new DateTimeProvider () {
-      @Override
-      public LocalDateTime toLocalDateTime () {
-        return getReferenceOffsetDateTime ().toLocalDateTime ();
-      }
-      @Override
-      public LocalDate toLocalDate () {
-        return getReferenceOffsetDateTime ().toLocalDate ();
-      }
-      @Override
-      public LocalTime toLocalTime () {
-        return getReferenceOffsetDateTime ().toLocalTime ();
-      }
-    };
+
+  private LocalTime getReferenceLocalTime() {
+    return getReferenceOffsetDateTime().getTime();
   }
-  
-  private LocalDate getReferenceLocalDate () {
-    return getReferenceDateProvider ().toLocalDate ();
+
+  private Instant getReferenceInstant() {
+    return getReferenceOffsetDateTime().toInstant();
   }
-  
-  private LocalDateTime getReferenceLocalDateTime () {
-    return getReferenceDateTimeProvider ().toLocalDateTime ();
+
+  private ZoneId getReferenceTimeZoneThreeTen() {
+    return ZoneId.of("Europe/Paris");
   }
-  
-  private LocalTime getReferenceLocalTime () {
-    return getReferenceTimeProvider ().toLocalTime ();
-  }
-  
-  private Instant getReferenceInstant () {
-    return getReferenceOffsetDateTime ().toInstant ();
-  }
-  
-  @SuppressWarnings("unused")
-  private InstantProvider getReferenceInstantProvider () {
-    return new InstantProvider () {
-      @Override
-      public Instant toInstant () {
-        return getReferenceInstant ();
-      }
-    };
-  }
-  
-  private javax.time.calendar.TimeZone getReferenceTimeZone310() {
-    return javax.time.calendar.TimeZone.UTC;
-  }
-  
+
   /**
    * Verify the derived objects:
    *   Calendar (via Date) against Instant
@@ -314,13 +265,13 @@ public class DateTimeTest {
    *   FudgeDateTimeNoTimezone against LocalDateTime
    */
   @Test
-  public void testReferenceObjects () {
-    assertEquals (getReferenceInstant (), getReferenceFudgeDateTime (DateTimeAccuracy.MILLISECOND).toInstant ());
-    assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.MILLISECOND).toInstant (), getReferenceFudgeDateTimeUTC (DateTimeAccuracy.MILLISECOND).toInstant ());
-    assertEquals (new Date (getReferenceInstant ().toEpochMillisLong ()), getReferenceDate ());
-    assertEquals (getReferenceLocalDateTime (), getReferenceFudgeDateTime (DateTimeAccuracy.MILLISECOND).toLocalDateTime ());
+  public void testReferenceObjects() {
+    assertEquals(getReferenceInstant(), getReferenceFudgeDateTime(DateTimeAccuracy.MILLISECOND).toInstant());
+    assertEquals(getReferenceFudgeDateTime(DateTimeAccuracy.MILLISECOND).toInstant(), getReferenceFudgeDateTimeUTC(DateTimeAccuracy.MILLISECOND).toInstant());
+    assertEquals(new Date(getReferenceInstant().toEpochMilli()), getReferenceDate());
+    assertEquals(getReferenceLocalDateTime(), getReferenceFudgeDateTime(DateTimeAccuracy.MILLISECOND).toLocalDateTime());
   }
-  
+
   /**
    * 
    */
@@ -489,14 +440,14 @@ public class DateTimeTest {
 //  }
   
   /**
-   * Test javax.time.TimeZone as secondary type.
+   * Test ZoneId as secondary type.
    */
   @Test
-  public void timeZone310Cycle() {
+  public void timeZoneThreeTenCycle() {
     final MutableFudgeMsg msg = _fudgeContext.newMessage();
-    msg.add(0, getReferenceTimeZone310());
+    msg.add(0, getReferenceTimeZoneThreeTen());
     final FudgeMsg msgOut = cycle(msg);
-    assertEquals(getReferenceTimeZone310(), (javax.time.calendar.TimeZone) msgOut.getFieldValue(javax.time.calendar.TimeZone.class, msgOut.getByOrdinal(0)));
+    assertEquals(getReferenceTimeZoneThreeTen(), (ZoneId) msgOut.getFieldValue(ZoneId.class, msgOut.getByOrdinal(0)));
   }
   
 }

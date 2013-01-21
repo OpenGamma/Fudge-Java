@@ -28,7 +28,7 @@ import org.fudgemsg.types.FudgeTime;
  * <p>
  * This is currently backed by a {@link FudgeTime}.
  * The secondary type mechanism is used to support additional Java representations,
- * such as {@link Date}, {@link Calendar} and {@code javax.time} classes.</p>
+ * such as {@link Date}, {@link Calendar} and {@code org.threeten.bp} classes.</p>
  * <p>
  * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime Encoding</a>.
  */

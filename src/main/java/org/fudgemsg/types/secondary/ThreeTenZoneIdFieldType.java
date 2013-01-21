@@ -15,38 +15,36 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.Instant;
-
-import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.ZoneId;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen {@link ZoneId} conversion to/from a {@link String} transport object. 
  */
-public class JSR310InstantFieldType extends SecondaryFieldType<Instant,FudgeDateTime> {
-  
+public class ThreeTenZoneIdFieldType extends SecondaryFieldType<ZoneId, String> {
+
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310InstantFieldType INSTANCE = new JSR310InstantFieldType ();
-  
+  public static final ThreeTenZoneIdFieldType INSTANCE = new ThreeTenZoneIdFieldType();
+
   /**
    * Restricted constructor.
    */
-  private JSR310InstantFieldType () {
-    super(FudgeWireType.DATETIME, Instant.class);
+  private ThreeTenZoneIdFieldType() {
+    super(FudgeWireType.STRING, ZoneId.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeDateTime secondaryToPrimary(final Instant object) {
-    return new FudgeDateTime (object);
+  public String secondaryToPrimary(ZoneId object) {
+    return object.getId();
   }
-  
+
   @Override
-  public Instant primaryToSecondary (final FudgeDateTime object) {
-    return object.toInstant ();
+  public ZoneId primaryToSecondary(String object) {
+    return ZoneId.of(object);
   }
 
 }

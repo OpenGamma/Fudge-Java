@@ -15,37 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.TimeZone;
-
+import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.OffsetDateTime;
 
 /**
- * Secondary type for JSR310 {@link TimeZone} conversion to/from a {@link String} transport object. 
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310TimeZoneFieldType extends SecondaryFieldType<TimeZone, String> {
+public class ThreeTenOffsetDateTimeFieldType extends SecondaryFieldType<OffsetDateTime, FudgeDateTime> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310TimeZoneFieldType INSTANCE = new JSR310TimeZoneFieldType();
+  public static final ThreeTenOffsetDateTimeFieldType INSTANCE = new ThreeTenOffsetDateTimeFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310TimeZoneFieldType() {
-    super(FudgeWireType.STRING, TimeZone.class);
+  private ThreeTenOffsetDateTimeFieldType() {
+    super(FudgeWireType.DATETIME, OffsetDateTime.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public String secondaryToPrimary(TimeZone object) {
-    return object.getID();
+  public FudgeDateTime secondaryToPrimary(final OffsetDateTime object) {
+    return new FudgeDateTime(object);
   }
 
   @Override
-  public TimeZone primaryToSecondary(String object) {
-    return TimeZone.of(object);
+  public OffsetDateTime primaryToSecondary(final FudgeDateTime object) {
+    return object.toOffsetDateTime();
   }
 
 }

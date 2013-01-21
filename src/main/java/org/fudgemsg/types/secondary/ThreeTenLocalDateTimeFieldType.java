@@ -15,38 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.YearMonth;
-
-import org.fudgemsg.types.FudgeDate;
+import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.LocalDateTime;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310YearMonthFieldType extends SecondaryFieldType<YearMonth, FudgeDate> {
+public class ThreeTenLocalDateTimeFieldType extends SecondaryFieldType<LocalDateTime, FudgeDateTime> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310YearMonthFieldType INSTANCE = new JSR310YearMonthFieldType();
+  public static final ThreeTenLocalDateTimeFieldType INSTANCE = new ThreeTenLocalDateTimeFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310YearMonthFieldType() {
-    super(FudgeWireType.DATE, YearMonth.class);
+  private ThreeTenLocalDateTimeFieldType() {
+    super(FudgeWireType.DATETIME, LocalDateTime.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeDate secondaryToPrimary(final YearMonth object) {
-    return new FudgeDate(object.getYear(), object.getMonthOfYear().getValue());
+  public FudgeDateTime secondaryToPrimary(final LocalDateTime object) {
+    return new FudgeDateTime(object);
   }
 
   @Override
-  public YearMonth primaryToSecondary(final FudgeDate object) {
-    return YearMonth.of(object.getYear(), object.getMonthOfYear());
+  public LocalDateTime primaryToSecondary(final FudgeDateTime object) {
+    return object.toLocalDateTime();
   }
 
 }

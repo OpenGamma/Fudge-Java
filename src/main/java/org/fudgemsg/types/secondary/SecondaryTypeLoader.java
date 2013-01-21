@@ -48,7 +48,7 @@ public class SecondaryTypeLoader {
       } catch (ClassNotFoundException ex) {
         throw new FudgeRuntimeException("secondary type" + secondaryFieldType + " not found", ex);
       } catch (NoClassDefFoundError ex) {
-        // ignore; a referenced class wasn't available (e.g. JSR-310)
+        // ignore; a referenced class wasn't available (e.g. ThreeTen)
       } catch (Exception ex) {
         throw new FudgeRuntimeException("couldn't register secondary type" + secondaryFieldType, ex);
       }

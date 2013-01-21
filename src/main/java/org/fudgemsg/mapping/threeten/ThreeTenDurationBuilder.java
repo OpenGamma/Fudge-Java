@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.fudgemsg.mapping.jsr310;
-
-import javax.time.Duration;
+package org.fudgemsg.mapping.threeten;
 
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
 import org.fudgemsg.mapping.FudgeBuilder;
 import org.fudgemsg.mapping.FudgeDeserializer;
 import org.fudgemsg.mapping.FudgeSerializer;
+import org.threeten.bp.Duration;
 
 /**
- * Builder for encoding and decoding JSR-310 Duration objects.
+ * Builder for encoding and decoding ThreeTen Duration objects.
  */
-public class JSR310DurationBuilder implements FudgeBuilder<Duration> {
+public class ThreeTenDurationBuilder implements FudgeBuilder<Duration> {
 
   /**
    * Singleton instance of the builder.
    */
-  public static final FudgeBuilder<Duration> INSTANCE = new JSR310DurationBuilder();
+  public static final FudgeBuilder<Duration> INSTANCE = new ThreeTenDurationBuilder();
   
   private static final String SECONDS_FIELD = "seconds";
   private static final String NANOS_FIELD = "nanos";
   
-  private JSR310DurationBuilder() {
+  private ThreeTenDurationBuilder() {
   }
   
   @Override
@@ -47,7 +45,7 @@ public class JSR310DurationBuilder implements FudgeBuilder<Duration> {
     }
     MutableFudgeMsg msg = serializer.newMessage();
     msg.add(SECONDS_FIELD, object.getSeconds());
-    msg.add(NANOS_FIELD, object.getNanoOfSecond());
+    msg.add(NANOS_FIELD, object.getNano());
     return msg;
   }
 

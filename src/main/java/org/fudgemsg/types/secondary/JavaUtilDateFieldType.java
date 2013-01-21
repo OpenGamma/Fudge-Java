@@ -17,13 +17,12 @@ package org.fudgemsg.types.secondary;
 
 import java.util.Date;
 
-import javax.time.Instant;
-
 import org.fudgemsg.types.DateTimeAccuracy;
 import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldTypeBase;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.Instant;
 
 /**
  * Secondary type for {@link Date} conversion to/from a {@link FudgeDate} or {@link FudgeDateTime}
@@ -47,7 +46,7 @@ public class JavaUtilDateFieldType extends SecondaryFieldTypeBase<Date, Object, 
   //-------------------------------------------------------------------------
   @Override
   public FudgeDateTime secondaryToPrimary(Date object) {
-    return new FudgeDateTime(DateTimeAccuracy.MILLISECOND, Instant.ofEpochMillis(object.getTime())); // Interim measure
+    return FudgeDateTime.ofUTC(DateTimeAccuracy.MILLISECOND, Instant.ofEpochMilli(object.getTime())); // Interim measure
   }
 
   @Override

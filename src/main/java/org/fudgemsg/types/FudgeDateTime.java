@@ -17,16 +17,17 @@ package org.fudgemsg.types;
 
 import java.util.Calendar;
 
-import javax.time.Instant;
-import javax.time.InstantProvider;
-import javax.time.calendar.DateTimeProvider;
-import javax.time.calendar.LocalDate;
-import javax.time.calendar.LocalDateTime;
-import javax.time.calendar.LocalTime;
-import javax.time.calendar.OffsetDate;
-import javax.time.calendar.OffsetDateTime;
-import javax.time.calendar.OffsetTime;
-import javax.time.calendar.ZoneOffset;
+import org.threeten.bp.DateTimeException;
+import org.threeten.bp.Instant;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.LocalTime;
+import org.threeten.bp.OffsetDate;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.OffsetTime;
+import org.threeten.bp.ZoneOffset;
+import org.threeten.bp.temporal.TemporalAccessor;
+import org.threeten.bp.temporal.TemporalQueries;
 
 /**
  * A date-time at varying precision.
@@ -36,7 +37,7 @@ import javax.time.calendar.ZoneOffset;
  * <p>
  * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>.
  */
-public class FudgeDateTime implements DateTimeProvider, InstantProvider {
+public class FudgeDateTime {
 
   /**
    * The Fudge date.
@@ -49,14 +50,45 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
 
   /**
    * Creates a new Fudge date/time representation.
+   * <p>
+   * This will use any offset from the temporal object.
+   * The temporal object must represent at least date and time.
+   * 
+   * @param instant  the instant, not null
+   * @return the date-time, not null
+   * @throws DateTimeException if unable to convert
+   */
+  public static FudgeDateTime ofUTC(final Instant instant) {
+    return new FudgeDateTime(OffsetDateTime.ofInstant(instant, ZoneOffset.UTC));
+  }
+
+  /**
+   * Creates a new Fudge date/time representation.
+   * <p>
+   * This will use any offset from the temporal object.
+   * The temporal object must represent at least date and time.
+   * 
+   * @param accuracy  the resolution of the representation, not null
+   * @param instant  the instant, not null
+   * @return the date-time, not null
+   * @throws DateTimeException if unable to convert
+   */
+  public static FudgeDateTime ofUTC(final DateTimeAccuracy accuracy, final Instant instant) {
+    return new FudgeDateTime(accuracy, OffsetDateTime.ofInstant(instant, ZoneOffset.UTC));
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Creates a new Fudge date/time representation.
    * 
    * @param precision  the resolution of the representation
    * @param year  the year
-   * @param month  the month
-   * @param day  the day
+   * @param month  the month, from 1 to 12
+   * @param day  the day, from 1 to 31
    * @param timezoneOffset  the time-zone offset in 15 minute intervals 
    * @param seconds  the seconds since midnight
    * @param nanos  the nanoseconds within the second
+   * @throws IllegalArgumentException if the month or day is invalid
    */
   public FudgeDateTime(
       final DateTimeAccuracy precision, final int year, final int month, final int day,
@@ -97,44 +129,6 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy  the resolution of the representation
-   * @param instant  the time instant, converted to a date-time using UTC
-   */
-  protected FudgeDateTime(final DateTimeAccuracy accuracy, final Instant instant) {
-    this(accuracy, OffsetDateTime.ofInstant(instant, ZoneOffset.UTC));
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param offsetDateTime  the date and time
-   */
-  public FudgeDateTime(final OffsetDateTime offsetDateTime) {
-    this(DateTimeAccuracy.NANOSECOND, offsetDateTime);
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param accuracy  the resolution of the representation
-   * @param offsetDateTime  the date and time
-   */
-  public FudgeDateTime(final DateTimeAccuracy accuracy, final OffsetDateTime offsetDateTime) {
-    this(new FudgeDate(offsetDateTime.toOffsetDate()), new FudgeTime(accuracy, offsetDateTime.toOffsetTime()));
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param offsetDate  the date, midnight on this day will be used for the time
-   */
-  public FudgeDateTime(final OffsetDate offsetDate) {
-    this(new FudgeDate(offsetDate), new FudgeTime(DateTimeAccuracy.DAY, offsetDate.atMidnight().toOffsetTime()));
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
    * @param localDateTime  the date, Midnight on this day will be used for the time
    */
   protected FudgeDateTime(final LocalDateTime localDateTime) {
@@ -144,55 +138,45 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param accuracy  the resolution of the representation 
-   * @param localDateTime  the date and time
+   * @param accuracy  the resolution of the representation, not null
+   * @param localDateTime  the date and time, not null
+   * @param offset  the offset, may be null
    */
-  protected FudgeDateTime(final DateTimeAccuracy accuracy, final LocalDateTime localDateTime) {
-    this(new FudgeDate(localDateTime), new FudgeTime(accuracy, localDateTime));
+  public FudgeDateTime(final DateTimeAccuracy accuracy, final LocalDateTime localDateTime, ZoneOffset offset) {
+    this(new FudgeDate(localDateTime.getDate()), new FudgeTime(accuracy, localDateTime.getTime(), offset));
+  }
+
+  /**
+   * Creates a new Fudge date/time representation.
+   * <p>
+   * This will use any offset from the temporal object.
+   * The temporal object must represent at least date and time.
+   * 
+   * @param temporal  the temporal object providing the time, not null
+   * @throws DateTimeException if unable to convert
+   */
+  public FudgeDateTime(final TemporalAccessor temporal) {
+    this(DateTimeAccuracy.NANOSECOND, temporal);
+  }
+
+  /**
+   * Creates a new Fudge date/time representation.
+   * <p>
+   * This will use any offset from the temporal object.
+   * The temporal object must represent at least date and time.
+   * 
+   * @param accuracy  the resolution of the representation , not null
+   * @param temporal  the temporal object providing the time, not null
+   * @throws DateTimeException if unable to convert
+   */
+  public FudgeDateTime(final DateTimeAccuracy accuracy, final TemporalAccessor temporal) {
+    this(accuracy, LocalDateTime.from(temporal), temporal.query(TemporalQueries.offset()));
   }
 
   /**
    * Creates a new Fudge date/time representation.
    * 
-   * @param instantProvider  the provider of an instant - the date and time at UTC will be used  
-   */
-  public FudgeDateTime(final InstantProvider instantProvider) {
-    this(DateTimeAccuracy.NANOSECOND, instantProvider);
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param accuracy  the resolution of the representation
-   * @param instantProvider  the provider of an instant - the date and time at UTC will be used 
-   */
-  public FudgeDateTime(final DateTimeAccuracy accuracy, final InstantProvider instantProvider) {
-    this(accuracy, instantProvider.toInstant());
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param dateTimeProvider  the provider of date and time 
-   */
-  public FudgeDateTime(final DateTimeProvider dateTimeProvider) {
-    this(DateTimeAccuracy.NANOSECOND, dateTimeProvider);
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param accuracy  the resolution of the representation 
-   * @param dateTimeProvider  the provider of date and time
-   */
-  public FudgeDateTime(final DateTimeAccuracy accuracy, final DateTimeProvider dateTimeProvider) {
-    this(accuracy, dateTimeProvider.toLocalDateTime());
-  }
-
-  /**
-   * Creates a new Fudge date/time representation.
-   * 
-   * @param calendar  the representation of the date and time
+   * @param calendar  the representation of the date and time, not null
    */
   public FudgeDateTime(final Calendar calendar) {
     this(new FudgeDate(calendar), new FudgeTime(calendar));
@@ -233,7 +217,6 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
    * 
    * @return a {@code LocalDate} roughly equivalent to this date-time, not null
    */
-  @Override
   public LocalDate toLocalDate() {
     return getDate().toLocalDate();
   }
@@ -244,9 +227,8 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
    * 
    * @return a {@code LocalDateTime} roughly equivalent to this date-time, not null
    */
-  @Override
   public LocalDateTime toLocalDateTime() {
-    return LocalDateTime.of(getDate(), getTime());
+    return toLocalDate().atTime(toLocalTime());
   }
 
   /**
@@ -255,7 +237,6 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
    * 
    * @return a {@code LocalTime} roughly equivalent to this date-time, not null
    */
-  @Override
   public LocalTime toLocalTime() {
     return getTime().toLocalTime();
   }
@@ -263,26 +244,32 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
   /**
    * Converts this date to a {@code OffsetDateTime}, using the first appropriate
    * value if any field is not set.
+   * <p>
+   * The offset is defaulted to UTC if not set.
    * 
    * @return a {@code OffsetDateTime} roughly equivalent to this date-time, not null
    */
   public OffsetDateTime toOffsetDateTime() {
-    return OffsetDateTime.of(getDate(), getTime(), getTime().getOffset());
+    return toOffsetTime().atDate(toLocalDate());
   }
 
   /**
    * Converts this date to a {@code OffsetDate}, using the first appropriate
    * value if any field is not set.
+   * <p>
+   * The offset is defaulted to UTC if not set.
    * 
    * @return a {@code OffsetDate} roughly equivalent to this date-time, not null
    */
   public OffsetDate toOffsetDate() {
-    return OffsetDate.of(getDate(), getTime().getOffset());
+    return toLocalDate().atOffset(_time.toZoneOffset() == null ? ZoneOffset.UTC : _time.toZoneOffset());
   }
 
   /**
    * Converts this date to a {@code OffsetTime}, using the first appropriate
    * value if any field is not set.
+   * <p>
+   * The offset is defaulted to UTC if not set.
    * 
    * @return a {@code OffsetTime} roughly equivalent to this date-time, not null
    */
@@ -293,10 +280,11 @@ public class FudgeDateTime implements DateTimeProvider, InstantProvider {
   /**
    * Converts this date to an {@code Instant}, using the first appropriate
    * value if any field is not set.
+   * <p>
+   * The offset is defaulted to UTC if not set.
    * 
    * @return an {@code Instant} roughly equivalent to this date-time, not null
    */
-  @Override
   public Instant toInstant() {
     return toOffsetDateTime().toInstant();
   }

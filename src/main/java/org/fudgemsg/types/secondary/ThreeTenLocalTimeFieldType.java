@@ -15,44 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.DateTimeProvider;
-import javax.time.calendar.LocalDateTime;
-
-import org.fudgemsg.types.FudgeDateTime;
-import org.fudgemsg.types.SecondaryFieldTypeBase;
+import org.fudgemsg.types.FudgeTime;
+import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.LocalTime;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310LocalDateTimeFieldType extends SecondaryFieldTypeBase<LocalDateTime, DateTimeProvider, FudgeDateTime> {
+public class ThreeTenLocalTimeFieldType extends SecondaryFieldType<LocalTime, FudgeTime> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310LocalDateTimeFieldType INSTANCE = new JSR310LocalDateTimeFieldType();
+  public static final ThreeTenLocalTimeFieldType INSTANCE = new ThreeTenLocalTimeFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310LocalDateTimeFieldType() {
-    super(FudgeWireType.DATETIME, LocalDateTime.class);
+  private ThreeTenLocalTimeFieldType() {
+    super(FudgeWireType.TIME, LocalTime.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeDateTime secondaryToPrimary(final LocalDateTime object) {
-    return new FudgeDateTime(object);
+  public FudgeTime secondaryToPrimary(final LocalTime object) {
+    return new FudgeTime(object);
   }
 
   @Override
-  public LocalDateTime primaryToSecondary(final DateTimeProvider object) {
-    return object.toLocalDateTime();
-  }
-
-  @Override
-  public boolean canConvertPrimary(final Class<? extends DateTimeProvider> clazz) {
-    return DateTimeProvider.class.isAssignableFrom(clazz);
+  public LocalTime primaryToSecondary(final FudgeTime object) {
+    return object.toLocalTime();
   }
 
 }

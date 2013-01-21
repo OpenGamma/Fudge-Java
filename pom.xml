@@ -50,8 +50,8 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git://github.com/FudgeMsg/Fudge-Java.git</connection>
-    <developerConnection>scm:git:https://github.com/FudgeMsg/Fudge-Java.git</developerConnection>
+    <connection>scm:git:git@github.com:FudgeMsg/Fudge-Java.git</connection>
+    <developerConnection>scm:git:git@github.com:FudgeMsg/Fudge-Java.git</developerConnection>
     <url>https://github.com/FudgeMsg/Fudge-Java</url>
   </scm>
   <organization>
@@ -90,7 +90,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.4.1</version>
+        <version>2.5</version>
         <configuration>
           <!-- delete contents of target, but not target itself -->
           <!-- so Eclipse derived setting is not lost on a clean -->
@@ -108,19 +108,19 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>3.0</version>
         <configuration>
           <verbose>true</verbose>
           <fork>true</fork>
-          <compilerVersion>1.6</compilerVersion>
-          <source>1.6</source>
-          <target>1.6</target>
+          <compilerVersion>1.7</compilerVersion>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.5</version>
+        <version>2.13</version>
         <configuration>
           <includes>
             <include>**/*Test.java</include>
@@ -133,7 +133,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.12</version>
+        <version>2.13</version>
         <configuration>
           <includes>
             <include>**/interop/*Test.java</include>
@@ -151,7 +151,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>2.4</version>
         <configuration>
           <archive>
             <manifest>
@@ -165,7 +165,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8.1</version>
+        <version>2.9</version>
         <configuration>
           <linksource>true</linksource>
           <links>
@@ -190,7 +190,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
+        <version>2.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -204,7 +204,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>2.1.1</version>
+        <version>3.2</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -213,7 +213,18 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4</version>
         <configuration>
           <descriptors>
             <descriptor>src/main/assembly/dist.xml</descriptor>
@@ -256,9 +267,9 @@
       <version>1.0.0.v20101106</version>
     </dependency>
     <dependency>
-      <groupId>com.opengamma.external.threeten</groupId>
-      <artifactId>threeten-core</artifactId>
-      <version>0.6.4</version>
+      <groupId>org.threeten</groupId>
+      <artifactId>threetenbp</artifactId>
+      <version>0.7</version>
     </dependency>
     <dependency>
       <groupId>net.sf.scannotation</groupId>
@@ -279,6 +290,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.6</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -298,7 +310,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8.1</version>
+        <version>2.9</version>
         <configuration>
           <linksource>true</linksource>
           <links>
@@ -314,7 +326,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.12</version>
+        <version>2.13</version>
         <configuration>
            <showSuccess>true</showSuccess>
         </configuration>
@@ -322,7 +334,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.12</version>
+        <version>2.13</version>
         <reportSets>
           <reportSet>
             <id>integration-tests</id>
@@ -335,7 +347,7 @@
       <!--plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.7.1</version>
+        <version>2.8</version>
         <configuration>
           <onlyCurrentVersion>true</onlyCurrentVersion>
         </configuration>
@@ -360,7 +372,7 @@
           <linkXref>true</linkXref>
           <sourceEncoding>utf-8</sourceEncoding>
           <minimumTokens>100</minimumTokens>
-          <targetJdk>1.5</targetJdk>
+          <targetJdk>1.7</targetJdk>
         </configuration>
       </plugin>
       <plugin>
@@ -379,7 +391,56 @@
       <layout>default</layout>
     </repository>
   </distributionManagement>
-
+  <profiles>
+    <profile>
+      <id>repo-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>oss.repo</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <version>1.0</version>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>1.7</version>
+                  <vendor>oracle</vendor>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

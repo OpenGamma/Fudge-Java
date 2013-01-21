@@ -15,38 +15,37 @@
  */
 package org.fudgemsg.types.secondary;
 
-import javax.time.calendar.Year;
-
-import org.fudgemsg.types.FudgeDate;
+import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.SecondaryFieldType;
 import org.fudgemsg.wire.types.FudgeWireType;
+import org.threeten.bp.Instant;
 
 /**
- * Secondary type for JSR-310 object conversion.
+ * Secondary type for ThreeTen object conversion.
  */
-public class JSR310YearFieldType extends SecondaryFieldType<Year, FudgeDate> {
+public class ThreeTenInstantFieldType extends SecondaryFieldType<Instant, FudgeDateTime> {
 
   /**
    * Singleton instance of the type.
    */
-  public static final JSR310YearFieldType INSTANCE = new JSR310YearFieldType();
+  public static final ThreeTenInstantFieldType INSTANCE = new ThreeTenInstantFieldType();
 
   /**
    * Restricted constructor.
    */
-  private JSR310YearFieldType() {
-    super(FudgeWireType.DATE, Year.class);
+  private ThreeTenInstantFieldType() {
+    super(FudgeWireType.DATETIME, Instant.class);
   }
 
   //-------------------------------------------------------------------------
   @Override
-  public FudgeDate secondaryToPrimary(final Year object) {
-    return new FudgeDate(object.getValue());
+  public FudgeDateTime secondaryToPrimary(final Instant object) {
+    return FudgeDateTime.ofUTC(object);
   }
 
   @Override
-  public Year primaryToSecondary(final FudgeDate object) {
-    return Year.of(object.getYear());
+  public Instant primaryToSecondary(final FudgeDateTime object) {
+    return object.toInstant();
   }
 
 }
