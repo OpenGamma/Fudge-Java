@@ -31,7 +31,6 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
-import org.threeten.bp.OffsetDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.OffsetTime;
 import org.threeten.bp.ZoneId;
@@ -230,24 +229,20 @@ public class DateTimeTest {
     return LocalDateTime.of(2010, 3, 5, 11, 12, 13, 987000000).atOffset(ZoneOffset.ofHours(1));
   }
 
-  private OffsetDate getReferenceOffsetDate() {
-    return getReferenceOffsetDateTime().toOffsetDate();
-  }
-
   private OffsetTime getReferenceOffsetTime() {
     return getReferenceOffsetDateTime().toOffsetTime();
   }
 
   private LocalDate getReferenceLocalDate() {
-    return getReferenceOffsetDateTime().getDate();
+    return getReferenceOffsetDateTime().toLocalDate();
   }
 
   private LocalDateTime getReferenceLocalDateTime() {
-    return getReferenceOffsetDateTime().getDateTime();
+    return getReferenceOffsetDateTime().toLocalDateTime();
   }
 
   private LocalTime getReferenceLocalTime() {
-    return getReferenceOffsetDateTime().getTime();
+    return getReferenceOffsetDateTime().toLocalTime();
   }
 
   private Instant getReferenceInstant() {
@@ -389,18 +384,6 @@ public class DateTimeTest {
     final FudgeMsg msgOut = cycle (msg);
     assertEquals (getReferenceFudgeDateTimeNoTimezone (DateTimeAccuracy.NANOSECOND).getTime (), (FudgeTime)msgOut.getByOrdinal (0).getValue ());
     assertEquals (getReferenceLocalTime (), msgOut.getFieldValue (LocalTime.class, msgOut.getByOrdinal (0)));
-  }
-  
-  /**
-   * 
-   */
-  @Test
-  public void offsetDateCycle () {
-    final MutableFudgeMsg msg = _fudgeContext.newMessage ();
-    msg.add (0, getReferenceOffsetDate ());
-    final FudgeMsg msgOut = cycle (msg);
-    assertEquals (getReferenceFudgeDateTime (DateTimeAccuracy.DAY), (FudgeDateTime)msgOut.getByOrdinal (0).getValue ());
-    assertEquals (getReferenceOffsetDate (), msgOut.getFieldValue (OffsetDate.class, msgOut.getByOrdinal (0)));
   }
   
   /**

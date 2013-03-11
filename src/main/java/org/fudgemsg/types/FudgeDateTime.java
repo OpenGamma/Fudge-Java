@@ -22,7 +22,6 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
-import org.threeten.bp.OffsetDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.OffsetTime;
 import org.threeten.bp.ZoneOffset;
@@ -143,7 +142,7 @@ public class FudgeDateTime {
    * @param offset  the offset, may be null
    */
   public FudgeDateTime(final DateTimeAccuracy accuracy, final LocalDateTime localDateTime, ZoneOffset offset) {
-    this(new FudgeDate(localDateTime.getDate()), new FudgeTime(accuracy, localDateTime.getTime(), offset));
+    this(new FudgeDate(localDateTime.toLocalDate()), new FudgeTime(accuracy, localDateTime.toLocalTime(), offset));
   }
 
   /**
@@ -251,18 +250,6 @@ public class FudgeDateTime {
    */
   public OffsetDateTime toOffsetDateTime() {
     return toOffsetTime().atDate(toLocalDate());
-  }
-
-  /**
-   * Converts this date to a {@code OffsetDate}, using the first appropriate
-   * value if any field is not set.
-   * <p>
-   * The offset is defaulted to UTC if not set.
-   * 
-   * @return a {@code OffsetDate} roughly equivalent to this date-time, not null
-   */
-  public OffsetDate toOffsetDate() {
-    return toLocalDate().atOffset(_time.toZoneOffset() == null ? ZoneOffset.UTC : _time.toZoneOffset());
   }
 
   /**
