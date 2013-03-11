@@ -9,7 +9,7 @@
   <artifactId>fudge-java</artifactId>
   <packaging>jar</packaging>
   <name>Fudge Java</name>
-  <version>0.3.9.6</version>
+  <version>0.3.9.7</version>
   <description>A binary messaging system designed to scale from ad-hoc messages to long-term persistence</description>
   <url>http://fudgemsg.org</url>
 
@@ -63,17 +63,13 @@
     <resources>
       <resource>
         <targetPath>META-INF</targetPath>
-        <directory>.</directory>
+        <directory>${basedir}</directory>
         <includes>
           <include>LICENSE.txt</include>
         </includes>
       </resource>
       <resource>
-        <targetPath>.</targetPath>
-        <directory>${project.build.sourceDirectory}</directory>
-        <includes>
-          <include>**/*.properties</include>
-        </includes>
+        <directory>${basedir}/src/main/resources</directory>
       </resource>
     </resources>
     <testResources>
