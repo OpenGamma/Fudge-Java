@@ -20,6 +20,7 @@ import static org.threeten.bp.temporal.ChronoField.MONTH_OF_YEAR;
 import static org.threeten.bp.temporal.ChronoField.YEAR;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.threeten.bp.DateTimeException;
 import org.threeten.bp.LocalDate;
@@ -36,7 +37,7 @@ import org.threeten.bp.temporal.TemporalAccessor;
 public class FudgeDate {
 
   /**
-   * The year.
+   * The year, using negative for BCE and positive for CE, year zero invalid.
    */
   private final int _year;
   /**
@@ -51,7 +52,7 @@ public class FudgeDate {
   /**
    * Constructs a new {@link FudgeDate} object representing just a year.
    * 
-   * @param year  the year
+   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
    */
   public FudgeDate(final int year) {
     this(year, 0, 0);
@@ -60,7 +61,7 @@ public class FudgeDate {
   /**
    * Constructs a new {@link FudgeDate} object representing a year and a month.
    * 
-   * @param year  the year
+   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
    * @param month  the month, from 1 to 31, or 0 if not set
    * @throws IllegalArgumentException if the month is invalid
    */
@@ -71,7 +72,7 @@ public class FudgeDate {
   /**
    * Constructs a new {@link FudgeDate} object.
    * 
-   * @param year  the year
+   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
    * @param month  the month, from 1 to 12, or 0 if not set
    * @param day  the day, from 1 to 31, or 0 if not set
    * @throws IllegalArgumentException if the month or day is invalid
@@ -97,7 +98,7 @@ public class FudgeDate {
    * @param date  the {@link Calendar} object supplying the year, month and day
    */
   public FudgeDate(final Calendar date) {
-    this(date.get(Calendar.YEAR),
+    this(date.get(Calendar.ERA) == GregorianCalendar.BC ? -date.get(Calendar.YEAR) : date.get(Calendar.YEAR),
         date.isSet(Calendar.MONTH) ? (date.get(Calendar.MONTH) + 1) : 0,
         date.isSet(Calendar.DAY_OF_MONTH) ? date.get(Calendar.DAY_OF_MONTH) : 0);
   }
@@ -113,7 +114,11 @@ public class FudgeDate {
    * @throws DateTimeException if unable to convert
    */
   public FudgeDate(final TemporalAccessor temporal) {
-    _year = temporal.get(YEAR);
+    int year = temporal.get(YEAR);
+    if (year <= 0) {
+      year--;
+    }
+    _year = year;
     if (temporal.isSupported(MONTH_OF_YEAR)) {
       _month = temporal.get(MONTH_OF_YEAR);
       if (temporal.isSupported(DAY_OF_MONTH)) {
@@ -129,7 +134,20 @@ public class FudgeDate {
 
   //-------------------------------------------------------------------------
   /**
+   * Gets the ISO year.
+   * This uses negative for BCE and positive for CE, counting year zero as the
+   * first year of the previous era.
+   * 
+   * @return the ISO year
+   */
+  public int getYearISO() {
+    return (_year >= 0 ? _year : _year + 1);
+  }
+
+  /**
    * Gets the stored year.
+   * The year uses negative for BCE and positive for CE, year zero invalid.
+   * Note that the constructors do not validate that the year is not zero.
    * 
    * @return the year
    */
@@ -139,6 +157,7 @@ public class FudgeDate {
 
   /**
    * Gets the month-of-year, or 0 if the date just represents a year
+   * Note that the constructors do not validate that the month is valid.
    * 
    * @return month-of-year
    */
@@ -148,6 +167,7 @@ public class FudgeDate {
 
   /**
    * Gets the day of the month, or 0 if the date just represents a year or year/month.
+   * Note that the constructors do not validate that the day-of-month is valid.
    * 
    * @return the day-of-month
    */
@@ -181,7 +201,7 @@ public class FudgeDate {
    */
   public LocalDate toLocalDate() {
     return LocalDate.of(
-        getYear(),
+        getYearISO(),
         getMonthOfYear() == 0 ? 1 : getMonthOfYear(),
         getDayOfMonth() == 0 ? 1 : getDayOfMonth());
   }

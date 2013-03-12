@@ -16,6 +16,7 @@
 package org.fudgemsg.types.secondary;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.fudgemsg.types.DateTimeAccuracy;
 import org.fudgemsg.types.FudgeDate;
@@ -68,6 +69,9 @@ public class JavaUtilCalendarFieldType extends SecondaryFieldTypeBase<Calendar, 
 
   private static void fudgeDateToCalendar(final Calendar cal, final FudgeDate date) {
     cal.set(Calendar.YEAR, date.getYear());
+    if (date.getYear() < 0) {
+      cal.set(Calendar.ERA, GregorianCalendar.BC);
+    }
     if (date.getAccuracy().greaterThan(DateTimeAccuracy.YEAR)) {
       cal.set(Calendar.MONTH, date.getMonthOfYear() - 1);
       if (date.getAccuracy().greaterThan(DateTimeAccuracy.MONTH)) {

@@ -81,7 +81,7 @@ public class FudgeDateTime {
    * Creates a new Fudge date/time representation.
    * 
    * @param precision  the resolution of the representation
-   * @param year  the year
+   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
    * @param month  the month, from 1 to 12
    * @param day  the day, from 1 to 31
    * @param timezoneOffset  the time-zone offset in 15 minute intervals 
