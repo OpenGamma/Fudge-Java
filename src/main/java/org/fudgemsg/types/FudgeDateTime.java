@@ -92,7 +92,7 @@ public class FudgeDateTime {
   public FudgeDateTime(
       final DateTimeAccuracy precision, final int year, final int month, final int day,
       final int timezoneOffset, final int seconds, final int nanos) {
-    this(new FudgeDate(year, month, day), new FudgeTime(precision, timezoneOffset, seconds, nanos));
+    this(FudgeDate.of(year, month, day), new FudgeTime(precision, timezoneOffset, seconds, nanos));
   }
 
   /**
@@ -142,7 +142,7 @@ public class FudgeDateTime {
    * @param offset  the offset, may be null
    */
   public FudgeDateTime(final DateTimeAccuracy accuracy, final LocalDateTime localDateTime, ZoneOffset offset) {
-    this(new FudgeDate(localDateTime.toLocalDate()), new FudgeTime(accuracy, localDateTime.toLocalTime(), offset));
+    this(FudgeDate.from(localDateTime.toLocalDate()), new FudgeTime(accuracy, localDateTime.toLocalTime(), offset));
   }
 
   /**
@@ -178,7 +178,7 @@ public class FudgeDateTime {
    * @param calendar  the representation of the date and time, not null
    */
   public FudgeDateTime(final Calendar calendar) {
-    this(new FudgeDate(calendar), new FudgeTime(calendar));
+    this(FudgeDate.from(calendar), new FudgeTime(calendar));
   }
 
   //-------------------------------------------------------------------------

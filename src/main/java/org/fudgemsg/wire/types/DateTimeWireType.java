@@ -59,11 +59,7 @@ final class DateTimeWireType extends FudgeWireType {
    */
   static FudgeDate readFudgeDate(final DataInput input) throws IOException {
     final int n = input.readInt();
-    final int dayOfMonth = (n & 31);
-    final int monthOfYear = (n >> 5) & 15;
-    final int year = n >> 9; // will sign-extend
-    //System.out.println ("readFudgeDate: " + n + ", " + year + ", " + monthOfYear + ", " + dayOfMonth);
-    return new FudgeDate(year, monthOfYear, dayOfMonth);
+    return FudgeDate.ofMessage(n);
   }
 
   /**
@@ -92,11 +88,7 @@ final class DateTimeWireType extends FudgeWireType {
    * @throws IOException if there is an error from the output target
    */
   static void writeFudgeDate(final DataOutput output, final FudgeDate value) throws IOException {
-    final int dayOfMonth = value.getDayOfMonth();
-    final int monthOfYear = value.getMonthOfYear();
-    final int year = value.getYear();
-    final int n = (year << 9) | ((monthOfYear & 15) << 5) | (dayOfMonth & 31);
-    //System.out.println ("writeFudgeDate: " + n + ", " + year + ", " + monthOfYear + ", " + dayOfMonth);
+    int n = value.toMessage();
     output.writeInt(n);
   }
 

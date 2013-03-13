@@ -40,7 +40,7 @@ public class ThreeTenYearFieldType extends SecondaryFieldType<Year, FudgeDate> {
   //-------------------------------------------------------------------------
   @Override
   public FudgeDate secondaryToPrimary(final Year object) {
-    return new FudgeDate(object);
+    return FudgeDate.from(object);
   }
 
   @Override

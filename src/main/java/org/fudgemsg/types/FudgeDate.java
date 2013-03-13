@@ -24,6 +24,8 @@ import java.util.GregorianCalendar;
 
 import org.threeten.bp.DateTimeException;
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.Year;
+import org.threeten.bp.YearMonth;
 import org.threeten.bp.temporal.TemporalAccessor;
 
 /**
@@ -35,6 +37,23 @@ import org.threeten.bp.temporal.TemporalAccessor;
  * For more details, please refer to <a href="http://wiki.fudgemsg.org/display/FDG/DateTime+encoding">DateTime encoding</a>.
  */
 public class FudgeDate {
+
+  /**
+   * The maximum year.
+   */
+  public static final int MAX_YEAR = 4_194_303;  // 23 bits max
+  /**
+   * The maximum year.
+   */
+  public static final int MIN_YEAR = -4_194_304;  // 23 bits min
+  /**
+   * The maximum value.
+   */
+  public static final FudgeDate MAX = new FudgeDate(MAX_YEAR, 15, 31);  // year = Integer.MAX_VALUE >> 9
+  /**
+   * The minimum value.
+   */
+  public static final FudgeDate MIN = new FudgeDate(MIN_YEAR, 15, 31);  // year = Integer.MIN_VALUE >> 9
 
   /**
    * The year, using negative for BCE and positive for CE, year zero invalid.
@@ -49,87 +68,141 @@ public class FudgeDate {
    */
   private final int _day;
 
+  //-------------------------------------------------------------------------
   /**
-   * Constructs a new {@link FudgeDate} object representing just a year.
+   * Obtains a {@link FudgeDate} object representing just a year.
    * 
-   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
+   * @param year  the year, using negative for BCE and positive for CE,
+   *  year zero invalid, from -999,999 to 999,999
+   * @throws RuntimeException if the year is invalid
+   * @return the date, not null
    */
-  public FudgeDate(final int year) {
-    this(year, 0, 0);
+  public static FudgeDate ofYear(int year) {
+    return FudgeDate.of(year, 0, 0);
   }
 
   /**
-   * Constructs a new {@link FudgeDate} object representing a year and a month.
+   * Obtains a {@link FudgeDate} object representing a year and a month.
    * 
-   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
+   * @param year  the year, using negative for BCE and positive for CE,
+   *  year zero invalid, from -999,999 to 999,999
    * @param month  the month, from 1 to 31, or 0 if not set
-   * @throws IllegalArgumentException if the month is invalid
+   * @return the date, not null
+   * @throws RuntimeException if the year or month is invalid
    */
-  public FudgeDate(final int year, final int month) {
-    this(year, month, 0);
+  public static FudgeDate ofYearMonth(int year, final int month) {
+    return FudgeDate.of(year, month, 0);
   }
 
   /**
-   * Constructs a new {@link FudgeDate} object.
+   * Obtains a {@link FudgeDate} object.
    * 
-   * @param year  the year, using negative for BCE and positive for CE, year zero invalid
+   * @param year  the year, using negative for BCE and positive for CE,
+   *  year zero invalid, from -999,999 to 999,999
    * @param month  the month, from 1 to 12, or 0 if not set
    * @param day  the day, from 1 to 31, or 0 if not set
-   * @throws IllegalArgumentException if the month or day is invalid
+   * @return the date, not null
+   * @throws RuntimeException if the year, month or day is invalid
    */
-  public FudgeDate(final int year, final int month, final int day) {
-    if (month < 0) {
-      throw new IllegalArgumentException("month cannot be negative");
+  public static FudgeDate of(int year, int month, int day) {
+    if (year == 0) {
+      throw new IllegalArgumentException("Year zero is not allowed, -1 is 1BCE");
     }
-    if (day < 0) {
-      throw new IllegalArgumentException("day cannot be negative");
+    if (year < MIN_YEAR) {
+      throw new IllegalArgumentException("Year too small, minimum is " + MIN_YEAR);
     }
-    if ((month == 0) && (day > 0)) {
-      throw new IllegalArgumentException("cannot specify day without month");
+    if (year > MAX_YEAR) {
+      throw new IllegalArgumentException("Year too large, minimum is " + MAX_YEAR);
     }
-    _year = year;
-    _month = (month == 0 ? 0 : MONTH_OF_YEAR.checkValidIntValue(month));
-    _day = (day == 0 ? 0 : DAY_OF_MONTH.checkValidIntValue(day));
+    if (month == 0) {
+      if (day != 0) {
+        throw new IllegalArgumentException("Cannot specify day without month");
+      }
+    } else {
+      if (day != 0) {
+        LocalDate.of(year, month, day);  // validation
+      } else {
+        MONTH_OF_YEAR.checkValidIntValue(month);
+      }
+    }
+    return new FudgeDate(year, month, day);
   }
 
   /**
-   * Creates a new {@link FudgeDate} object.
+   * Obtains a {@link FudgeDate} object from a message.
+   * <p>
+   * This is intended for use when reading a message.
+   * 
+   * @param message  the Fudge encoded message
+   * @return the date, not null
+   */
+  public static FudgeDate ofMessage(int message) {
+    final int dayOfMonth = (message & 31);
+    final int monthOfYear = (message >> 5) & 15;
+    final int year = message >> 9; // will sign-extend
+    return new FudgeDate(year, monthOfYear, dayOfMonth);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Obtains a {@link FudgeDate} object.
    * 
    * @param date  the {@link Calendar} object supplying the year, month and day
+   * @return the date, not null
    */
-  public FudgeDate(final Calendar date) {
-    this(date.get(Calendar.ERA) == GregorianCalendar.BC ? -date.get(Calendar.YEAR) : date.get(Calendar.YEAR),
+  public static FudgeDate from(Calendar date) {
+    return FudgeDate.of(date.get(Calendar.ERA) == GregorianCalendar.BC ? -date.get(Calendar.YEAR) : date.get(Calendar.YEAR),
         date.isSet(Calendar.MONTH) ? (date.get(Calendar.MONTH) + 1) : 0,
         date.isSet(Calendar.DAY_OF_MONTH) ? date.get(Calendar.DAY_OF_MONTH) : 0);
   }
 
   /**
-   * Creates a new {@link FudgeDate} object.
+   * Obtains a {@link FudgeDate} object.
    * <p>
    * The temporal object will be queried for the year, month and day fields.
    * The accuracy will be set based on the available fields.
    * Thus a {@code YearMonth} instance will have month accuracy.
    * 
    * @param temporal  the temporal object to create a date from, not null
+   * @return the date, not null
    * @throws DateTimeException if unable to convert
    */
-  public FudgeDate(final TemporalAccessor temporal) {
+  public static FudgeDate from(TemporalAccessor temporal) {
     int year = temporal.get(YEAR);
     if (year <= 0) {
       year--;
     }
-    _year = year;
+    int month = 0;
+    int day = 0;
     if (temporal.isSupported(MONTH_OF_YEAR)) {
-      _month = temporal.get(MONTH_OF_YEAR);
+      month = temporal.get(MONTH_OF_YEAR);
       if (temporal.isSupported(DAY_OF_MONTH)) {
-        _day = temporal.get(DAY_OF_MONTH);
-      } else {
-        _day = 0;
+        day = temporal.get(DAY_OF_MONTH);
       }
-    } else {
-      _month = 0;
-      _day = 0;
     }
+    if (year == Year.MAX_VALUE && month == 12 && day == 31) {
+      return MAX;
+    }
+    if (year == (Year.MIN_VALUE - 1) && month == 1 && day == 1) {
+      return MIN;
+    }
+    return FudgeDate.of(year, month, day);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Constructs a new {@link FudgeDate}.
+   * <p>
+   * No validation is performed for accurately storing the content of messages.
+   * 
+   * @param year  the year
+   * @param month  the month
+   * @param day  the day
+   */
+  protected FudgeDate(int year, int month, int day) {
+    _year = year;
+    _month = month;
+    _day = day;
   }
 
   //-------------------------------------------------------------------------
@@ -147,7 +220,8 @@ public class FudgeDate {
   /**
    * Gets the stored year.
    * The year uses negative for BCE and positive for CE, year zero invalid.
-   * Note that the constructors do not validate that the year is not zero.
+   * If the non-validated constructor is used (such as reading a message) then
+   * the result will not be validated.
    * 
    * @return the year
    */
@@ -156,8 +230,12 @@ public class FudgeDate {
   }
 
   /**
-   * Gets the month-of-year, or 0 if the date just represents a year
-   * Note that the constructors do not validate that the month is valid.
+   * Gets the stored month-of-year.
+   * <p>
+   * Normally returns 1 to 12.
+   * Returns 0 if the date just represents a year.
+   * Returns 15 if is a maximum or minimum date.
+   * Can return 13, 14 or 15 if an invalid message is read.
    * 
    * @return month-of-year
    */
@@ -166,8 +244,11 @@ public class FudgeDate {
   }
 
   /**
-   * Gets the day of the month, or 0 if the date just represents a year or year/month.
-   * Note that the constructors do not validate that the day-of-month is valid.
+   * Gets the stored day-of-month.
+   * This returns 0 if the date just represents a year or year-month.
+   * The maximum and minimum dates returns 31.
+   * If the non-validated constructor is used (such as reading a message) then
+   * the result will not be validated.
    * 
    * @return the day-of-month
    */
@@ -198,12 +279,31 @@ public class FudgeDate {
    * first month-of-year if the fields are not set.
    * 
    * @return a {@code LocalDate} roughly equivalent to this date, not null
+   * @throws DateTimeException if the year, month or day are invalid
    */
   public LocalDate toLocalDate() {
-    return LocalDate.of(
-        getYearISO(),
-        getMonthOfYear() == 0 ? 1 : getMonthOfYear(),
-        getDayOfMonth() == 0 ? 1 : getDayOfMonth());
+    // lenient
+    if (_month == 15) {
+      if (_year < 0) {
+        return LocalDate.MIN;
+      } else {
+        return LocalDate.MAX;
+      }
+    }
+    int year = getYearISO();
+    int month = Math.min(Math.max(_month, 1), 12);
+    int day = Math.min(Math.max(_day, 1), 31);
+    day = Math.min(day, YearMonth.of(year, month).lengthOfMonth());
+    return LocalDate.of(year, month, day);
+  }
+
+  /**
+   * Converts this date to a Fudge message {@code int}.
+   * 
+   * @return the Fudge int
+   */
+  public int toMessage() {
+    return (_year << 9) | ((_month & 15) << 5) | (_day & 31);
   }
 
   //-------------------------------------------------------------------------

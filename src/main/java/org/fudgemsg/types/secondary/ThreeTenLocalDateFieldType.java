@@ -40,7 +40,7 @@ public class ThreeTenLocalDateFieldType extends SecondaryFieldType<LocalDate, Fu
   //-------------------------------------------------------------------------
   @Override
   public FudgeDate secondaryToPrimary(final LocalDate object) {
-    return new FudgeDate(object);
+    return FudgeDate.from(object);
   }
 
   @Override

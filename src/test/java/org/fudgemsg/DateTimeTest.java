@@ -87,9 +87,11 @@ public class DateTimeTest {
   @Test
   public void fudgeDateCycle () {
     final MutableFudgeMsg msg = _fudgeContext.newMessage ();
-    msg.add (0, new FudgeDate (2010));
-    msg.add (1, new FudgeDate (2010, 3));
-    msg.add (2, new FudgeDate (2010, 3, 4));
+    msg.add (0, FudgeDate.ofYear (2010));
+    msg.add (1, FudgeDate.ofYearMonth (2010, 3));
+    msg.add (2, FudgeDate.of (2010, 3, 4));
+    msg.add (3, FudgeDate.MAX);
+    msg.add (4, FudgeDate.MIN);
     final FudgeMsg msgOut = cycle (msg);
     assertEquals (DateTimeAccuracy.YEAR, msgOut.getFieldValue (FudgeDate.class, msgOut.getByOrdinal (0)).getAccuracy ());
     assertEquals (DateTimeAccuracy.MONTH, msgOut.getFieldValue (FudgeDate.class, msgOut.getByOrdinal (1)).getAccuracy ());
