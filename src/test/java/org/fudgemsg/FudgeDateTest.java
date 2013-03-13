@@ -137,6 +137,7 @@ public class FudgeDateTest {
     assertEquals(2012, test.getYear());
     assertEquals(6, test.getMonthOfYear());
     assertEquals(30, test.getDayOfMonth());
+    assertEquals(LocalDate.of(2012, 6, 30), test.toLocalDate());
   }
 
   @Test
@@ -145,6 +146,7 @@ public class FudgeDateTest {
     assertEquals(-3, test.getYear());
     assertEquals(6, test.getMonthOfYear());
     assertEquals(30, test.getDayOfMonth());
+    assertEquals(LocalDate.of(-2, 6, 30), test.toLocalDate());
   }
 
   @Test
@@ -153,6 +155,7 @@ public class FudgeDateTest {
     assertEquals(FudgeDate.MAX_YEAR, test.getYear());
     assertEquals(15, test.getMonthOfYear());
     assertEquals(31, test.getDayOfMonth());
+    assertEquals(LocalDate.MAX, test.toLocalDate());
   }
 
   @Test
@@ -161,6 +164,7 @@ public class FudgeDateTest {
     assertEquals(FudgeDate.MIN_YEAR, test.getYear());
     assertEquals(15, test.getMonthOfYear());
     assertEquals(31, test.getDayOfMonth());
+    assertEquals(LocalDate.MIN, test.toLocalDate());
   }
 
 }
