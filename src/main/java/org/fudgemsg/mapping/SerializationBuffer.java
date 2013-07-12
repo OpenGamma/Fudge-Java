@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fudgemsg.mapping;
 
 import java.util.Stack;
@@ -50,7 +49,8 @@ import org.fudgemsg.FudgeRuntimeException;
    */
   /* package */void beginObject(final Object object) {
     if (_buffer.contains(object)) {
-      throw new UnsupportedOperationException("Serialization framework does not support cyclic references");
+      throw new UnsupportedOperationException("Serialization framework does not support cyclic references: " +
+          object + " " + (object != null ? object.getClass().getName() : "") + ", current buffer: " + _buffer);
     }
     _buffer.push(object);
   }
