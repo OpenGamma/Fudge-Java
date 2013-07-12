@@ -23,10 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.fudgemsg.AnnotationReflector;
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
-import org.fudgemsg.types.ClasspathUtilities;
 
 /**
  * Extensible dictionary of types that Fudge can convert to and from wire format.
@@ -113,7 +113,7 @@ public class FudgeObjectDictionary {
     _defaultBuilderFactory = new FudgeDefaultBuilderFactory();
 
     if (System.getProperty(AUTO_CLASSPATH_SCAN_PROPERTY) != null) {
-      addAllAnnotatedBuilders();
+      addAllAnnotatedBuilders(AnnotationReflector.getDefaultReflector());
     }
   }
 
@@ -299,49 +299,50 @@ public class FudgeObjectDictionary {
    * annotations and registers them with this dictionary.
    * This provides the ability to automatically configure the Fudge system.
    * This is potentially a <em>very</em> expensive operation, and as such is optional.
+   * 
+   * @param reflector  the reflector to use, not null
    */
-  public void addAllAnnotatedBuilders() {
+  public void addAllAnnotatedBuilders(AnnotationReflector reflector) {
     if (_haveScannedClasspath.getAndSet(true)) {
       return;
     }
-    Set<String> classNamesWithAnnotation = ClasspathUtilities.getClassNamesWithAnnotation(FudgeBuilderFor.class);
-    if (classNamesWithAnnotation == null) {
+    Set<Class<?>> classesWithAnnotation = reflector.getReflector().getTypesAnnotatedWith(FudgeBuilderFor.class);
+    if (classesWithAnnotation == null) {
       return;
     }
-    for (String className : classNamesWithAnnotation) {
-      addAnnotatedBuilderClass(className);
+    for (Class<?> clazz : classesWithAnnotation) {
+      addAnnotatedBuilderClass(clazz);
     }
-    classNamesWithAnnotation = ClasspathUtilities.getClassNamesWithAnnotation(GenericFudgeBuilderFor.class);
-    if (classNamesWithAnnotation == null) {
+    classesWithAnnotation = reflector.getReflector().getTypesAnnotatedWith(GenericFudgeBuilderFor.class);
+    if (classesWithAnnotation == null) {
       return;
     }
-    for (String className : classNamesWithAnnotation) {
-      addAnnotatedGenericBuilderClass(className);
+    for (Class<?> clazz : classesWithAnnotation) {
+      addAnnotatedGenericBuilderClass(clazz);
     }
   }
 
   /**
    * Registers a class which is known to have a {@code FudgeBuilderFor} annotation.
    * 
-   * @param className  the fully qualified name of the builder class, not null
+   * @param clazz  the fully qualified name of the builder class, not null
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private void addAnnotatedBuilderClass(String className) {
-    Class<?> builderClass = instantiateBuilderClass(className);
-    if ((builderClass == null)
-        || !builderClass.isAnnotationPresent(FudgeBuilderFor.class)) {
+  private void addAnnotatedBuilderClass(Class<?> clazz) {
+    if ((clazz == null)
+        || !clazz.isAnnotationPresent(FudgeBuilderFor.class)) {
       return;
     }
     
     Object builderInstance = null;
     try {
-      builderInstance = builderClass.newInstance();
+      builderInstance = clazz.newInstance();
     } catch (Exception ex) {
       // do nothing other than stack trace
       ex.printStackTrace();
       return;
     }
-    Class<?> forClass = builderClass.getAnnotation(FudgeBuilderFor.class).value();
+    Class<?> forClass = clazz.getAnnotation(FudgeBuilderFor.class).value();
     if (builderInstance instanceof FudgeMessageBuilder) {
       addMessageBuilder(forClass, (FudgeMessageBuilder) builderInstance);
     }
@@ -353,48 +354,28 @@ public class FudgeObjectDictionary {
   /**
    * Registers a class which is known to have a {@code GenericFudgeBuilderFor} annotation.
    * 
-   * @param className  the fully qualified name of the builder class, not null
+   * @param clazz  the fully qualified name of the builder class, not null
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private void addAnnotatedGenericBuilderClass(String className) {
-    Class<?> builderClass = instantiateBuilderClass(className);
-    if ((builderClass == null)
-        || !builderClass.isAnnotationPresent(GenericFudgeBuilderFor.class)) {
+  private void addAnnotatedGenericBuilderClass(Class<?> clazz) {
+    if ((clazz == null)
+        || !clazz.isAnnotationPresent(GenericFudgeBuilderFor.class)) {
       return;
     }
     
     Object builderInstance = null;
     try {
-      builderInstance = builderClass.newInstance();
+      builderInstance = clazz.newInstance();
     } catch (Exception ex) {
       // do nothing other than stack trace
       ex.printStackTrace();
       return;
     }
-    Class<?> forClass = builderClass.getAnnotation(GenericFudgeBuilderFor.class).value();
+    Class<?> forClass = clazz.getAnnotation(GenericFudgeBuilderFor.class).value();
     if (!(builderInstance instanceof FudgeBuilder)) {
-      throw new IllegalArgumentException("Annotated a generic builder " + builderClass + " but not a full FudgeBuilder<> implementation.");
+      throw new IllegalArgumentException("Annotated a generic builder " + clazz + " but not a full FudgeBuilder<> implementation.");
     }
     getDefaultBuilderFactory().addGenericBuilder(forClass, (FudgeBuilder) builderInstance);
-  }
-
-  /**
-   * Instantiates the builder.
-   * 
-   * @param className  the class name, not null
-   * @return the builder class, null if not instantiable
-   */
-  private Class<?> instantiateBuilderClass(String className) {
-    Class<?> builderClass = null;
-    try {
-      builderClass = Class.forName(className);
-    } catch (Exception ex) {
-      // Silently swallow. Can't actually populate it.
-      // This should be rare, and you can just stop at this breakpoint
-      // (which is why the stack trace is here at all).
-      ex.printStackTrace();
-    }
-    return builderClass;
   }
 
 }

@@ -315,9 +315,9 @@
       <version>0.8.1</version>
     </dependency>
     <dependency>
-      <groupId>net.sf.scannotation</groupId>
-      <artifactId>scannotation</artifactId>
-      <version>1.0.2</version>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.9-RC1</version>
     </dependency>
 
     <dependency>

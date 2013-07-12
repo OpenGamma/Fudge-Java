@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import org.fudgemsg.mapping.FudgeBuilderFor;
-import org.fudgemsg.types.ClasspathUtilities;
 import org.fudgemsg.types.FudgeSecondaryType;
 import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorFieldTypeConverter;
@@ -395,17 +394,16 @@ public class FudgeTypeDictionary {
    * which ones have the {@link FudgeSecondaryType} annotation, and registers those as appropriate
    * secondary types.
    * This is potentially a <em>very</em> expensive operation, and as such is optional.
+   * 
+   * @param reflector  the reflector to use, not null
    */
-  public void addAllAnnotatedSecondaryTypes() {
+  public void addAllAnnotatedSecondaryTypes(AnnotationReflector reflector) {
     if (_haveScannedClasspath.getAndSet(true)) {
       return;
     }
-    final Set<String> classNamesWithAnnotation = ClasspathUtilities.getClassNamesWithAnnotation(FudgeSecondaryType.class);
-    if (classNamesWithAnnotation == null) {
-      return;
-    }
-    for (String className : classNamesWithAnnotation) {
-      addAnnotatedSecondaryTypeClass(className);
+    final Set<Field> fields = reflector.getReflector().getFieldsAnnotatedWith(FudgeSecondaryType.class);
+    for (Field field : fields) {
+      addAnnotatedSecondaryType(field);
     }
   }
 
@@ -413,41 +411,38 @@ public class FudgeTypeDictionary {
    * Add a class which is known to have a {@link FudgeBuilderFor} annotation as an
    * object or message builder (or both). 
    * 
-   * @param className  the fully qualified name of the builder class.
+   * @param clazz  the secondary type class
    */
-  public void addAnnotatedSecondaryTypeClass(String className) {
-    Class<?> builderClass = null;
-    try {
-      builderClass = Class.forName(className);
-    } catch (Exception ex) {
-      // Silently swallow. Can't actually populate it.
-      // This should be rare, and you can just stop at this breakpoint
-      // (which is why the stack trace is here at all).
-      ex.printStackTrace();
-      return;
+  public void addAnnotatedSecondaryType(Field field) {
+    if (!field.isAnnotationPresent(FudgeSecondaryType.class)) {
+      throw new FudgeRuntimeException("Invalid field, no FudgeSecondaryType annotation");
     }
-    
-    for (Field field : builderClass.getFields()) {
-      if (!field.isAnnotationPresent(FudgeSecondaryType.class)) {
-        continue;
-      }
-      int fieldModifiers = field.getModifiers();
-      if (!Modifier.isStatic(fieldModifiers)) {
-        continue;
-      }
-      if (!Modifier.isPublic(fieldModifiers)) {
-        continue;
-      }
-      if (!Modifier.isStatic(fieldModifiers)) {
-        continue;
-      }
+    int fieldModifiers = field.getModifiers();
+    if (Modifier.isStatic(fieldModifiers) && Modifier.isPublic(fieldModifiers)) {
       FudgeFieldType fudgeType;
       try {
         fudgeType = (FudgeFieldType) field.get(null);
       } catch (Exception ex) {
-        throw new FudgeRuntimeException("Cannot access field " + field.getName() + " on class " + builderClass.getName() + " with @FudgeSecondaryType annotation", ex);
+        throw new FudgeRuntimeException("Cannot access field " + field.getName() + " on class " +
+            field.getDeclaringClass().getName() + " with @FudgeSecondaryType annotation", ex);
       }
       addType(fudgeType);
+    } else {
+      throw new FudgeRuntimeException("Invalid field, not 'public static'");
+    }
+  }
+
+  /**
+   * Add a class which is known to have a {@link FudgeBuilderFor} annotation as an
+   * object or message builder (or both). 
+   * 
+   * @param clazz  the secondary type class
+   */
+  public void addAnnotatedSecondaryTypeClass(Class<?> clazz) {
+    for (Field field : clazz.getFields()) {
+      if (field.isAnnotationPresent(FudgeSecondaryType.class)) {
+        addAnnotatedSecondaryType(field);
+      }
     }
   }
 
