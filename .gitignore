@@ -1,15 +1,19 @@
-bin/
-build/
-classes/
-dist/
-docs/
-tests/classes/
-tests/output/
-lib/
+.project
+.checkstyle
+.classpath
+.settings/
+/bin/
+/build/
+/classes/
+/dist/
+/docs/
+/tests/classes/
+/tests/output/
+/lib/
+/target/
 /MANIFEST.MF
 build.number
 tests/*.dat
 
 # NetBeans specific
 nbproject/private
-/target/
