@@ -148,7 +148,7 @@ public class AnnotationReflector {
       filter = DEFAULT_ANNOTATION_REFLECTOR_FILTER;
     }
     if (urlsToScan == null) {
-      urlsToScan = ClasspathHelper.forManifest();
+      urlsToScan = ClasspathHelper.forManifest(ClasspathHelper.forJavaClassPath());
     }
     if (scanners == null || scanners.length == 0) {
       scanners = new Scanner[] {new TypeAnnotationsScanner(), new FieldAnnotationsScanner()};
