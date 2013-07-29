@@ -16,6 +16,9 @@
 package org.fudgemsg;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.reflections.Configuration;
@@ -39,7 +42,7 @@ public class AnnotationReflector {
   /**
    * The default set of packages to exclude.
    */
-  private static final String DEFAULT_ANNOTATION_REFLECTOR_FILTER =
+  public static final String DEFAULT_ANNOTATION_REFLECTOR_FILTER =
       "-java., " +
       "-javax., " +
       "-sun., " +
@@ -110,7 +113,7 @@ public class AnnotationReflector {
    */
   public static synchronized AnnotationReflector getDefaultReflector() {
     if (s_defaultReflector == null) {
-      initDefaultReflector(null, null);
+      initDefaultReflector(new AnnotationReflector(null, null));
     }
     return s_defaultReflector;
   }
@@ -120,16 +123,13 @@ public class AnnotationReflector {
    * <p>
    * This is used to find annotations.
    * 
-   * @param filter  a filter string, such as '+com.foobar' or '-org.springframework',
-   *  null uses a default excluding many common open source libraries
-   * @param urlsToScan  the URLs to scan, null defaults to the class loader based classpath
-   * @param scanners  the scanners to use, null or empty uses the default set
+   * @param reflector  the reflector, not null
    */
-  public static synchronized void initDefaultReflector(String filter, Set<URL> urlsToScan, Scanner... scanners) {
+  public static synchronized void initDefaultReflector(AnnotationReflector reflector) {
     if (s_defaultReflector != null) {
       throw new FudgeRuntimeException("Annotation reflector has already been initialized");
     }
-    s_defaultReflector = new AnnotationReflector(filter, urlsToScan, scanners);
+    s_defaultReflector = reflector;
   }
 
   //-------------------------------------------------------------------------
@@ -137,28 +137,49 @@ public class AnnotationReflector {
    * Constructs a new reflector.
    * <p>
    * This class wraps the underlying reflector.
+   * <p>
+   * The last argument is passed to {@link ConfigurationBuilder#build(Object...)}.
+   * It typically consists of {@link Scanner} and {@link ClassLoader} instances.
+   * If no scanners are specified, the type and field scanners are added.
+   * If the filter is null, a default filter is added excluding common OSS projects.
+   * If the URL set is null, the Java class path is used.
    * 
    * @param filter  a filter string, such as '+com.foobar' or '-org.springframework',
-   *  null uses a default excluding many common open source libraries
-   * @param urlsToScan  the URLs to scan, null defaults to the class loader based classpath
-   * @param scanners  the scanners to use, null or empty uses the default set
+   *  null uses a default excluding many common open source libraries,
+   *  an empty string relies on filtering being added in the Object array
+   * @param urlsToScan  the URLs to scan, null defaults to the java class path
+   * @param configurationObjects  the configuration objects to use, not null
    */
-  public AnnotationReflector(String filter, Set<URL> urlsToScan, Scanner... scanners) {
+  public AnnotationReflector(String filter, Set<URL> urlsToScan, Object... configurationObjects) {
+    List<Object> objects = new ArrayList<>(Arrays.asList(configurationObjects));
+    // null filter uses our default, empty uses no filter
     if (filter == null) {
       filter = DEFAULT_ANNOTATION_REFLECTOR_FILTER;
     }
+    if (filter.length() > 0) {
+      objects.add(FilterBuilder.parse(filter));
+    }
+    // null URLs uses our default
     if (urlsToScan == null) {
       urlsToScan = ClasspathHelper.forManifest(ClasspathHelper.forJavaClassPath());
     }
-    if (scanners == null || scanners.length == 0) {
-      scanners = new Scanner[] {new TypeAnnotationsScanner(), new FieldAnnotationsScanner()};
+    objects.add(urlsToScan);
+    // no scanners uses our default
+    boolean found = false;
+    for (Object object : objects) {
+      if (object instanceof Scanner) {
+        found = true;
+        break;
+      }
     }
-    Configuration config = new ConfigurationBuilder()
-      .setUrls(urlsToScan)
-      .setScanners(scanners)
-      .filterInputsBy(FilterBuilder.parse(filter))
-      .useParallelExecutor();
-    _reflections = new Reflections(config);
+    if (found == false) {
+      objects.add(new TypeAnnotationsScanner());
+      objects.add(new FieldAnnotationsScanner());
+    }
+    // create parallel builder
+    ConfigurationBuilder builder = ConfigurationBuilder.build(objects);
+    builder.useParallelExecutor();
+    _reflections = builder.build();
   }
 
   /**
