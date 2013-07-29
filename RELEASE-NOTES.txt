@@ -68,3 +68,6 @@ The wire protocol is unchanged.
 - FudgeXMLStreamWriter
   Constructor changed to have settings at the end
 
+- Annotation scanning
+  Change to use Reflections library rather than scannotations, exposed via AnnotationReflector class
+
