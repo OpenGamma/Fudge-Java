@@ -23,12 +23,18 @@ import java.util.Set;
 
 import org.reflections.Configuration;
 import org.reflections.Reflections;
+import org.reflections.ReflectionsException;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.Scanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+import org.reflections.util.FilterBuilder.Exclude;
+import org.reflections.util.FilterBuilder.Include;
+import org.reflections.util.Utils;
+
+import com.google.common.base.Predicate;
 
 /**
  * Wraps a tool that can scan annotations in classes.
@@ -43,59 +49,60 @@ public class AnnotationReflector {
    * The default set of packages to exclude.
    */
   public static final String DEFAULT_ANNOTATION_REFLECTOR_FILTER =
-      "-java., " +
-      "-javax., " +
-      "-sun., " +
-      "-sunw., " +
-      "-com.sun., " +
-      "-org.springframework., " +
-      "-org.eclipse., " +
-      "-org.apache., " +
-      "-org.antlr., " +
-      "-org.hibernate., " +
-      "-org.fudgemsg., " +
-      "-org.threeten., " +
-      "-org.reflections., " +
-      "-org.joda., " +
-      "-cern.clhep., " +
-      "-cern.colt., " +
-      "-cern.jet.math., " +
-      "-ch.qos.logback., " +
-      "-com.codahale.metrics., " +
-      "-com.mongodb., " +
-      "-com.sleepycat., " +
-      "-com.yahoo.platform.yui., " +
-      "-de.odysseus.el., " +
-      "-freemarker., " +
-      "-groovy., " +
-      "-groovyjar, " +
-      "-it.unimi.dsi.fastutil., " +
-      "-jargs.gnu., " +
-      "-javassist., " +
-      "-jsr166y., " +
-      "-net.sf.ehcache., " +
-      "-org.bson., " +
-      "-org.codehaus.groovy., " +
-      "-org.cometd., " +
-      "-com.google.common., " +
-      "-org.hsqldb., " +
-      "-com.jolbox., " +
-      "-edu.emory.mathcs., " +
-      "-info.ganglia., " +
-      "-org.aopalliance., " +
-      "-org.dom4j., " +
-      "-org.mozilla.javascript., " +
-      "-org.mozilla.classfile., " +
-      "-org.objectweb.asm., " +
-      "-org.osgi., " +
-      "-org.postgresql., " +
-      "-org.quartz., " +
-      "-org.slf4j., " +
-      "-org.w3c.dom, " +
-      "-org.xml.sax., " +
-      "-org.jcsp., " +
-      "-org.json., " +
-      "-redis.";
+      "-java, " +
+      "-javax, " +
+      "-sun, " +
+      "-sunw, " +
+      "-com.sun, " +
+      "-org.springframework, " +
+      "-org.eclipse, " +
+      "-org.apache, " +
+      "-org.antlr, " +
+      "-org.hibernate, " +
+      "-org.threeten, " +
+      "-org.reflections, " +
+      "-org.joda, " +
+      "-cern.clhep, " +
+      "-cern.colt, " +
+      "-cern.jet.math, " +
+      "-ch.qos.logback, " +
+      "-com.codahale.metrics, " +
+      "-com.mongodb, " +
+      "-com.sleepycat, " +
+      "-com.yahoo.platform.yui, " +
+      "-de.odysseus.el, " +
+      "-freemarker, " +
+      "-groovy, " +
+      "-groovyjar*, " +
+      "-it.unimi.dsi.fastutil, " +
+      "-jargs.gnu, " +
+      "-javassist, " +
+      "-jsr166y, " +
+      "-net.sf.ehcache, " +
+      "-org.bson, " +
+      "-org.codehaus.groovy, " +
+      "-org.cometd, " +
+      "-com.google.common, " +
+      "-org.hsqldb, " +
+      "-com.jolbox, " +
+      "-edu.emory.mathcs, " +
+      "-info.ganglia, " +
+      "-org.aopalliance, " +
+      "-org.dom4j, " +
+      "-org.junit, " +
+      "-org.mozilla.javascript, " +
+      "-org.mozilla.classfile, " +
+      "-org.objectweb.asm, " +
+      "-org.osgi, " +
+      "-org.postgresql, " +
+      "-org.quartz, " +
+      "-org.slf4j, " +
+      "-org.testng, " +
+      "-org.w3c.dom*, " +
+      "-org.xml.sax, " +
+      "-org.jcsp, " +
+      "-org.json, " +
+      "-redis";
 
   /**
    * The annotation reflector.
@@ -157,13 +164,13 @@ public class AnnotationReflector {
       filter = DEFAULT_ANNOTATION_REFLECTOR_FILTER;
     }
     if (filter.length() > 0) {
-      objects.add(FilterBuilder.parse(filter));
+      objects.add(parsePackages(filter));
     }
     // null URLs uses our default
     if (urlsToScan == null) {
       urlsToScan = ClasspathHelper.forManifest(ClasspathHelper.forJavaClassPath());
     }
-    objects.add(urlsToScan);
+    objects.addAll(urlsToScan);
     // no scanners uses our default
     boolean found = false;
     for (Object object : objects) {
@@ -177,9 +184,52 @@ public class AnnotationReflector {
       objects.add(new FieldAnnotationsScanner());
     }
     // create parallel builder
-    ConfigurationBuilder builder = ConfigurationBuilder.build(objects);
+    Object[] objectArray = (Object[]) objects.toArray(new Object[objects.size()]);
+    ConfigurationBuilder builder = ConfigurationBuilder.build(objectArray);
     builder.useParallelExecutor();
     _reflections = builder.build();
+  }
+
+  /**
+   * Parses a string representation of an include/exclude filter.
+   * <p>
+   * The given includeExcludeString is a comma separated list of package name segments,
+   * each starting with either + or - to indicate include/exclude.
+   * <p>
+   * For example parsePackages("-java, -javax, -sun, -com.sun") or parse("+com.myn,-com.myn.excluded").
+   * Note that "-java" will block "java.foo" but not "javax.foo".
+   * <p>
+   * The input strings "-java" and "-java." are equivalent.
+   */
+  private static FilterBuilder parsePackages(String includeExcludeString) {
+    // copy of pull request  #5 to Reflections project
+    FilterBuilder builder = new FilterBuilder();
+    if (!Utils.isEmpty(includeExcludeString)) {
+      for (String string : includeExcludeString.split(",")) {
+        String trimmed = string.trim();
+        char prefix = trimmed.charAt(0);
+        String pattern = trimmed.substring(1);
+        if (pattern.endsWith(".") == false) {
+          pattern += ".";
+        }
+        pattern = FilterBuilder.prefix(pattern);
+
+        Predicate<String> filter;
+        switch (prefix) {
+        case '+':
+          filter = new Include(pattern);
+          break;
+        case '-':
+          filter = new Exclude(pattern);
+          break;
+        default:
+          throw new ReflectionsException(
+              "includeExclude should start with either + or -");
+        }
+        builder.add(filter);
+      }
+    }
+    return builder;
   }
 
   /**
