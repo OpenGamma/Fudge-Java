@@ -358,61 +358,14 @@ public class FudgeTime {
   }
 
   /**
-   * Returns a string representation of the time.
+   * Returns a string representation of the time using {@link OffsetTime#toString()}.
+   * This ignores the accuracy but is trivial to parse.
    * 
    * @return the time as a string, not null
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-    if (getAccuracy().greaterThan(DateTimeAccuracy.DAY)) {
-      if (getHour() < 10) {
-        sb.append('0');
-      }
-      sb.append(getHour());
-      if (getAccuracy().greaterThan(DateTimeAccuracy.HOUR)) {
-        sb.append(':');
-        if (getMinute() < 10) {
-          sb.append('0');
-        }
-        sb.append(getMinute());
-        if (getAccuracy().greaterThan(DateTimeAccuracy.MINUTE)) {
-          sb.append(':');
-          if (getSeconds() < 10) {
-            sb.append('0');
-          }
-          sb.append(getSeconds());
-          if (getAccuracy().greaterThan(DateTimeAccuracy.SECOND)) {
-            int frac = getNanos();
-            if (getAccuracy().lessThan(DateTimeAccuracy.NANOSECOND)) {
-              frac /= 1000;
-              if (getAccuracy().lessThan(DateTimeAccuracy.MICROSECOND)) {
-                frac /= 1000;
-              }
-            }
-            sb.append('.').append(frac);
-          }
-        }
-      }
-    }
-    if (hasTimezoneOffset()) {
-      int tz = getTimezoneOffset() * 15;
-      if (tz == 0) {
-        sb.append(" UTC");
-      } else {
-        sb.append((tz > 0) ? " +" : " -");
-        if (tz < 0) {
-          tz = -tz;
-        }
-        sb.append(tz / 60).append(':');
-        tz %= 60;
-        if (tz < 10) {
-          sb.append('0');
-        }
-        sb.append(tz);
-      }
-    }
-    return sb.toString();
+    return toOffsetTime().toString();
   }
 
 }
