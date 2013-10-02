@@ -16,9 +16,13 @@
 
 package org.fudgemsg.mapping;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeField;
@@ -39,6 +43,8 @@ import org.fudgemsg.FudgeTypeDictionary;
  * This class is mutable and intended for use by a single thread.
  */
 public class FudgeDeserializer {
+
+  private static final Logger LOGGER = Logger.getLogger(FudgeDeserializer.class.getName());
 
   /**
    * The parent Fudge context.
@@ -146,14 +152,14 @@ public class FudgeDeserializer {
     List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);
     if (types.size() == 0) {
       // no types passed in ordinal zero
-      
-      
+
+
       //This loop is long, so Set implementations are too slow
       boolean valueTypeHintPresent = false;
       boolean keyTypeHintPresent = false;
       boolean valueOrdinalPresent = false;
       boolean keyOrdinalPresent = false;
-      
+
       for (FudgeField field : message) {
         if (field.getOrdinal() != null) {
           switch (field.getOrdinal()) {
@@ -173,10 +179,10 @@ public class FudgeDeserializer {
               // not a list/set/map
               return message;
           }
-         
+
         }
       }
-      
+
       int typeIndicator = 0;
       if (valueOrdinalPresent) {
         typeIndicator = BuilderUtil.VALUE_ORDINAL;
@@ -187,7 +193,7 @@ public class FudgeDeserializer {
       } else if (keyTypeHintPresent) {
         typeIndicator = BuilderUtil.KEY_ORDINAL;
       }
-      
+
 
       final Class<?> defaultClass = getFudgeContext().getObjectDictionary().getDefaultObjectClass(typeIndicator);
       if (defaultClass != null) {
@@ -274,14 +280,34 @@ public class FudgeDeserializer {
       } catch (Exception ex) {
         exceptions.add(ex);
         lastException = ex;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        ex.printStackTrace(ps);
+        LOGGER.warning("Exception:  "+baos.toString());
       }
     }
     // nothing matched
     if (lastException == null) {
-      throw new IllegalArgumentException("Unable to create " + clazz + " from " + message);      
+      throw new IllegalArgumentException("Unable to create " + clazz + " from " + message);
     } else {
       throw new FudgeRuntimeContextException("Unable to create " + clazz + " from " + message, lastException, exceptions);
     }
+  }
+
+  private String pprintMap(Map map){
+    StringBuilder sb = new StringBuilder();
+    Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
+    while (iter.hasNext()) {
+      Map.Entry<String, String> entry = iter.next();
+      sb.append(entry.getKey());
+      sb.append('=').append('"');
+      sb.append(entry.getValue());
+      sb.append('"');
+      if (iter.hasNext()) {
+        sb.append(',').append('\n');
+      }
+    }
+    return sb.toString();
   }
 
 }
