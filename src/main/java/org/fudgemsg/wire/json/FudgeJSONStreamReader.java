@@ -17,7 +17,12 @@ package org.fudgemsg.wire.json;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -196,6 +201,7 @@ public class FudgeJSONStreamReader implements FudgeStreamReader {
 
   @Override
   public boolean hasNext() {
+    // TODO this logic is broken. it truncates a message at the end of the first submessage
     if (getCurrentElement() == null || getCurrentElement().equals(FudgeStreamElement.SUBMESSAGE_FIELD_END)) {
       // haven't read anything yet (or have read a full message already)
       try {

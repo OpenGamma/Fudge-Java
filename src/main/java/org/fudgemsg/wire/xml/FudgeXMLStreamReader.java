@@ -28,13 +28,15 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.types.FudgeDateTime;
+import org.fudgemsg.types.FudgeTime;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamReader;
 import org.fudgemsg.wire.types.FudgeWireType;
 import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.LocalTime;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.OffsetTime;
 
 /**
  * Reader that decodes XML into Fudge messages.
@@ -259,9 +261,9 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
       case FudgeWireType.DATE_TYPE_ID:
         return LocalDate.parse(elementValue);
       case FudgeWireType.TIME_TYPE_ID:
-        return LocalTime.parse(elementValue);
+        return new FudgeTime(OffsetTime.parse(elementValue));
       case FudgeWireType.DATETIME_TYPE_ID:
-        return LocalDateTime.parse(elementValue);
+        return new FudgeDateTime(OffsetDateTime.parse(elementValue));
       default:
         return elementValue;
     }
