@@ -240,7 +240,7 @@ public class FudgeDeserializer {
       return (T) message;
     }
     FudgeObjectBuilder<T> builder;
-    List<Exception> exceptions = new ArrayList<Exception>();
+    List<Exception> exceptions = new ArrayList<>();
     Exception lastException = null;
 
     List<FudgeField> types = message.getAllByOrdinal(FudgeSerializer.TYPES_HEADER_ORDINAL);

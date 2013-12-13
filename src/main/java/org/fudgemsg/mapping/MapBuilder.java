@@ -28,6 +28,9 @@ import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
+import static org.fudgemsg.mapping.BuilderUtil.fieldValueToObject;
+import static org.fudgemsg.mapping.BuilderUtil.typeHintsFromFields;
+
 /**
  * Builder for {@code Map} objects.
  * <p/>
@@ -87,17 +90,12 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public Map<?, ?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
-    final Map<Object, Object> map = new HashMap<Object, Object>();
-    final Queue<Object> keys = new LinkedList<Object>();
-    final Queue<Object> values = new LinkedList<Object>();
+    final Map<Object, Object> map = new HashMap<>();
+    final Queue<Object> keys = new LinkedList<>();
+    final Queue<Object> values = new LinkedList<>();
 
     final List<FudgeField> keysTypeHints = message.getAllByOrdinal(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
     final List<FudgeField> valuesTypeHints = message.getAllByOrdinal(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
-
-    FudgeObjectBuilder<?> keyBuilder = BuilderUtil.findObjectBuilder(deserializer, keysTypeHints);
-    FudgeTypeConverter keyTypeConverter = BuilderUtil.findTypeConverter(deserializer, keysTypeHints);
-    FudgeObjectBuilder<?> valueBuilder = BuilderUtil.findObjectBuilder(deserializer, valuesTypeHints);
-    FudgeTypeConverter valueTypeConverter = BuilderUtil.findTypeConverter(deserializer, valuesTypeHints);
 
     for (FudgeField field : message) {
 
@@ -108,14 +106,9 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
         if(value instanceof IndicatorType){
           obj = null;
-        } else if (keyBuilder != null && value instanceof FudgeMsg) {
-          obj = keyBuilder.buildObject(deserializer, (FudgeMsg) value);
-        } else if (keyTypeConverter != null) {
-          obj = keyTypeConverter.primaryToSecondary(value);
         } else {
-          obj = deserializer.fieldValueToObject(field);
+          obj = fieldValueToObject(deserializer, typeHintsFromFields(deserializer, keysTypeHints), field);
         }
-        obj = (obj instanceof IndicatorType) ? null : obj;
 
         if (values.isEmpty()) {
           // no values ready, so store the key till next time
@@ -128,14 +121,9 @@ import org.fudgemsg.wire.types.FudgeWireType;
 
         if(value instanceof IndicatorType){
           obj = null;
-        } else if (valueBuilder != null && value instanceof FudgeMsg) {
-          obj = valueBuilder.buildObject(deserializer, (FudgeMsg) value);
-        } else if (valueTypeConverter != null) {
-          obj = valueTypeConverter.primaryToSecondary(value);
         } else {
-          obj = deserializer.fieldValueToObject(field);
+          obj = fieldValueToObject(deserializer, typeHintsFromFields(deserializer, valuesTypeHints), field);
         }
-        obj = (obj instanceof IndicatorType) ? null : obj;
 
         if (keys.isEmpty()) {
           // no keys ready, so store the value till next time

@@ -63,4 +63,9 @@ public class MockCurrencySecondaryType extends SecondaryFieldType<Currency, Numb
     return null;
   }
 
+  @Override
+  public boolean canConvertPrimary(Class<? extends Number> clazz) {
+    return Number.class.isAssignableFrom(clazz);
+  }
+
 }

@@ -26,6 +26,9 @@ import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
+import static org.fudgemsg.mapping.BuilderUtil.fieldValueToObject;
+import static org.fudgemsg.mapping.BuilderUtil.typeHintsFromFields;
+
 /**
  * Builder for {@code Set} objects.
  * <p/>
@@ -72,11 +75,9 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public Set<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
-    final Set<Object> set = new HashSet<Object>();
+    final Set<Object> set = new HashSet<>();
 
     final List<FudgeField> typeHints = message.getAllByOrdinal(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
-    FudgeObjectBuilder<?> entryBuilder = BuilderUtil.findObjectBuilder(deserializer, typeHints);
-    FudgeTypeConverter typeConverter = BuilderUtil.findTypeConverter(deserializer, typeHints);
 
     for (FudgeField field : message) {
       if ((field.getOrdinal() == null) && (field.getOrdinal() != BuilderUtil.KEY_ORDINAL) && (field.getOrdinal() != BuilderUtil.KEY_TYPE_HINT_ORDINAL)) {
@@ -88,12 +89,8 @@ import org.fudgemsg.wire.types.FudgeWireType;
         final Object obj;
         if(value instanceof IndicatorType){
           obj = null;
-        } else if (entryBuilder != null && value instanceof FudgeMsg) {
-          obj = entryBuilder.buildObject(deserializer, (FudgeMsg) value);
-        } else if (typeConverter != null) {
-          obj = typeConverter.primaryToSecondary(value);
         } else {
-          obj = deserializer.fieldValueToObject(field);
+          obj = fieldValueToObject(deserializer, typeHintsFromFields(deserializer, typeHints), field);
         }
         set.add((obj instanceof IndicatorType) ? null : obj);
       }

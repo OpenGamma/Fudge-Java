@@ -226,7 +226,12 @@ import org.fudgemsg.MutableFudgeMsg;
         }
         if (field == null)
           continue;
-        prop.getWrite().invoke(object, context.fieldValueToObject(prop.getType(), field));
+        Object value = context.fieldValueToObject(field);
+        if (prop.getType().isAssignableFrom(value.getClass())) {
+          prop.getWrite().invoke(object, value);
+        } else {
+          prop.getWrite().invoke(object, context.fieldValueToObject(prop.getType(), field));
+        }
       }
     } catch (IOException ex) {
       throw new FudgeRuntimeException("Unable to deserialise " + getBeanName(), ex);
