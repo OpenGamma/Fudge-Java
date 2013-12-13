@@ -9,7 +9,7 @@
   <artifactId>fudge-java</artifactId>
   <packaging>jar</packaging>
   <name>Fudge Java</name>
-  <version>0.3.9.13</version>
+  <version>0.3.9.14</version>
   <description>A binary messaging system designed to scale from ad-hoc messages to long-term persistence</description>
   <url>http://fudgemsg.org</url>
 

@@ -66,8 +66,7 @@ import static org.fudgemsg.mapping.BuilderUtil.typeHintsFromFields;
         if (entry == null) {
           msg.add(null, null, FudgeWireType.INDICATOR, IndicatorType.INSTANCE);
         } else {
-          msg.add((String)null, entry);
-          //serializer.addToMessage(msg, null, null, entry);
+          serializer.addToMessage(msg, null, null, entry);
         }
       }
     }
