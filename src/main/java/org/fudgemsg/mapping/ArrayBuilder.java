@@ -17,8 +17,10 @@
 package org.fudgemsg.mapping;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.fudgemsg.FudgeField;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.MutableFudgeMsg;
 
@@ -55,7 +57,10 @@ import org.fudgemsg.MutableFudgeMsg;
   @SuppressWarnings("unchecked")
   @Override
   public E[] buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
-    final List<?> list = ListBuilder.INSTANCE.buildObject(deserializer, message);
+    final List<E> list = new ArrayList<>();
+    for (FudgeField field : message) {
+      list.add(deserializer.fieldValueToObject(_clazz, field));
+    }
     return list.toArray((E[]) Array.newInstance(_clazz, list.size()));
   }
 
