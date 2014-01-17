@@ -40,7 +40,7 @@ public class ListFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
   @Test
   public void testListContainingSingleCurrency() {
-    List<Currency> list = new LinkedList<>();
+    List<Currency> list = new LinkedList<Currency>();
     list.add(Currency.getInstance("USD"));
 
     List<Currency> deserializedObject = cycleObject(list);

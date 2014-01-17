@@ -25,9 +25,6 @@ import org.fudgemsg.types.FudgeTypeConverter;
 import org.fudgemsg.types.IndicatorType;
 import org.fudgemsg.wire.types.FudgeWireType;
 
-import static org.fudgemsg.mapping.BuilderUtil.fieldValueToObject;
-import static org.fudgemsg.mapping.BuilderUtil.typeHintsFromFields;
-
 /**
  * Builder for {@code List} objects.
  * <p/>
@@ -76,8 +73,11 @@ import static org.fudgemsg.mapping.BuilderUtil.typeHintsFromFields;
   @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public List<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
-    final List<Object> list = new ArrayList<>();
+    final List<Object> list = new ArrayList<Object>();
     final List<FudgeField> typeHints = message.getAllByOrdinal(BuilderUtil.VALUE_TYPE_HINT_ORDINAL);
+    FudgeObjectBuilder<?> listEntryBuilder = BuilderUtil.findObjectBuilder(deserializer, typeHints);
+    FudgeTypeConverter fudgeTypeConverter = BuilderUtil.findTypeConverter(deserializer, typeHints);
+
     for (FudgeField field : message) {
       if ((field.getOrdinal() != null) && (field.getOrdinal() != BuilderUtil.VALUE_TYPE_HINT_ORDINAL)) {
         throw new IllegalArgumentException("Sub-message interpretted as a list but found invalid ordinal " + field + ")");
@@ -92,8 +92,12 @@ import static org.fudgemsg.mapping.BuilderUtil.typeHintsFromFields;
 
       if(value instanceof IndicatorType){
         obj = null;
+      } else if (listEntryBuilder != null && value instanceof FudgeMsg) {
+        obj = listEntryBuilder.buildObject(deserializer, (FudgeMsg) value);
+      } else if (fudgeTypeConverter != null) {
+        obj = fudgeTypeConverter.primaryToSecondary(value);
       } else {
-        obj = fieldValueToObject(deserializer, typeHintsFromFields(deserializer, typeHints), field);
+        obj = deserializer.fieldValueToObject(field);
       }
       list.add((obj instanceof IndicatorType) ? null : obj);
 

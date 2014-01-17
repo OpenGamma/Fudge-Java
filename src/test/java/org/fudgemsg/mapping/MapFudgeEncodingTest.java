@@ -42,27 +42,9 @@ public class MapFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
 
   @Test
   public void testMapWithIntegerValues() {
-    Map<String, Byte> map = new HashMap<>();
-    map.put("A", (byte) 1);
-    map.put("B", (byte) 2);
-
-    Map<String, Byte> deserializedObject = cycleObject(map);
-
-    isInstanceOf(deserializedObject, HashMap.class);
-
-    for (Object o : deserializedObject.keySet()) {
-      isInstanceOf(o, String.class);
-    }
-
-    isInstanceOf(deserializedObject.get("A"), Byte.class);
-    isInstanceOf(deserializedObject.get("B"), Byte.class);
-  }
-
-  @Test
-  public void testMapWithIntegerValues2() {
-    Map map = new HashMap();
-    map.put("A", (byte) 1);
-    map.put("B", (byte) 2);
+    Map<String, Integer> map = new HashMap<String, Integer>();
+    map.put("A", 1);
+    map.put("B", 2);
 
     Map<String, Integer> deserializedObject = cycleObject(map);
 

@@ -13,6 +13,7 @@
 /target/
 /MANIFEST.MF
 build.number
+tests/*.dat
 
 # NetBeans specific
 nbproject/private

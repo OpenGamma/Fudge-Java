@@ -20,7 +20,6 @@ import static org.fudgemsg.util.TopologicalSort.topologicalSort;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,8 +73,8 @@ import org.fudgemsg.types.FudgeTypeConverter;
         size += 1;
       }
     }
-    Set<Class<?>> topTypes = new HashSet<>();
-    Map<Class<?>, AtomicInteger> allTypes = new HashMap<>();
+    Set<Class<?>> topTypes = new HashSet<Class<?>>();
+    Map<Class<?>, AtomicInteger> allTypes = new HashMap<Class<?>, AtomicInteger>();
     for (Object o : objects) {
       if (o != null) {
         allTypes.put(o.getClass(), new AtomicInteger());
@@ -98,10 +97,10 @@ import org.fudgemsg.types.FudgeTypeConverter;
       }
     }
     Map<Class<?>, Set<Class<?>>> typeHierarchy = resolveTypeHierarchy(topTypes);
-    //typeHierarchy.remove(Object.class);
-    //typeHierarchy.remove(Serializable.class);
-    //typeHierarchy.remove(Comparable.class);
-    //typeHierarchy.remove(String.class);
+    typeHierarchy.remove(Object.class);
+    typeHierarchy.remove(Serializable.class);
+    typeHierarchy.remove(Comparable.class);
+    typeHierarchy.remove(String.class);
     return reverse(topologicalSort(typeHierarchy));
   }
 
@@ -154,23 +153,6 @@ import org.fudgemsg.types.FudgeTypeConverter;
     return addedTypes;
   }
 
-  static List<Class<?>> typeHintsFromFields(FudgeDeserializer deserializer, List<FudgeField> fields) {
-    List<Class<?>> typeHints = new ArrayList<>();
-    for (FudgeField type : fields) {
-      final Object obj = type.getValue();
-      if (obj instanceof Number) {
-        throw new UnsupportedOperationException("Serialisation framework does not support back/forward references");
-      } else if (obj instanceof String) {
-        try {
-          typeHints.add(deserializer.getFudgeContext().getTypeDictionary().loadClass((String) obj));
-        } catch (ClassNotFoundException ex) {
-          // ignore
-        }
-      }
-    }
-    return typeHints;
-  }
-
   static FudgeObjectBuilder<?> findObjectBuilder(FudgeDeserializer deserializer, List<FudgeField> fields) {
     FudgeObjectBuilder<?> objectBuilder = null;
     for (FudgeField type : fields) {
@@ -212,21 +194,4 @@ import org.fudgemsg.types.FudgeTypeConverter;
     return null;
   }
 
-  /**
-   * Builds object from fudge field trying in turns all provided type hints, beginning from most specific one.
-   * @param deserializer
-   * @param typeHints
-   * @param field
-   * @return object build from fudge field
-   */
-  public static Object fieldValueToObject(FudgeDeserializer deserializer,  List<Class<?>> typeHints, FudgeField field) {
-    for (Class<?> typeHint : typeHints) {
-      try {
-        return deserializer.fieldValueToObject(typeHint, field);
-      } catch (Exception e) {
-        // ignore
-      }
-    }
-    return deserializer.fieldValueToObject(field);
-  }
 }
