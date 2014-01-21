@@ -34,6 +34,9 @@ import org.fudgemsg.StandardFudgeMessages;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
 import org.fudgemsg.taxonomy.ImmutableMapTaxonomyResolver;
 import org.fudgemsg.taxonomy.MapFudgeTaxonomy;
+import org.fudgemsg.types.FudgeDate;
+import org.fudgemsg.types.FudgeDateTime;
+import org.fudgemsg.types.FudgeTime;
 import org.fudgemsg.wire.xml.FudgeXMLStreamReader;
 import org.fudgemsg.wire.xml.FudgeXMLStreamWriter;
 import org.junit.Test;
@@ -140,13 +143,37 @@ public class FudgeXMLTest {
     FudgeMsgReader msgReader = new FudgeMsgReader(streamReader);
     FudgeMsg readMsg = msgReader.nextMessage();
 
-    assertEquals(dateTimeUtc, readMsg.getValue(OffsetDateTime.class, "dateTimeUtc"));
-    assertEquals(dateTimePlus1, readMsg.getValue(OffsetDateTime.class, "dateTimePlus1"));
-    assertEquals(timeUtc, readMsg.getValue(OffsetTime.class, "timeUtc"));
-    assertEquals(timePlus1, readMsg.getValue(OffsetTime.class, "timePlus1"));
-    assertEquals(localDateTime, readMsg.getValue(LocalDateTime.class, "localDateTime"));
-    assertEquals(localDate, readMsg.getValue(LocalDate.class, "localDate"));
-    assertEquals(localTime, readMsg.getValue(LocalTime.class, "localTime"));
+    assertEquals(new FudgeDateTime(dateTimeUtc), readMsg.getValue("dateTimeUtc"));
+    assertEquals(new FudgeDateTime(dateTimePlus1), readMsg.getValue("dateTimePlus1"));
+    assertEquals(new FudgeTime(timeUtc), readMsg.getValue("timeUtc"));
+    assertEquals(new FudgeTime(timePlus1), readMsg.getValue("timePlus1"));
+    assertEquals(new FudgeDateTime(localDateTime), readMsg.getValue("localDateTime"));
+    assertEquals(FudgeDate.from(localDate), readMsg.getValue("localDate"));
+    assertEquals(new FudgeTime(localTime), readMsg.getValue("localTime"));
+  }
+
+  @Test
+  public void testFudgeTimeWithNoTimeZoneToString(){
+    FudgeTime time = new FudgeTime(LocalTime.of(12, 33));
+    assertEquals("12:33", time.toString());
+  }
+
+  @Test
+  public void testFudgeTimeWithTimeZoneToString(){
+    FudgeTime time = new FudgeTime(OffsetTime.of(12, 33, 0, 0, ZoneOffset.ofHours(2)));
+    assertEquals("12:33+02:00", time.toString());
+  }
+
+  @Test
+  public void testFudgeDateTimeWithNoTimeZoneToString(){
+    FudgeDateTime time = new FudgeDateTime(LocalDateTime.of(1999, 12, 3, 12, 33));
+    assertEquals("1999-12-03T12:33", time.toString());
+  }
+
+  @Test
+  public void testFudgeDateTimeWithTimeZoneToString(){
+    FudgeDateTime time = new FudgeDateTime(OffsetDateTime.of(1999, 12, 3, 12, 33, 0, 0, ZoneOffset.ofHours(2)));
+    assertEquals("1999-12-03T12:33+02:00", time.toString());
   }
 
   private FudgeMsg[] createMessages () {

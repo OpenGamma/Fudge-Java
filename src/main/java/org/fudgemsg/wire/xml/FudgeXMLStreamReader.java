@@ -28,6 +28,7 @@ import org.fudgemsg.FudgeContext;
 import org.fudgemsg.FudgeFieldType;
 import org.fudgemsg.FudgeRuntimeException;
 import org.fudgemsg.taxonomy.FudgeTaxonomy;
+import org.fudgemsg.types.FudgeDate;
 import org.fudgemsg.types.FudgeDateTime;
 import org.fudgemsg.types.FudgeTime;
 import org.fudgemsg.types.IndicatorType;
@@ -35,8 +36,11 @@ import org.fudgemsg.wire.FudgeRuntimeIOException;
 import org.fudgemsg.wire.FudgeStreamReader;
 import org.fudgemsg.wire.types.FudgeWireType;
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.LocalTime;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.OffsetTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 /**
  * Reader that decodes XML into Fudge messages.
@@ -259,11 +263,19 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
       case FudgeWireType.DOUBLE_ARRAY_TYPE_ID:
         return toDoubleArray(elementValue);
       case FudgeWireType.DATE_TYPE_ID:
-        return LocalDate.parse(elementValue);
+        return FudgeDate.from(LocalDate.parse(elementValue));
       case FudgeWireType.TIME_TYPE_ID:
-        return new FudgeTime(OffsetTime.parse(elementValue));
+        try {
+          return new FudgeTime(OffsetTime.parse(elementValue));
+        } catch (org.threeten.bp.format.DateTimeParseException e) {
+          return new FudgeTime(LocalTime.parse(elementValue));
+        }
       case FudgeWireType.DATETIME_TYPE_ID:
-        return new FudgeDateTime(OffsetDateTime.parse(elementValue));
+        try {
+          return new FudgeDateTime(OffsetDateTime.parse(elementValue));
+        } catch (org.threeten.bp.format.DateTimeParseException e) {
+          return new FudgeDateTime(LocalDateTime.parse(elementValue));
+        }
       default:
         return elementValue;
     }

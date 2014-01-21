@@ -365,7 +365,11 @@ public class FudgeTime {
    */
   @Override
   public String toString() {
-    return toOffsetTime().toString();
+    if (_timezoneOffset == NO_TIMEZONE_OFFSET) {
+      return toLocalTime().toString();
+    } else {
+      return toOffsetTime().toString();
+    }
   }
 
 }

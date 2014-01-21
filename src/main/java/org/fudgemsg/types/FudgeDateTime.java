@@ -312,7 +312,7 @@ public class FudgeDateTime {
    */
   @Override
   public String toString() {
-    return toOffsetDateTime().toString();
+    return toLocalDate().toString()+"T"+getTime().toString();
   }
 
 }
