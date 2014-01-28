@@ -158,6 +158,10 @@ public class FudgeDefaultBuilderFactory implements FudgeBuilderFactory {
     if ((builder = (FudgeObjectBuilder<T>) getGenericObjectBuilders().get(clazz)) != null) {
       return builder;
     }
+    for (Map.Entry<Class<?>, FudgeObjectBuilder<?>> defaultBuilder : getGenericObjectBuilders().entrySet()) {
+      if (defaultBuilder.getKey().isAssignableFrom(clazz))
+        return (FudgeObjectBuilder<T>) defaultBuilder.getValue();
+    }
     if (clazz.isInterface()) {
       return null;
     }
