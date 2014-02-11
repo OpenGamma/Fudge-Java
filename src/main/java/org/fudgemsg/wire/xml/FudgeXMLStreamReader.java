@@ -40,7 +40,6 @@ import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.OffsetTime;
-import org.threeten.bp.format.DateTimeFormatter;
 
 /**
  * Reader that decodes XML into Fudge messages.
@@ -104,7 +103,9 @@ public class FudgeXMLStreamReader implements FudgeStreamReader {
    * @return the XML reader, not null
    */
   private XMLStreamReader createXMLStreamReader(Reader reader) {
-    XMLInputFactory factory = XMLInputFactory.newInstance();
+    XMLInputFactory factory = XMLInputFactory.newFactory();
+    factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+    factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
     try {
       XMLStreamReader parser = factory.createXMLStreamReader(reader);
       return parser;
