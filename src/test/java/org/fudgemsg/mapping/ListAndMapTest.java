@@ -22,12 +22,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.fudgemsg.FudgeContext;
+import org.fudgemsg.FudgeMsg;
 import org.junit.Test;
 
 /**
@@ -113,6 +115,50 @@ public class ListAndMapTest {
     final Map<String,String> m2 = (Map<String,String>)o;
     assertEquals (m.size (), m2.size ());
     for (Map.Entry<String,String> e : m.entrySet ()) {
+      assertTrue (m2.containsKey (e.getKey ()));
+      assertEquals (e.getValue (), m2.get (e.getKey ()));
+    }
+  }
+
+  /**
+   * 
+   */
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testSetInMap () {
+    final Set<String> set = new HashSet<String> ();
+    set.add("A");
+    set.add("B");
+    final Map<String,Object> m = new HashMap<String,Object> ();
+    m.put ("hello", set);
+    m.put ("world", "42");
+    final Object o = cycleObject (m);
+    assertNotNull (o);
+    assertTrue (o instanceof Map);
+    final Map<String,Object> m2 = (Map<String,Object>)o;
+    assertEquals (m.size (), m2.size ());
+    for (Map.Entry<String,Object> e : m.entrySet ()) {
+      assertTrue (m2.containsKey (e.getKey ()));
+      assertEquals (e.getValue (), m2.get (e.getKey ()));
+    }
+  }
+  
+  /**
+   * 
+   */
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testEmptySetInMap () {
+    final Set<String> set = new HashSet<String> ();
+    final Map<String,Object> m = new HashMap<String,Object> ();
+    m.put ("hello", set);
+    m.put ("world", "42");
+    final Object o = cycleObject (m);
+    assertNotNull (o);
+    assertTrue (o instanceof Map);
+    final Map<String,Object> m2 = (Map<String,Object>)o;
+    assertEquals (m.size (), m2.size ());
+    for (Map.Entry<String,Object> e : m.entrySet ()) {
       assertTrue (m2.containsKey (e.getKey ()));
       assertEquals (e.getValue (), m2.get (e.getKey ()));
     }
