@@ -27,8 +27,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.fudgemsg.FudgeMsg;
 import org.fudgemsg.FudgeRuntimeException;
 
-import com.mongodb.DBObject;
-
 /**
  * Default factory for building Fudge message encoders and decoders.
  * <p>
@@ -51,8 +49,8 @@ import com.mongodb.DBObject;
  *   <li>Otherwise the {@link JavaBeanBuilder} will be used
  * </ul>
  * <p>
- * Dynamic builders are pre-registered for {@link Map}, {@link List}, {@link Set},
- * {@link FudgeMsg} and {@link DBObject}.
+ * Dynamic builders are pre-registered for {@link Map}, {@link List}, {@link Set} and
+ * {@link FudgeMsg}.
  * <p>
  * This class is mutable but thread-safe via concurrent collections.
  */ 

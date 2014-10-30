@@ -14,7 +14,6 @@
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.3" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.8" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:2.11.2" level="project" />
     <orderEntry type="library" name="Maven: com.opengamma.external.json:json:1.0.0.v20101106" level="project" />
     <orderEntry type="library" name="Maven: org.threeten:threetenbp:0.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.9-RC1" level="project" />

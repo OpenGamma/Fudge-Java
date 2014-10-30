@@ -299,12 +299,6 @@
       <version>1.8</version>
     </dependency>
     <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
-      <version>2.11.2</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>com.opengamma.external.json</groupId>
       <artifactId>json</artifactId>
       <version>1.0.0.v20101106</version>
