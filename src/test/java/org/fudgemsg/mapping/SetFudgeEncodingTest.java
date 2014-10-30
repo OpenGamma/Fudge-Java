@@ -21,12 +21,16 @@ import static org.junit.Assert.assertTrue;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
+
 
 import org.fudgemsg.AbstractFudgeBuilderTestCase;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test Set Fudge encoding.
@@ -147,6 +151,23 @@ public class SetFudgeEncodingTest extends AbstractFudgeBuilderTestCase {
     Object deserializedObject = cycleObject(set);
 
     isInstanceOf(deserializedObject, HashSet.class);
+  }
+
+  @Test
+  public void testOrderedSet() {
+    Set<String> set = new LinkedHashSet<String>();
+    set.add("a");
+    set.add("b");
+    set.add("c");
+
+    Object deserializedObject = cycleObject(set);
+    isInstanceOf(deserializedObject, LinkedHashSet.class);
+    set = (LinkedHashSet<String>) deserializedObject;
+
+    String[] elements = set.toArray(new String[3]);
+    assertEquals("a", elements[0]);
+    assertEquals("b", elements[1]);
+    assertEquals("c", elements[2]);
   }
 
 }

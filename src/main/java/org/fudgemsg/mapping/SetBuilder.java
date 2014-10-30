@@ -15,7 +15,7 @@
  */
 package org.fudgemsg.mapping;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +72,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
   @SuppressWarnings({"rawtypes", "unchecked" })
   @Override
   public Set<?> buildObject(FudgeDeserializer deserializer, FudgeMsg message) {
-    final Set<Object> set = new HashSet<Object>();
+    final Set<Object> set = new LinkedHashSet<Object>();
 
     final List<FudgeField> typeHints = message.getAllByOrdinal(BuilderUtil.KEY_TYPE_HINT_ORDINAL);
     FudgeObjectBuilder<?> entryBuilder = BuilderUtil.findObjectBuilder(deserializer, typeHints);
@@ -86,7 +86,7 @@ import org.fudgemsg.wire.types.FudgeWireType;
       } else {
         final Object value = field.getValue();
         final Object obj;
-        if(value instanceof IndicatorType){
+        if (value instanceof IndicatorType) {
           obj = null;
         } else if (entryBuilder != null && value instanceof FudgeMsg) {
           obj = entryBuilder.buildObject(deserializer, (FudgeMsg) value);
