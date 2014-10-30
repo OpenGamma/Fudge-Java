@@ -418,11 +418,15 @@
   <!-- ==================================================================== -->
   <distributionManagement>
     <repository>
-      <id>og-maven-repo-public</id>
-      <name>OpenGamma maven repository</name>
-      <url>${og-maven-repo-public.url}</url><!-- http://maven.opengamma.com/nexus/content/groups/public/ -->
-      <layout>default</layout>
+      <id>og-public-release</id>
+      <name>OpenGamma public maven repository</name>
+      <url>${og-public-release.url}</url>
     </repository>
+    <snapshotRepository>
+      <id>og-public-snapshot</id>
+      <name>OpenGamma public snapshot maven repository</name>
+      <url>${og-public-snapshot.url}</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <!-- ==================================================================== -->
